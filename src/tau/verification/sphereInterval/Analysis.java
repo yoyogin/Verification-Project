@@ -8,6 +8,7 @@ import soot.Body;
 import soot.BodyTransformer;
 import soot.Unit;
 import soot.jimple.InvokeStmt;
+import tau.verification.sphereInterval.util.StringUtils;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -56,7 +57,7 @@ public class Analysis extends BodyTransformer {
 
         System.out.println("Found " + errors.size() + " errors");
         if (!errors.isEmpty()) {
-            System.out.println(errors); //TODO: pretty print
+            System.out.println(StringUtils.collectionWithSeparatorToString(errors, "\n"));
         }
     }
 }
