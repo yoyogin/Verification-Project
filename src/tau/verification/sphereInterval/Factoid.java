@@ -49,7 +49,6 @@ public class Factoid {
 
     @Override
     public int hashCode() {
-        // based on https://en.wikipedia.org/wiki/Java_hashCode()#The_java.lang.String_hash_function
         final int prime = 31;
         int result = 1;
 

@@ -5,8 +5,6 @@ public class Sphere {
     private int radios;
 
     public Sphere(int x, int y, int z, int radios) {
-//        assert radios >= 0;
-
         this.x = x;
         this.y = y;
         this.z = z;
@@ -29,8 +27,6 @@ public class Sphere {
     }
 
     public void addRadios(int radios) {
-//        assert radios >= 0;
-
         this.radios += radios;
     }
 
@@ -41,15 +37,11 @@ public class Sphere {
     }
 
     public void setRadios(int radios) {
-//        assert radios >= 0;
-
         this.radios = radios;
     }
 
     public boolean isContained(Sphere other) {
-        //calculate distance between both center points
-
-        // TODO
+        // TODO: calculate distance between both center points
         return false;
     }
 

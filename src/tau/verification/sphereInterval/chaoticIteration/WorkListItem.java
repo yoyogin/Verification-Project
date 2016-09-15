@@ -2,9 +2,6 @@ package tau.verification.sphereInterval.chaoticIteration;
 
 import tau.verification.sphereInterval.FactoidsConjunction;
 
-/**
- * A work list item for Chaotic Iteration
- */
 public class WorkListItem {
     public FactoidsConjunction value;
     private String name;
