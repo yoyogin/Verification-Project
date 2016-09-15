@@ -1,12 +1,5 @@
 package tau.verification.sphereInterval.chaoticIteration;
 
-import tau.verification.sphereInterval.chaoticIteration.Equation;
-import tau.verification.sphereInterval.function.Function;
-import tau.verification.sphereInterval.function.TransformerFunction;
-import tau.verification.sphereInterval.Domain;
-import tau.verification.sphereInterval.FactoidsConjunction;
-import tau.verification.sphereInterval.chaoticIteration.EquationSystem;
-import tau.verification.sphereInterval.chaoticIteration.WorkListItem;
 import soot.Body;
 import soot.Unit;
 import soot.jimple.GotoStmt;
@@ -16,6 +9,10 @@ import soot.jimple.toolkits.annotation.logic.Loop;
 import soot.jimple.toolkits.annotation.logic.LoopFinder;
 import soot.toolkits.graph.ExceptionalUnitGraph;
 import soot.toolkits.graph.UnitGraph;
+import tau.verification.sphereInterval.Domain;
+import tau.verification.sphereInterval.FactoidsConjunction;
+import tau.verification.sphereInterval.function.Function;
+import tau.verification.sphereInterval.function.TransformerFunction;
 import tau.verification.sphereInterval.transformer.TransformerSwitch;
 
 import java.util.*;
