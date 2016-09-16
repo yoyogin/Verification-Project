@@ -50,7 +50,7 @@ public class Sphere {
         double sqrt_sum = Math.sqrt(sum);
 
 
-        return sqrt_sum + this.radios <=other.radios;
+        return sqrt_sum + this.radios <= other.radios;
     }
 
     public boolean contains(Sphere other) {

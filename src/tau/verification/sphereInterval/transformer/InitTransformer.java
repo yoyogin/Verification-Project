@@ -1,13 +1,11 @@
-package tau.verification.sphereInterval.function;
+package tau.verification.sphereInterval.transformer;
 
 import soot.Local;
 import soot.jimple.IntConstant;
 import soot.jimple.NumericConstant;
 import tau.verification.sphereInterval.FactoidsConjunction;
+import tau.verification.sphereInterval.function.TransformerFunction;
 
-/**
- * Created by Lior on 16/09/16.
- */
 public class InitTransformer extends TransformerFunction {
 
     public final Local sphereVariable;
@@ -136,15 +134,10 @@ public class InitTransformer extends TransformerFunction {
 
     }
 
-
-
-
-
-
-
     @Override
     public FactoidsConjunction invoke(FactoidsConjunction input) {
-        return FactoidsConjunction.getFactoidsConjunction(input).
-                setFactoid(sphereVariable,x0,y0,z0,edgeA,edgeB,edgeC,radios);
+        return FactoidsConjunction
+                .getFactoidsConjunction(input)
+                .setFactoid(sphereVariable, x0, y0, z0, edgeA, edgeB, edgeC, radios);
     }
 }
