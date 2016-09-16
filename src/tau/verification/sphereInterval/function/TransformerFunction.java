@@ -4,7 +4,7 @@ import tau.verification.sphereInterval.FactoidsConjunction;
 
 public abstract class TransformerFunction extends Function {
     @Override
-    public final byte arguments() {
+    public final int arguments() {
         return 1;
     }
 

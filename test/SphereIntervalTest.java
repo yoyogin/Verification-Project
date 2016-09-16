@@ -8,8 +8,6 @@ public class SphereIntervalTest {
 
         if (!x.contains(y)) {
             error("Cannot prove that x.contains(y)");
-        } else if(x.contains(y)) {
-            error("");
         } else {
             int z = 3;
         }

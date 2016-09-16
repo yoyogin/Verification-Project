@@ -9,7 +9,7 @@ public abstract class Function {
     public Function() {
     }
 
-    public abstract byte arguments();
+    public abstract int arguments();
 
     public FactoidsConjunction invoke(List<WorkListItem> inputs) {
         switch (this.arguments()) {

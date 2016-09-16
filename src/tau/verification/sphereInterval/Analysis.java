@@ -32,8 +32,8 @@ public class Analysis extends BodyTransformer {
 
         System.out.println("\nBuilding Equation System from '" + methodName + "' body");
         EquationsSystemBuilder equationsSystemBuilder = new EquationsSystemBuilder(body, domain);
-        EquationSystem equationSystem = equationsSystemBuilder.build();
         System.out.println("Equation system body = \n" + equationsSystemBuilder.getEquationSystemBodyDescription());
+        EquationSystem equationSystem = equationsSystemBuilder.build();
 
         System.out.println("Running Chaotic Iteration on equation system");
         ChaoticIteration chaoticIteration = new ChaoticIteration();

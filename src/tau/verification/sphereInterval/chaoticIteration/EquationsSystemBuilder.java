@@ -65,8 +65,26 @@ public class EquationsSystemBuilder {
     private EquationSystem createEquations() {
         EquationSystem equationSystem = new EquationSystem();
 
-        // Add an equation to initialize the entry variable to top.
-        Equation setTopToEntryWorkListItem = new Equation(this.entryWorkListItem, this.domain.getTopOperation(), "Entry Work List Item");
+        // Add an equation to initialize entry variable to top
+        Equation setTopToEntryWorkListItem = new Equation(
+                this.entryWorkListItem,
+                new Function() {
+                    @Override
+                    public int arguments() {
+                        return 0;
+                    }
+
+                    @Override
+                    public FactoidsConjunction invoke() {
+                        return domain.getTop();
+                    }
+
+                    @Override
+                    public String invocationToString(List<WorkListItem> arguments) {
+                        return "Get Top function";
+                    }
+                },
+                "Entry Work List Item");
         equationSystem.addEquation(setTopToEntryWorkListItem);
         this.equationToUnit.put(setTopToEntryWorkListItem, unitGraph.getHeads().get(0));
 
@@ -78,7 +96,7 @@ public class EquationsSystemBuilder {
                 WorkListItem joinWorkListItem = unitToLoopJoinWorkListItem.get(unit);
                 Function joinFunction = new Function() {
                     @Override
-                    public byte arguments() {
+                    public int arguments() {
                         return 2;
                     }
 

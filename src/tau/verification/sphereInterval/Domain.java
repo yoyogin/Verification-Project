@@ -1,5 +1,6 @@
 package tau.verification.sphereInterval;
 
+import soot.jimple.internal.JimpleLocal;
 import tau.verification.sphereInterval.function.Function;
 import soot.Local;
 import tau.verification.sphereInterval.chaoticIteration.WorkListItem;
@@ -37,10 +38,10 @@ public class Domain {
         }
 
         FactoidsConjunction result = FactoidsConjunction.getFactoidsConjunction();
-        Set<Local> vars = first.getVars();
+        Set<JimpleLocal> vars = first.getVars();
         vars.addAll(second.getVars());
 
-        for (Local var : vars) {
+        for (JimpleLocal var : vars) {
             Factoid firstFactoid = first.getFactoid(var);
             Factoid secondFactoid = second.getFactoid(var);
             Factoid jointFactoid = Factoid.getUpperBound(firstFactoid, secondFactoid);
@@ -59,10 +60,10 @@ public class Domain {
         }
 
         FactoidsConjunction result = FactoidsConjunction.getFactoidsConjunction();
-        Set<Local> vars = first.getVars();
+        Set<JimpleLocal> vars = first.getVars();
         vars.addAll(second.getVars());
 
-        for (Local var : vars) {
+        for (JimpleLocal var : vars) {
             Factoid firstFactoid = first.getFactoid(var);
             Factoid secondFactoid = second.getFactoid(var);
             Factoid jointFactoid = Factoid.getLowerBound(firstFactoid, secondFactoid);
@@ -87,9 +88,9 @@ public class Domain {
             return false;
         }
 
-        Set<Local> vars = first.getVars();
+        Set<JimpleLocal> vars = first.getVars();
         vars.addAll(second.getVars());
-        for (Local var : vars) {
+        for (JimpleLocal var : vars) {
             Factoid firstFactoid = first.getFactoid(var);
             Factoid secondFactoid = second.getFactoid(var);
             if (secondFactoid == null) {
@@ -102,34 +103,5 @@ public class Domain {
         }
 
         return true;
-    }
-
-
-
-    /**
-     * Returns an operation that always returns the top element.
-     */
-    public Function getTopOperation() {
-        return new Function(){
-            @Override
-            public byte arguments() {
-                return 0;
-            }
-
-            @Override
-            public FactoidsConjunction invoke() {
-                return getTop();
-            }
-
-            @Override
-            public String toString() {
-                return getTop().toString();
-            }
-
-            @Override
-            public String invocationToString(List<WorkListItem> arguments) {
-                return getTop().toString();
-            }
-        };
     }
 }

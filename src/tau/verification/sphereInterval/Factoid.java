@@ -2,6 +2,7 @@ package tau.verification.sphereInterval;
 
 import soot.Local;
 import soot.jimple.NumericConstant;
+import soot.jimple.internal.JimpleLocal;
 
 /**
  * The abstraction for each Sphere variable
@@ -9,8 +10,8 @@ import soot.jimple.NumericConstant;
  * 2. Center point interval - a cuboid with edges parallel to coordinate system.
  * 3. Radios length
  */
-public class Factoid {
-    public final Local sphereVariable;
+public class Factoid implements Comparable<Factoid> {
+    public final JimpleLocal sphereVariable;
     public final NumericConstant x0;
     public final NumericConstant y0;
     public final NumericConstant z0;
@@ -20,7 +21,7 @@ public class Factoid {
     public final NumericConstant radios;
 
     public Factoid(
-            Local sphereVariable,
+            JimpleLocal sphereVariable,
             NumericConstant x0,
             NumericConstant y0,
             NumericConstant z0,

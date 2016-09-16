@@ -1,9 +1,12 @@
 package tau.verification.sphereInterval;
 
-import soot.Local;
 import soot.jimple.NumericConstant;
+import soot.jimple.internal.JimpleLocal;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * A set of varToFactoid of the form 'x = Sphere'
@@ -71,8 +74,8 @@ public class FactoidsConjunction {
     /**
      * Returns a (mutable) copy of the set of local variables appearing in any factoid in the conjunction.
      */
-    public Set<Local> getVars() {
-        HashSet<Local> vars = new HashSet<>();
+    public Set<JimpleLocal> getVars() {
+        HashSet<JimpleLocal> vars = new HashSet<>();
         if(this.factoids == null) {
             return vars;
         }
@@ -86,19 +89,9 @@ public class FactoidsConjunction {
 
     /**
      * This functions ads Factoid to the set if the same factoid exactly(defined by hashcode and equals) is not contained in set
-     *
-     * @param sphereVariable
-     * @param bottomLeft0
-     * @param bottomLeft1
-     * @param bottomLeft2
-     * @param edgeA
-     * @param edgeB
-     * @param edgeC
-     * @param radios
-     * @return true iff factoid added
      */
     public boolean add(
-            Local sphereVariable,
+            JimpleLocal sphereVariable,
             NumericConstant bottomLeft0,
             NumericConstant bottomLeft1,
             NumericConstant bottomLeft2,
@@ -133,7 +126,7 @@ public class FactoidsConjunction {
     }
 
     public FactoidsConjunction setFactoid(
-            Local sphereVariable,
+            JimpleLocal sphereVariable,
             NumericConstant bottomLeft0,
             NumericConstant bottomLeft1,
             NumericConstant bottomLeft2,
@@ -157,7 +150,7 @@ public class FactoidsConjunction {
         return setFactoid(factoid.sphereVariable, factoid.x0, factoid.y0, factoid.z0, factoid.edgeA, factoid.edgeB, factoid.edgeC, factoid.radios);
     }
 
-    public Factoid getFactoid(Local sphereVariable) {
+    public Factoid getFactoid(JimpleLocal sphereVariable) {
         if(this.factoids == null) {
             return null;
         }
@@ -171,7 +164,7 @@ public class FactoidsConjunction {
         return null;
     }
 
-    public boolean removeVar(Local sphereVariable) {
+    public boolean removeVar(JimpleLocal sphereVariable) {
         boolean result = false;
         for (Iterator<Factoid> iterator = factoids.iterator(); iterator.hasNext();) {
             Factoid factoid = iterator.next();
@@ -195,9 +188,9 @@ public class FactoidsConjunction {
         }
 
         StringBuilder result = new StringBuilder("and(");
-        Set<Local> vars = getVars();
+        Set<JimpleLocal> vars = getVars();
         int size = vars.size();
-        for (Local var : vars) {
+        for (JimpleLocal var : vars) {
             Factoid factoid = getFactoid(var);
             result.append(factoid.toString());
             --size;

@@ -3,14 +3,15 @@ package tau.verification.sphereInterval.transformer;
 import soot.Local;
 import soot.jimple.IntConstant;
 import soot.jimple.NumericConstant;
+import soot.jimple.internal.JimpleLocal;
 import tau.verification.sphereInterval.FactoidsConjunction;
 import tau.verification.sphereInterval.function.TransformerFunction;
 
-public class InitTransformer extends TransformerFunction {
+public class SphereConstructorTransformer extends TransformerFunction {
 
-    public final Local sphereVariable;
-    public final Local sphereOtherVariablePointer;
-    public final Local sphereOtherVariableRadios;
+    public final JimpleLocal sphereVariable;
+    public final JimpleLocal sphereOtherVariablePointer;
+    public final JimpleLocal sphereOtherVariableRadios;
     public final NumericConstant x0;
     public final NumericConstant y0;
     public final NumericConstant z0;
@@ -19,8 +20,8 @@ public class InitTransformer extends TransformerFunction {
     public final NumericConstant edgeC;
     public final NumericConstant radios;
 
-    public InitTransformer(
-            Local sphereVariable,
+    public SphereConstructorTransformer(
+            JimpleLocal sphereVariable,
             NumericConstant x0,
             NumericConstant y0,
             NumericConstant z0,
@@ -49,8 +50,8 @@ public class InitTransformer extends TransformerFunction {
         assert radios != null;
     }
 
-    public InitTransformer(
-            Local sphereVariable,
+    public SphereConstructorTransformer(
+            JimpleLocal sphereVariable,
             NumericConstant x0,
             NumericConstant y0,
             NumericConstant z0,
@@ -74,10 +75,10 @@ public class InitTransformer extends TransformerFunction {
         assert radios != null;
     }
 
-    public InitTransformer(
-            Local sphereVariable,
-            Local sphereOtherVariablePointer,
-            Local sphereOtherVariableRadios)
+    public SphereConstructorTransformer(
+            JimpleLocal sphereVariable,
+            JimpleLocal sphereOtherVariablePointer,
+            JimpleLocal sphereOtherVariableRadios)
     {
         this.sphereVariable = sphereVariable;
         this.sphereOtherVariableRadios = sphereOtherVariableRadios;
@@ -93,9 +94,9 @@ public class InitTransformer extends TransformerFunction {
 
     }
 
-    public InitTransformer(
-            Local sphereVariable,
-            Local sphereOtherVariablePointer,
+    public SphereConstructorTransformer(
+            JimpleLocal sphereVariable,
+            JimpleLocal sphereOtherVariablePointer,
             NumericConstant radios)
     {
         this.sphereVariable = sphereVariable;
@@ -112,9 +113,9 @@ public class InitTransformer extends TransformerFunction {
 
     }
 
-    public InitTransformer(
-            Local sphereVariable,
-            Local sphereOtherVariableRadios,
+    public SphereConstructorTransformer(
+            JimpleLocal sphereVariable,
+            JimpleLocal sphereOtherVariableRadios,
             NumericConstant x0,
             NumericConstant y0,
             NumericConstant z0,
