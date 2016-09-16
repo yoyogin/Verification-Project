@@ -1,7 +1,7 @@
 package tau.verification.sphereInterval;
 
 import soot.Local;
-import soot.jimple.NumericConstant;
+import soot.jimple.IntConstant;
 import soot.jimple.internal.JimpleLocal;
 
 /**
@@ -12,23 +12,23 @@ import soot.jimple.internal.JimpleLocal;
  */
 public class Factoid implements Comparable<Factoid> {
     public final JimpleLocal sphereVariable;
-    public final NumericConstant x0;
-    public final NumericConstant y0;
-    public final NumericConstant z0;
-    public final NumericConstant edgeA;
-    public final NumericConstant edgeB;
-    public final NumericConstant edgeC;
-    public final NumericConstant radios;
+    public final IntConstant x0;
+    public final IntConstant y0;
+    public final IntConstant z0;
+    public final IntConstant edgeA;
+    public final IntConstant edgeB;
+    public final IntConstant edgeC;
+    public final IntConstant radios;
 
     public Factoid(
             JimpleLocal sphereVariable,
-            NumericConstant x0,
-            NumericConstant y0,
-            NumericConstant z0,
-            NumericConstant edgeA,
-            NumericConstant edgeB,
-            NumericConstant edgeC,
-            NumericConstant radios) {
+            IntConstant x0,
+            IntConstant y0,
+            IntConstant z0,
+            IntConstant edgeA,
+            IntConstant edgeB,
+            IntConstant edgeC,
+            IntConstant radios) {
         this.sphereVariable = sphereVariable;
         this.x0 = x0;
         this.y0 = y0;
@@ -100,23 +100,23 @@ public class Factoid implements Comparable<Factoid> {
         return result.toString();
     }
 
-    private NumericConstant getX1() {
-        return this.x0.add(this.edgeA);
+    private IntConstant getX1() {
+        return (IntConstant) this.x0.add(this.edgeA);
     }
 
-    private NumericConstant getY1() {
-        return this.y0.add(this.edgeB);
+    private IntConstant getY1() {
+        return (IntConstant) this.y0.add(this.edgeB);
     }
 
-    private NumericConstant getZ1() {
-        return this.z0.add(this.edgeC);
+    private IntConstant getZ1() {
+        return (IntConstant) this.z0.add(this.edgeC);
     }
 
     public boolean contains(Factoid other) {
         return getLowerBound(this, other).equals(other);
     }
 
-    // TODO: what about infinity? (i.e. does NumericConstant wraps around? or reach infy on Wrap?)
+    // TODO: what about infinity? (i.e. does IntConstant wraps around? or reach infy on Wrap?)
     public static Factoid getUpperBound(Factoid first, Factoid second) {
         if (first == null || second == null) {
             return null;
@@ -137,24 +137,24 @@ public class Factoid implements Comparable<Factoid> {
         //      return 'Sphere Interval which contains both first and second';
         // }
 
-        NumericConstant minX0 = (first.x0.lessThanOrEqual(second.x0).equivTo(1)) ? first.x0 : second.x0;
-        NumericConstant minY0 = (first.y0.lessThanOrEqual(second.x0).equivTo(1)) ? first.y0 : second.y0;
-        NumericConstant minZ0 = (first.z0.lessThanOrEqual(second.z0).equivTo(1)) ? first.z0 : second.z0;
+        IntConstant minX0 = (first.x0.lessThanOrEqual(second.x0).equivTo(1)) ? first.x0 : second.x0;
+        IntConstant minY0 = (first.y0.lessThanOrEqual(second.x0).equivTo(1)) ? first.y0 : second.y0;
+        IntConstant minZ0 = (first.z0.lessThanOrEqual(second.z0).equivTo(1)) ? first.z0 : second.z0;
 
-        NumericConstant maxX1 = (first.getX1().lessThanOrEqual(second.getX1()).equivTo(1)) ? second.getX1() : first.getX1();
-        NumericConstant maxY1 = (first.getY1().lessThanOrEqual(second.getY1()).equivTo(1)) ? second.getY1() : first.getY1();
-        NumericConstant maxZ1 = (first.getZ1().lessThanOrEqual(second.getZ1()).equivTo(1)) ? second.getZ1() : first.getZ1();
+        IntConstant maxX1 = (first.getX1().lessThanOrEqual(second.getX1()).equivTo(1)) ? second.getX1() : first.getX1();
+        IntConstant maxY1 = (first.getY1().lessThanOrEqual(second.getY1()).equivTo(1)) ? second.getY1() : first.getY1();
+        IntConstant maxZ1 = (first.getZ1().lessThanOrEqual(second.getZ1()).equivTo(1)) ? second.getZ1() : first.getZ1();
 
-        NumericConstant maxRadios = (first.radios.lessThanOrEqual(second.radios).equivTo(1)) ? second.radios : first.radios;
+        IntConstant maxRadios = (first.radios.lessThanOrEqual(second.radios).equivTo(1)) ? second.radios : first.radios;
 
         Factoid joint = new Factoid(
                 first.sphereVariable, // first.sphereVariable == second.sphereVariable
                 minX0,
                 minY0,
                 minZ0,
-                maxX1.subtract(minX0),
-                maxY1.subtract(minY0),
-                maxZ1.subtract(minZ0),
+                (IntConstant) maxX1.subtract(minX0),
+                (IntConstant) maxY1.subtract(minY0),
+                (IntConstant) maxZ1.subtract(minZ0),
                 maxRadios);
 
         return joint;
@@ -182,15 +182,15 @@ public class Factoid implements Comparable<Factoid> {
 
         // TODO: refactor code copying
         // X
-        NumericConstant jointX0;
-        NumericConstant jointEdgeA;
+        IntConstant jointX0;
+        IntConstant jointEdgeA;
         if (first.x0.lessThanOrEqual(second.x0).equivTo(1)) {
             if(second.x0.lessThanOrEqual(first.getX1()).equivTo(1)) {
                 jointX0 = second.x0;
                 if(second.getX1().lessThanOrEqual(first.getX1()).equivTo(1)) {
                     jointEdgeA = second.getX1();
                 } else {
-                    jointEdgeA = first.getX1().subtract(second.x0);
+                    jointEdgeA = (IntConstant) first.getX1().subtract(second.x0);
                 }
             } else {
                 return null; // there is no intersection on X axis
@@ -201,7 +201,7 @@ public class Factoid implements Comparable<Factoid> {
                 if(first.getX1().lessThanOrEqual(second.getX1()).equivTo(1)) {
                     jointEdgeA = first.getX1();
                 } else {
-                    jointEdgeA = second.getX1().subtract(first.x0);
+                    jointEdgeA = (IntConstant) second.getX1().subtract(first.x0);
                 }
             } else {
                 return null; // there is no intersection on X axis
@@ -209,15 +209,15 @@ public class Factoid implements Comparable<Factoid> {
         }
 
         // Y
-        NumericConstant jointY0;
-        NumericConstant jointEdgeB;
+        IntConstant jointY0;
+        IntConstant jointEdgeB;
         if (first.y0.lessThanOrEqual(second.y0).equivTo(1)) {
             if(second.y0.lessThanOrEqual(first.getY1()).equivTo(1)) {
                 jointY0 = second.y0;
                 if(second.getY1().lessThanOrEqual(first.getY1()).equivTo(1)) {
                     jointEdgeB = second.getY1();
                 } else {
-                    jointEdgeB = first.getY1().subtract(second.y0);
+                    jointEdgeB = (IntConstant) first.getY1().subtract(second.y0);
                 }
             } else {
                 return null; // there is no intersection on Y axis
@@ -228,7 +228,7 @@ public class Factoid implements Comparable<Factoid> {
                 if(first.getY1().lessThanOrEqual(second.getY1()).equivTo(1)) {
                     jointEdgeB = first.getY1();
                 } else {
-                    jointEdgeB = second.getY1().subtract(first.y0);
+                    jointEdgeB = (IntConstant) second.getY1().subtract(first.y0);
                 }
             } else {
                 return null; // there is no intersection on Y axis
@@ -236,15 +236,15 @@ public class Factoid implements Comparable<Factoid> {
         }
 
         // Z
-        NumericConstant jointZ0;
-        NumericConstant jointEdgeC;
+        IntConstant jointZ0;
+        IntConstant jointEdgeC;
         if (first.z0.lessThanOrEqual(second.z0).equivTo(1)) {
             if(second.z0.lessThanOrEqual(first.getZ1()).equivTo(1)) {
                 jointZ0 = second.z0;
                 if(second.getZ1().lessThanOrEqual(first.getZ1()).equivTo(1)) {
                     jointEdgeC = second.getZ1();
                 } else {
-                    jointEdgeC = first.getZ1().subtract(second.z0);
+                    jointEdgeC = (IntConstant) first.getZ1().subtract(second.z0);
                 }
             } else {
                 return null; // there is no intersection on Z axis
@@ -255,14 +255,14 @@ public class Factoid implements Comparable<Factoid> {
                 if(first.getZ1().lessThanOrEqual(second.getZ1()).equivTo(1)) {
                     jointEdgeC = first.getZ1();
                 } else {
-                    jointEdgeC = second.getZ1().subtract(first.z0);
+                    jointEdgeC = (IntConstant) second.getZ1().subtract(first.z0);
                 }
             } else {
                 return null; // there is no intersection on Z axis
             }
         }
 
-        NumericConstant minRadios = (first.radios.lessThanOrEqual(second.radios).equivTo(1)) ? first.radios : second.radios;
+        IntConstant minRadios = (first.radios.lessThanOrEqual(second.radios).equivTo(1)) ? first.radios : second.radios;
 
         Factoid joint = new Factoid(
                 first.sphereVariable, // first.sphereVariable == second.sphereVariable

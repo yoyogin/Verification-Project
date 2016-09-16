@@ -1,6 +1,6 @@
 package tau.verification.sphereInterval;
 
-import soot.jimple.NumericConstant;
+import soot.jimple.IntConstant;
 import soot.jimple.internal.JimpleLocal;
 
 import java.util.HashSet;
@@ -92,13 +92,13 @@ public class FactoidsConjunction {
      */
     public boolean add(
             JimpleLocal sphereVariable,
-            NumericConstant bottomLeft0,
-            NumericConstant bottomLeft1,
-            NumericConstant bottomLeft2,
-            NumericConstant edgeA,
-            NumericConstant edgeB,
-            NumericConstant edgeC,
-            NumericConstant radios) {
+            IntConstant bottomLeft0,
+            IntConstant bottomLeft1,
+            IntConstant bottomLeft2,
+            IntConstant edgeA,
+            IntConstant edgeB,
+            IntConstant edgeC,
+            IntConstant radios) {
 
         if(this.factoids == null) {
             return false;
@@ -127,13 +127,13 @@ public class FactoidsConjunction {
 
     public FactoidsConjunction setFactoid(
             JimpleLocal sphereVariable,
-            NumericConstant bottomLeft0,
-            NumericConstant bottomLeft1,
-            NumericConstant bottomLeft2,
-            NumericConstant edgeA,
-            NumericConstant edgeB,
-            NumericConstant edgeC,
-            NumericConstant radios)
+            IntConstant bottomLeft0,
+            IntConstant bottomLeft1,
+            IntConstant bottomLeft2,
+            IntConstant edgeA,
+            IntConstant edgeB,
+            IntConstant edgeC,
+            IntConstant radios)
     {
         if(getFactoid(sphereVariable) != null)
         {

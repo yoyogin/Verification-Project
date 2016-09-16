@@ -2,7 +2,7 @@ package tau.verification.sphereInterval.transformer;
 
 import soot.Local;
 import soot.jimple.IntConstant;
-import soot.jimple.NumericConstant;
+import soot.jimple.IntConstant;
 import soot.jimple.internal.JimpleLocal;
 import tau.verification.sphereInterval.FactoidsConjunction;
 import tau.verification.sphereInterval.function.TransformerFunction;
@@ -12,23 +12,23 @@ public class SphereConstructorTransformer extends TransformerFunction {
     public final JimpleLocal sphereVariable;
     public final JimpleLocal sphereOtherVariablePointer;
     public final JimpleLocal sphereOtherVariableRadios;
-    public final NumericConstant x0;
-    public final NumericConstant y0;
-    public final NumericConstant z0;
-    public final NumericConstant edgeA;
-    public final NumericConstant edgeB;
-    public final NumericConstant edgeC;
-    public final NumericConstant radios;
+    public final IntConstant x0;
+    public final IntConstant y0;
+    public final IntConstant z0;
+    public final IntConstant edgeA;
+    public final IntConstant edgeB;
+    public final IntConstant edgeC;
+    public final IntConstant radios;
 
     public SphereConstructorTransformer(
             JimpleLocal sphereVariable,
-            NumericConstant x0,
-            NumericConstant y0,
-            NumericConstant z0,
-            NumericConstant edgeA,
-            NumericConstant edgeB,
-            NumericConstant edgeC,
-            NumericConstant radios) {
+            IntConstant x0,
+            IntConstant y0,
+            IntConstant z0,
+            IntConstant edgeA,
+            IntConstant edgeB,
+            IntConstant edgeC,
+            IntConstant radios) {
         this.sphereVariable = sphereVariable;
         this.x0 = x0;
         this.y0 = y0;
@@ -52,10 +52,10 @@ public class SphereConstructorTransformer extends TransformerFunction {
 
     public SphereConstructorTransformer(
             JimpleLocal sphereVariable,
-            NumericConstant x0,
-            NumericConstant y0,
-            NumericConstant z0,
-            NumericConstant radios) {
+            IntConstant x0,
+            IntConstant y0,
+            IntConstant z0,
+            IntConstant radios) {
         this.sphereVariable = sphereVariable;
         this.x0 = x0;
         this.y0 = y0;
@@ -97,7 +97,7 @@ public class SphereConstructorTransformer extends TransformerFunction {
     public SphereConstructorTransformer(
             JimpleLocal sphereVariable,
             JimpleLocal sphereOtherVariablePointer,
-            NumericConstant radios)
+            IntConstant radios)
     {
         this.sphereVariable = sphereVariable;
         this.sphereOtherVariableRadios = null;
@@ -116,12 +116,12 @@ public class SphereConstructorTransformer extends TransformerFunction {
     public SphereConstructorTransformer(
             JimpleLocal sphereVariable,
             JimpleLocal sphereOtherVariableRadios,
-            NumericConstant x0,
-            NumericConstant y0,
-            NumericConstant z0,
-            NumericConstant edgeA,
-            NumericConstant edgeB,
-            NumericConstant edgeC) {
+            IntConstant x0,
+            IntConstant y0,
+            IntConstant z0,
+            IntConstant edgeA,
+            IntConstant edgeB,
+            IntConstant edgeC) {
         this.sphereVariable = sphereVariable;
         this.x0 = x0;
         this.y0 = y0;
