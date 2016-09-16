@@ -4,9 +4,7 @@ import tau.verification.sphereInterval.Domain;
 import tau.verification.sphereInterval.FactoidsConjunction;
 import tau.verification.sphereInterval.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedList;
+import java.util.*;
 
 public class ChaoticIteration {
     private EquationSystem equationSystem;
@@ -16,72 +14,83 @@ public class ChaoticIteration {
     /**
      * Solves an equation equationSystem using chaotic iteration
      */
-    public void iterate(EquationSystem system, Domain domain) {
-        this.equationSystem = system;
+    public void iterate(EquationSystem equationSystem, Domain domain) {
+        this.equationSystem = equationSystem;
         this.domain = domain;
         this.iterationCounter = 0;
 
-        System.out.println("Solving equation equationSystem = \n" + system);
-        equationSystem.resetWorkListItems(domain.getBottom());
+        System.out.println("Solving equation system = \n" + equationSystem);
+        this.equationSystem.resetWorkListItems(domain.getBottom());
 
         System.out.println("Begin Chaotic Iterations");
         internalIterate();
 
         System.out.println("Reached fixed-point after " + iterationCounter + " iterations");
-        printSolution(system);
+        printSolution(equationSystem);
     }
 
     /**
      * Starts chaotic iteration computation
      */
     private void internalIterate() {
-        Collection<Equation> initialEquations = equationSystem.getConstantEquations();
-        if (initialEquations.isEmpty()) {
-            initialEquations.addAll(equationSystem.getEquations());
-        }
+        Set<WorkListItem> workList = new LinkedHashSet<>(equationSystem.getWorkListItems());
 
-        LinkedList<Equation> workList = new LinkedList<>(initialEquations);
         while (!workList.isEmpty()) {
             iterationCounter++;
             printWorkList(workList);
 
-            Equation equation = workList.remove();
+            WorkListItem currentWorkListItem = removeItemFromWorkList(workList);
+            Equation currentEquation = equationSystem.getEquation(currentWorkListItem);
 
-            System.out.println("Iteration " + iterationCounter + ": working on equation " + equation.toString());
+            System.out.println("Iteration " + iterationCounter + ": working on equation " + currentEquation.toString());
 
-            System.out.println("\t\t\t" + equation.getLhsWorkListItem() + " : " + equation.getLhsWorkListItem().value);
-            for (WorkListItem arg : equation.getRhsWorkListItems()) {
+            System.out.println("\t\t\t" + currentEquation.getLhsWorkListItem() + " : " + currentEquation.getLhsWorkListItem().value);
+            for (WorkListItem arg : currentEquation.getRhsWorkListItems()) {
                 System.out.println("\t\t\t" + arg + " : " + arg.value);
             }
 
-            FactoidsConjunction previousValue = equation.getLhsWorkListItem().value;
-            equation.evaluate();
-            System.out.println("\t\t\t updated " + equation.getLhsWorkListItem() + " : " + equation.getLhsWorkListItem().value);
+            FactoidsConjunction previousValue = currentEquation.getLhsWorkListItem().value;
+            currentEquation.evaluate();
+            System.out.println("\t\t\t updated " + currentEquation.getLhsWorkListItem() + " : " + currentEquation.getLhsWorkListItem().value);
 
 
-            if (domain.lessThanEquals(equation.getLhsWorkListItem().value, previousValue)) {
+            if (domain.lessThanEquals(currentEquation.getLhsWorkListItem().value, previousValue)) {
                 // evaluate takes a conjunction upwards so there
                 // was no change to the value in this iteration
                 continue;
             }
 
 
-            Collection<Equation> newEquationsToWorkList = new ArrayList<>();
-            for (Equation nextEquation : equationSystem.getDependentEquations(equation.getLhsWorkListItem())) {
-                assert nextEquation != equation; // would get us to infinite loop...
-                if (nextEquation == equation) {
+            Collection<WorkListItem> newWorkListItemsToWorkingSet = new ArrayList<>();
+            for (WorkListItem dependentWorkListItem : equationSystem.getDependentWorkListItems(currentWorkListItem)) {
+                assert dependentWorkListItem != currentWorkListItem; // would get us to infinite loop...
+                if (dependentWorkListItem == currentWorkListItem) {
                     continue;
                 }
 
-                newEquationsToWorkList.add(nextEquation);
+                newWorkListItemsToWorkingSet.add(dependentWorkListItem);
             }
 
-            System.out.println("\t\t\tAdding the following to work list" + newEquationsToWorkList);
-            workList.addAll(newEquationsToWorkList);
+            System.out.println("\t\t\tAdding the following to work list" + newWorkListItemsToWorkingSet);
+            workList.addAll(newWorkListItemsToWorkingSet);
         }
     }
 
-    private void printWorkList(Collection<Equation> workList) {
+    private WorkListItem removeItemFromWorkList(Set<WorkListItem> workList) {
+        Iterator<WorkListItem> iterator = workList.iterator();
+
+        assert iterator.hasNext(); // we shouldn't get to this point
+        if(!iterator.hasNext()) {
+            return null;
+        }
+
+        WorkListItem result = iterator.next();
+        iterator.remove();
+
+        return result;
+    }
+
+    private void printWorkList(Collection<WorkListItem> workList) {
         StringBuilder result = new StringBuilder("\t\t\tworkSet = { ");
         result.append(StringUtils.collectionWithSeparatorToString(workList, ", "));
         result.append("}");

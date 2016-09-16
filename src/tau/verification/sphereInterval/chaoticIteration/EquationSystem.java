@@ -7,30 +7,40 @@ import java.util.*;
 
 public class EquationSystem {
     private LinkedHashMap<WorkListItem, Equation> workListItemToEquation = new LinkedHashMap<>();
-    private HashMap<WorkListItem, Set<Equation>> workListItemToDependentEquations = new HashMap<>();
+    private HashMap<WorkListItem, Set<WorkListItem>> workListItemToDependentWorkListItems = new HashMap<>();
 
     public void addEquation(Equation equation) {
-        WorkListItem workListItem = equation.getLhsWorkListItem();
+        WorkListItem lhsWorkListItem = equation.getLhsWorkListItem();
 
-        assert !workListItemToEquation.containsKey(workListItem);
-        workListItemToEquation.put(workListItem, equation);
+        assert !workListItemToEquation.containsKey(lhsWorkListItem);
+        workListItemToEquation.put(lhsWorkListItem, equation);
 
-        for (WorkListItem argVar : equation.getRhsWorkListItems()) {
-            Set<Equation> containingEquations = workListItemToDependentEquations.get(argVar);
-            if (containingEquations == null) {
-                containingEquations = new HashSet<>();
-                workListItemToDependentEquations.put(argVar, containingEquations);
+        for (WorkListItem rhsWorkListItem : equation.getRhsWorkListItems()) {
+            Set<WorkListItem> dependentWorkListItems = workListItemToDependentWorkListItems.get(rhsWorkListItem);
+
+            if (dependentWorkListItems == null) {
+                dependentWorkListItems = new HashSet<>();
+                workListItemToDependentWorkListItems.put(rhsWorkListItem, dependentWorkListItems);
             }
-            containingEquations.add(equation);
+
+            dependentWorkListItems.add(lhsWorkListItem);
         }
+    }
+
+    public Equation getEquation(WorkListItem workListItem) {
+        return workListItemToEquation.get(workListItem);
     }
 
     public Collection<Equation> getEquations() {
         return workListItemToEquation.values();
     }
 
-    public Set<Equation> getDependentEquations(WorkListItem var) {
-        Set<Equation> result = workListItemToDependentEquations.get(var);
+    public Collection<WorkListItem> getWorkListItems() {
+        return workListItemToEquation.keySet();
+    }
+
+    public Set<WorkListItem> getDependentWorkListItems(WorkListItem workListItem) {
+        Set<WorkListItem> result = workListItemToDependentWorkListItems.get(workListItem);
         if (result == null) {
             return Collections.emptySet();
         }
@@ -42,19 +52,6 @@ public class EquationSystem {
         for (Equation equation : workListItemToEquation.values()) {
             equation.getLhsWorkListItem().value = value;
         }
-    }
-
-    /**
-     * @return all equations that don't depend on other work list items
-     */
-    public Set<Equation> getConstantEquations() {
-        Set<Equation> result = new HashSet<>();
-        for (Equation equation : workListItemToEquation.values()) {
-            if (equation.getRhsWorkListItems().isEmpty())
-                result.add(equation);
-        }
-
-        return result;
     }
 
     @Override
