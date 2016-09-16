@@ -276,4 +276,13 @@ public class Factoid implements Comparable<Factoid> {
 
         return joint;
     }
+
+    @Override
+    public int compareTo(Factoid other) {
+        if (sphereVariable.getNumber() != other.sphereVariable.getNumber()) {
+            return other.sphereVariable.getNumber() - sphereVariable.getNumber();
+        } else {
+            return -1; //TODO: is this correct? we always want the latest
+        }
+    }
 }
