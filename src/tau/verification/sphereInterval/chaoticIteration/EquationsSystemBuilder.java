@@ -123,9 +123,9 @@ public class EquationsSystemBuilder {
                 equationSystem.addEquation(assumeFalseEquation);
                 equationToUnit.put(assumeFalseEquation, unit);
             } else {
-                WorkListItem lhsVar = unitToOutputWorkListItem.get(unit);
+                WorkListItem lhsWorkListItem = unitToOutputWorkListItem.get(unit);
                 BaseTransformer unitTransformer = transformerSwitch.getStatmentTransformer((Stmt) unit);
-                Equation unitEquation = new Equation(lhsVar,unitTransformer, inputWorkListItem, getUnitDescription(unit));
+                Equation unitEquation = new Equation(lhsWorkListItem,unitTransformer, inputWorkListItem, getUnitDescription(unit));
                 equationSystem.addEquation(unitEquation);
                 equationToUnit.put(unitEquation, unit);
             }

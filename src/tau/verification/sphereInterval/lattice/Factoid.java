@@ -88,7 +88,8 @@ public class Factoid implements Comparable<Factoid> {
     @Override
     public String toString() {
         return String.format(
-                "%s = %s",
+                "(%d) %s = %s",
+                this.variable.hashCode(),
                 this.variable,
                 this.sphereInterval.toString());
     }
@@ -104,6 +105,10 @@ public class Factoid implements Comparable<Factoid> {
         } else {
             return -1; //TODO: is this correct? we always want the latest
         }
+    }
+
+    public boolean isBottom() {
+        return this.sphereInterval.isBottom;
     }
 
     public static Factoid getBottom(JimpleLocal variable) {

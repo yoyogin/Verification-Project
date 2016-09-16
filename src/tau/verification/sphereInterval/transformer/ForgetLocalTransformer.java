@@ -23,7 +23,7 @@ public class ForgetLocalTransformer extends BaseTransformer {
         }
 
         FactoidsConjunction result = FactoidsConjunction.getFactoidsConjunction(input);
-        result.removeVar(this.lhs);
+        result.removeFactoid(this.lhs);
 
         return result;
     }

@@ -21,16 +21,21 @@ public class AssignLocalToLocalTransformer extends BaseTransformer {
             return FactoidsConjunction.getBottom();
         }
 
-        FactoidsConjunction result = FactoidsConjunction.getFactoidsConjunction(factoidsConjunction);
-        result.removeVar(lhs);
-
-        Factoid rhsFactoid = result.getFactoid(rhs);
+        Factoid rhsFactoid = factoidsConjunction.getFactoid(rhs);
         if(rhsFactoid == null) {
-            return result;
+            ForgetLocalTransformer forgetLocalTransformer = new ForgetLocalTransformer(lhs);
+            return forgetLocalTransformer.invoke(factoidsConjunction);
         }
 
-        //TODO: consider whether we should validate that both a truly sphere variables? can we assume that this is guaranteed by the Java language compiler?
-        //result.add(new Factoid(lhs, rhsFactoid.getAbstractSphere()));
+        if(rhsFactoid.isBottom()) {
+            ForgetLocalTransformer forgetLhsLocalTransformer = new ForgetLocalTransformer(lhs);
+            ForgetLocalTransformer forgetRhsLocalTransformer = new ForgetLocalTransformer(rhs);
+            return forgetLhsLocalTransformer.invoke(forgetRhsLocalTransformer.invoke(factoidsConjunction));
+        }
+
+        FactoidsConjunction result = FactoidsConjunction.getFactoidsConjunction(factoidsConjunction);
+        result.removeFactoid(lhs);
+        result.update(new Factoid(lhs, rhsFactoid.sphereInterval));
 
         return result;
     }

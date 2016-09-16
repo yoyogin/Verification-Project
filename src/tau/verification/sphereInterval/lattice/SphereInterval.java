@@ -100,19 +100,24 @@ public class SphereInterval {
 
     @Override
     public String toString() {
+        String sphereIntervalDescription;
+
         if(this.isBottom) {
-            return "bottom";
+            sphereIntervalDescription = "bottom";
+        } else {
+            sphereIntervalDescription =
+                    String.format(
+                        "(%s, %s, %s, %s, %s, %s, %s)",
+                        this.x0,
+                        this.y0,
+                        this.z0,
+                        this.edgeA,
+                        this.edgeB,
+                        this.edgeC,
+                        this.radios);
         }
 
-        return String.format(
-                "(%s, %s, %s, %s, %s, %s, %s)",
-                this.x0,
-                this.y0,
-                this.z0,
-                this.edgeA,
-                this.edgeB,
-                this.edgeC,
-                this.radios);
+        return String.format("(%d) %s", this.hashCode(), sphereIntervalDescription);
     }
 
     private IntConstant getX1() {
