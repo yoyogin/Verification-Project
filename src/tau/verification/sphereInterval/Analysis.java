@@ -10,22 +10,27 @@ import soot.Unit;
 import soot.jimple.InvokeStmt;
 import tau.verification.sphereInterval.util.StringUtils;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 
 public class Analysis extends BodyTransformer {
     private Domain domain;
+    private Collection<String> ignoreMethodList;
 
     public Analysis() {
         this.domain = new Domain();
+        this.ignoreMethodList = Arrays.asList(new String[] { "<init>", "addPoint", "addRadios", "setPoint", "setRadios", "isContained", "contains", "error" });
     }
 
     @Override
     protected void internalTransform(Body body, String phaseName, Map options) {
-        System.out.println(">>>>> Analyzing method '" + body.getMethod().getName() + "' <<<<<");
+        String methodName = body.getMethod().getName();
+        if(ignoreMethodList.contains(methodName)){
+            return;
+        }
 
-        System.out.println("\nBuilding Equation System from '" + body.getMethod().getName() + "' body");
+        System.out.println(">>>>> Analyzing method '" + methodName + "' <<<<<");
+
+        System.out.println("\nBuilding Equation System from '" + methodName + "' body");
         EquationsSystemBuilder equationsSystemBuilder = new EquationsSystemBuilder(body, domain);
         EquationSystem equationSystem = equationsSystemBuilder.build();
 
@@ -33,7 +38,7 @@ public class Analysis extends BodyTransformer {
         ChaoticIteration chaoticIteration = new ChaoticIteration();
         chaoticIteration.iterate(equationSystem, domain);
 
-        System.out.println("\n>>>>> Error report for method '" + body.getMethod().getName() + "' <<<<<\n\n");
+        System.out.println("\n>>>>> Error report for method '" + methodName + "' <<<<<\n\n");
         reportErrors(equationsSystemBuilder.getEquationToUnit());
     }
 
