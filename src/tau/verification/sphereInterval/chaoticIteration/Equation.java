@@ -56,10 +56,18 @@ public class Equation {
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
 
+        stringBuilder.append("// ");
         stringBuilder.append(lhsWorkListItem);
         stringBuilder.append(" = ");
         stringBuilder.append(transformer.invocationToString(rhsWorkListItems));
-        stringBuilder.append("   <--->   ");
+
+        int magicNumber = 50 - stringBuilder.toString().length();
+        magicNumber = (magicNumber % 4) == 0 ? magicNumber : magicNumber + 1;
+
+        for(int i = magicNumber/4; i >=0 ; i--) {
+            stringBuilder.append("\t");
+        }
+
         stringBuilder.append(unitDescription);
 
         return stringBuilder.toString();
