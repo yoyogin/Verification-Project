@@ -2,6 +2,7 @@ package tau.verification.sphereInterval.transformer;
 
 import soot.jimple.IntConstant;
 import soot.jimple.internal.JimpleLocal;
+import tau.verification.sphereInterval.lattice.Factoid;
 import tau.verification.sphereInterval.lattice.FactoidsConjunction;
 
 public class SphereConstructorTransformer extends BaseTransformer {
@@ -34,9 +35,16 @@ public class SphereConstructorTransformer extends BaseTransformer {
     }
 
     @Override
-    public FactoidsConjunction invoke(FactoidsConjunction input) {
-        return FactoidsConjunction
-                .getFactoidsConjunction(input)
-                .setFactoid(sphereVariable, x0, y0, z0, edgeA, edgeB, edgeC, radios);
+    public FactoidsConjunction invoke(FactoidsConjunction factoidsConjunction) {
+        if(factoidsConjunction.isBottom()) {
+            return FactoidsConjunction.getBottom();
+        }
+
+        FactoidsConjunction result = FactoidsConjunction.getFactoidsConjunction(factoidsConjunction);
+        result.removeVar(this.sphereVariable);
+
+        result.add(new Factoid(sphereVariable, x0, y0, z0, edgeA, edgeB, edgeC, radios));
+
+        return result;
     }
 }

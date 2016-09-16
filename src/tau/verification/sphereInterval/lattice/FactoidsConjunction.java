@@ -125,31 +125,6 @@ public class FactoidsConjunction {
         return this.factoids.add(factoid);
     }
 
-    public FactoidsConjunction setFactoid(
-            JimpleLocal sphereVariable,
-            IntConstant bottomLeft0,
-            IntConstant bottomLeft1,
-            IntConstant bottomLeft2,
-            IntConstant edgeA,
-            IntConstant edgeB,
-            IntConstant edgeC,
-            IntConstant radios)
-    {
-        if(getFactoid(sphereVariable) != null)
-        {
-            removeVar(sphereVariable);
-        }
-
-        add(sphereVariable, bottomLeft0, bottomLeft1, bottomLeft2, edgeA, edgeB, edgeC, radios);
-        return this;
-    }
-
-
-    public FactoidsConjunction setFactoid(Factoid factoid)
-    {
-        return setFactoid(factoid.sphereVariable, factoid.x0, factoid.y0, factoid.z0, factoid.edgeA, factoid.edgeB, factoid.edgeC, factoid.radios);
-    }
-
     public Factoid getFactoid(JimpleLocal sphereVariable) {
         if(this.factoids == null) {
             return null;
