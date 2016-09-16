@@ -34,7 +34,6 @@ public class AssignLocalToLocalTransformer extends BaseTransformer {
         }
 
         FactoidsConjunction result = FactoidsConjunction.getFactoidsConjunction(factoidsConjunction);
-        result.removeFactoid(lhs);
         result.update(new Factoid(lhs, rhsFactoid.sphereInterval));
 
         return result;

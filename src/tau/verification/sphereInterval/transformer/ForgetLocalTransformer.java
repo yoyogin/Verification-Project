@@ -1,6 +1,7 @@
 package tau.verification.sphereInterval.transformer;
 
 import soot.jimple.internal.JimpleLocal;
+import tau.verification.sphereInterval.lattice.Factoid;
 import tau.verification.sphereInterval.lattice.FactoidsConjunction;
 
 /**
@@ -23,7 +24,7 @@ public class ForgetLocalTransformer extends BaseTransformer {
         }
 
         FactoidsConjunction result = FactoidsConjunction.getFactoidsConjunction(input);
-        result.removeFactoid(this.lhs);
+        result.update(Factoid.getBottom(this.lhs));
 
         return result;
     }

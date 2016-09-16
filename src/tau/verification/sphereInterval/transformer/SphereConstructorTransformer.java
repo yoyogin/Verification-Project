@@ -41,8 +41,6 @@ public class SphereConstructorTransformer extends BaseTransformer {
         }
 
         FactoidsConjunction result = FactoidsConjunction.getFactoidsConjunction(factoidsConjunction);
-        result.removeFactoid(this.sphereVariable);
-
         result.update(new Factoid(sphereVariable, x0, y0, z0, edgeA, edgeB, edgeC, radios));
 
         return result;

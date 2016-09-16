@@ -51,7 +51,7 @@ public class Factoid implements Comparable<Factoid> {
      * Private constructor for getBottom static method
      */
     private Factoid(JimpleLocal variable) {
-        if(variable != null) {
+        if(variable == null) {
             assert false;
             throw new IllegalArgumentException("Factoid lattice requires a named factoid at all times");
         }

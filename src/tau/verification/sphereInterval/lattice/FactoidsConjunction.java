@@ -114,11 +114,11 @@ public class FactoidsConjunction {
             return;
         } else if(this.factoids == null && !factoid.isBottom()) {
             this.factoids = new TreeSet<>();
+        } else if (this.factoids != null && factoid.isBottom()){
+            this.removeFactoidByVariable(factoid.variable);
+        } else {
+            this.factoids.add(factoid);
         }
-
-        this.factoids.add(factoid);
-
-        return;
     }
 
     public Factoid getFactoid(JimpleLocal sphereVariable) {
@@ -135,20 +135,7 @@ public class FactoidsConjunction {
         return null;
     }
 
-    public boolean removeFactoid(JimpleLocal sphereVariable) {
-        boolean result = false;
-        for (Iterator<Factoid> iterator = factoids.iterator(); iterator.hasNext();) {
-            Factoid factoid = iterator.next();
-            if (factoid.variable.equals(sphereVariable)) {
-                iterator.remove();
-                result = true;
-                break;
-            }
-        }
-
-        return result;
-    }
-
+    @Override
     public String toString() {
         if (this.factoids == null) {
             return "false (bottom)";
@@ -182,6 +169,16 @@ public class FactoidsConjunction {
         return (this.factoids != null) && (this.factoids.isEmpty());
     }
 
+    private void removeFactoidByVariable(JimpleLocal variable) {
+        for (Iterator<Factoid> iterator = factoids.iterator(); iterator.hasNext();) {
+            Factoid factoid = iterator.next();
+            if (factoid.variable.equals(variable)) {
+                iterator.remove();
+                break;
+            }
+        }
+    }
+
     public static FactoidsConjunction upperBound(FactoidsConjunction first, FactoidsConjunction second) {
         if (first.isBottom()) {
             return second;
@@ -198,11 +195,12 @@ public class FactoidsConjunction {
         for (JimpleLocal variable : variables) {
             Factoid firstFactoid = first.getFactoid(variable);
             Factoid secondFactoid = second.getFactoid(variable);
-            Factoid jointFactoid = Factoid.getUpperBound(firstFactoid, secondFactoid);
 
-            if (jointFactoid != null) {
-                result.update(jointFactoid);
+            if(first == null || second == null) {
+                continue;
             }
+
+            result.update(Factoid.getUpperBound(firstFactoid, secondFactoid));
         }
 
         return result;
@@ -220,11 +218,12 @@ public class FactoidsConjunction {
         for (JimpleLocal variable : variables) {
             Factoid firstFactoid = first.getFactoid(variable);
             Factoid secondFactoid = second.getFactoid(variable);
-            Factoid jointFactoid = Factoid.getLowerBound(firstFactoid, secondFactoid);
 
-            if (jointFactoid != null) {
-                result.update(jointFactoid);
+            if(first == null || second == null) {
+                continue;
             }
+
+            result.update(Factoid.getLowerBound(firstFactoid, secondFactoid));
         }
 
         return result;
