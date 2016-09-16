@@ -110,15 +110,12 @@ public class FactoidsConjunction {
     }
 
     public void update(Factoid factoid) {
-        if(this.factoids == null && factoid.isBottom()) {
-            return;
-        } else if(this.factoids == null && !factoid.isBottom()) {
+        if(this.factoids == null) {
             this.factoids = new TreeSet<>();
-        } else if (this.factoids != null && factoid.isBottom()){
-            this.removeFactoidByVariable(factoid.variable);
-        } else {
-            this.factoids.add(factoid);
         }
+
+
+        this.factoids.add(factoid);
     }
 
     public Factoid getFactoid(JimpleLocal sphereVariable) {
@@ -196,7 +193,7 @@ public class FactoidsConjunction {
             Factoid firstFactoid = first.getFactoid(variable);
             Factoid secondFactoid = second.getFactoid(variable);
 
-            if(first == null || second == null) {
+            if(firstFactoid == null || secondFactoid == null) {
                 continue;
             }
 
@@ -219,7 +216,7 @@ public class FactoidsConjunction {
             Factoid firstFactoid = first.getFactoid(variable);
             Factoid secondFactoid = second.getFactoid(variable);
 
-            if(first == null || second == null) {
+            if(firstFactoid == null || secondFactoid == null) {
                 continue;
             }
 

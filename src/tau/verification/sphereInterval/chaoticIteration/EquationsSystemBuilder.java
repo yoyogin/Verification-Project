@@ -105,15 +105,18 @@ public class EquationsSystemBuilder {
             if (unit instanceof IfStmt) {
                 IfStmt ifStmt = (IfStmt) unit;
 
+                JVirtualInvokeExpr ifSphereVirtualInvokeExpr = this.getIfSphereVirtualInvokeExpr(ifStmt);
+                Boolean assumeValue = this.getIfAssumeValue(ifStmt);
+
                 WorkListItem assumeTrueWorkListItem = this.unitToOutputWorkListItem.get(unit);
-                BaseTransformer assumeTrueTransformer = this.transformerSwitch.getAssumeTransformer(this.getIfSphereVirtualInvokeExpr(ifStmt), true);
+                BaseTransformer assumeTrueTransformer = this.transformerSwitch.getAssumeTransformer(ifSphereVirtualInvokeExpr, assumeValue);
 
                 Equation assumeTrueEquation = new Equation(assumeTrueWorkListItem, assumeTrueTransformer, inputWorkListItem, getUnitDescription(unit));
                 equationSystem.addEquation(assumeTrueEquation);
                 this.equationToUnit.put(assumeTrueEquation, unit);
 
                 WorkListItem assumeFalseWorkListItem = this.ifStmtToAssumeFalseWorkListItem.get(ifStmt);
-                BaseTransformer assumeFalseTransformer = this.transformerSwitch.getAssumeTransformer(this.getIfSphereVirtualInvokeExpr(ifStmt), false);
+                BaseTransformer assumeFalseTransformer = this.transformerSwitch.getAssumeTransformer(ifSphereVirtualInvokeExpr, !assumeValue);
 
                 Equation assumeFalseEquation = new Equation(assumeFalseWorkListItem, assumeFalseTransformer, inputWorkListItem, getUnitDescription(unit));
                 equationSystem.addEquation(assumeFalseEquation);
@@ -130,6 +133,23 @@ public class EquationsSystemBuilder {
         return equationSystem;
     }
 
+    private boolean getIfAssumeValue(IfStmt ifStmt) {
+        if(!(ifStmt.getCondition() instanceof EqExpr)) {
+            assert false; // we don't expect this case for our test files
+            throw null;
+        }
+
+        EqExpr expr = (EqExpr) ifStmt.getCondition();
+
+        if(!(expr.getOp2() instanceof IntConstant)) {
+            assert false; // we don't expect this case for our test files
+            throw null;
+        }
+
+        IntConstant intConstant = (IntConstant) expr.getOp2();
+
+        return intConstant.equivTo(IntConstant.v(1));
+    }
     private JVirtualInvokeExpr getIfSphereVirtualInvokeExpr(IfStmt ifStmt) {
         List<Unit> ifPreds = this.unitGraph.getPredsOf(ifStmt);
         if(ifPreds.size() != 1) {

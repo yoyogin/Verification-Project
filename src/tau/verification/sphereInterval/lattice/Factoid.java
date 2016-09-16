@@ -31,11 +31,12 @@ public class Factoid implements Comparable<Factoid> {
         this.sphereInterval = new SphereInterval(x0, y0, z0, edgeA, edgeB, edgeC, radios);
     }
 
-    public Factoid(
+    //TODO: consider making this public when reference to Spheres is introduced
+    private Factoid(
             JimpleLocal variable,
             SphereInterval sphereInterval) {
-        if(variable == null || sphereInterval == null || sphereInterval.isBottom) {
-            // note: two factoids shouldn't hold reference to same sphereInterval.isBottom
+        if(variable == null || sphereInterval == null) {
+            // TODO: should we  || sphereInterval.isBottom ? maybe when we introduce references as we don't want two references to same bottom
             assert false;
             throw new IllegalArgumentException();
         }
@@ -137,14 +138,9 @@ public class Factoid implements Comparable<Factoid> {
             throw new IllegalArgumentException("Factoids with different variables belong to different lattices");
         }
 
-        SphereInterval sphereIntervalLowerBound = SphereInterval.getLowerBound(first.sphereInterval, second.sphereInterval);
-        if (sphereIntervalLowerBound.isBottom) {
-            return getBottom(first.variable); // first.variable == second.variable
-        }
-
         return new Factoid(
                 first.variable, // first.variable == second.variable
-                sphereIntervalLowerBound);
+                SphereInterval.getLowerBound(first.sphereInterval, second.sphereInterval));
     }
 
 

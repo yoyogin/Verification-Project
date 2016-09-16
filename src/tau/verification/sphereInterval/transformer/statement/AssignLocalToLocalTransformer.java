@@ -35,7 +35,16 @@ public class AssignLocalToLocalTransformer extends BaseTransformer {
         }
 
         FactoidsConjunction result = FactoidsConjunction.getFactoidsConjunction(factoidsConjunction);
-        result.update(new Factoid(lhs, rhsFactoid.sphereInterval));
+        result.update(
+                new Factoid(
+                    lhs,
+                    rhsFactoid.sphereInterval.x0,
+                    rhsFactoid.sphereInterval.y0,
+                    rhsFactoid.sphereInterval.z0,
+                    rhsFactoid.sphereInterval.edgeA,
+                    rhsFactoid.sphereInterval.edgeB,
+                    rhsFactoid.sphereInterval.edgeC,
+                    rhsFactoid.sphereInterval.radios));
 
         return result;
     }
