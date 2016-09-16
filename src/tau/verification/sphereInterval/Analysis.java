@@ -2,8 +2,10 @@ package tau.verification.sphereInterval;
 
 import soot.*;
 import soot.jimple.InvokeStmt;
-import tau.verification.sphereInterval.chaoticIteration.*;
-import tau.verification.sphereInterval.lattice.FactoidsConjunction;
+import tau.verification.sphereInterval.chaoticIteration.ChaoticIteration;
+import tau.verification.sphereInterval.chaoticIteration.EquationSystem;
+import tau.verification.sphereInterval.chaoticIteration.EquationsSystemBuilder;
+import tau.verification.sphereInterval.chaoticIteration.WorkListItem;
 import tau.verification.sphereInterval.util.StringUtils;
 
 import java.util.Arrays;

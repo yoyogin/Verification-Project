@@ -1,10 +1,7 @@
 package tau.verification.sphereInterval.transformer.statement;
 
-import tau.verification.sphereInterval.chaoticIteration.WorkListItem;
 import tau.verification.sphereInterval.lattice.FactoidsConjunction;
 import tau.verification.sphereInterval.transformer.BaseTransformer;
-
-import java.util.List;
 
 public final class IdTransformer extends BaseTransformer {
     public IdTransformer() {

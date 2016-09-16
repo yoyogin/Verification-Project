@@ -1,7 +1,6 @@
 package tau.verification.sphereInterval.transformer.statement;
 
 import soot.jimple.internal.JimpleLocal;
-import tau.verification.sphereInterval.lattice.Factoid;
 import tau.verification.sphereInterval.lattice.FactoidsConjunction;
 import tau.verification.sphereInterval.transformer.BaseTransformer;
 

@@ -12,7 +12,10 @@ import tau.verification.sphereInterval.lattice.FactoidsConjunction;
 import tau.verification.sphereInterval.transformer.BaseTransformer;
 import tau.verification.sphereInterval.transformer.TransformerSwitch;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class EquationsSystemBuilder {
     private Body body;

@@ -1,11 +1,8 @@
 package tau.verification.sphereInterval.transformer.assume;
 
-import soot.jimple.IntConstant;
-import soot.jimple.NumericConstant;
 import soot.jimple.internal.JimpleLocal;
 import tau.verification.sphereInterval.lattice.Factoid;
 import tau.verification.sphereInterval.lattice.FactoidsConjunction;
-import tau.verification.sphereInterval.transformer.statement.IdTransformer;
 
 public class AssumeSphereContainsTransformer extends AssumeSphereBaseTransformer {
     public final JimpleLocal receiverVariable;
