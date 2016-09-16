@@ -13,6 +13,9 @@ public class SphereInterval {
 
     public final boolean isBottom;
     // Add if necessary public final boolean isTop;
+    private static int uniqueIdentifierCounter = 0;
+    private final int uniqueIdentifier;
+
 
     public SphereInterval(
             IntConstant x0,
@@ -23,6 +26,7 @@ public class SphereInterval {
             IntConstant edgeC,
             IntConstant radios) {
         this.isBottom = false;
+        this.uniqueIdentifier = SphereInterval.uniqueIdentifierCounter++;
 
         assert x0 != null;
         assert y0 != null;
@@ -42,6 +46,7 @@ public class SphereInterval {
 
     private SphereInterval() {
         this.isBottom = true;
+        this.uniqueIdentifier = SphereInterval.uniqueIdentifierCounter++;
 
         this.x0 = null;
         this.y0 = null;
@@ -117,7 +122,7 @@ public class SphereInterval {
                         this.radios);
         }
 
-        return String.format("(%d) %s", this.hashCode(), sphereIntervalDescription);
+        return String.format("(%d) %s", this.uniqueIdentifier, sphereIntervalDescription);
     }
 
     private IntConstant getX1() {
@@ -167,7 +172,14 @@ public class SphereInterval {
                 (IntConstant) maxZ1.subtract(minZ0),
                 maxRadios);
 
-        return result;
+        // Maintaining pointers to SphereInterval
+        if(result.equals(first)){
+            return first;
+        } else if(result.equals(second)) {
+            return second;
+        } else {
+            return result; // TODO: we do our best to maintain the pointer but in this case where join did change the object we'll fail. reconsider implementation.
+        }
     }
 
     public static SphereInterval getLowerBound(SphereInterval first, SphereInterval second) {
@@ -274,6 +286,13 @@ public class SphereInterval {
                 jointEdgeC,
                 minRadios);
 
-        return result;
+        // Maintaining pointers to SphereInterval
+        if(result.equals(first)){
+            return first;
+        } else if(result.equals(second)) {
+            return second;
+        } else {
+            return result; // TODO: we do our best to maintain the pointer but in this case where join did change the object we'll fail. reconsider implementation.
+        }
     }
 }

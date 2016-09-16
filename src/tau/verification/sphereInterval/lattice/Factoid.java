@@ -88,8 +88,7 @@ public class Factoid implements Comparable<Factoid> {
     @Override
     public String toString() {
         return String.format(
-                "(%d) %s = %s",
-                this.variable.hashCode(),
+                "%s = %s",
                 this.variable,
                 this.sphereInterval.toString());
     }

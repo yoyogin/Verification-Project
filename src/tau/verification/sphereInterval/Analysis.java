@@ -49,7 +49,7 @@ public class Analysis extends BodyTransformer {
         ChaoticIteration chaoticIteration = new ChaoticIteration();
         chaoticIteration.iterate(equationSystem);
 
-        System.out.println("\n>>>>> Error report for method '" + methodName + "' <<<<<\n\n");
+        System.out.println("\n>>>>> Error report for method '" + methodName + "' <<<<<");
         reportErrors(equationsSystemBuilder.getEquationToUnit());
     }
 
@@ -75,5 +75,7 @@ public class Analysis extends BodyTransformer {
         if (!errors.isEmpty()) {
             System.out.println(StringUtils.collectionWithSeparatorToString(errors, "\n"));
         }
+
+        System.out.println("\n");
     }
 }

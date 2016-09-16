@@ -92,7 +92,7 @@ public class EquationsSystemBuilder {
 
                     @Override
                     public String toString() {
-                        return "Join BaseTransformer";
+                        return "Join";
                     }
                 };
 
