@@ -1,13 +1,10 @@
 package tau.verification.sphereInterval.transformer;
 
-import soot.Local;
-import soot.jimple.IntConstant;
 import soot.jimple.IntConstant;
 import soot.jimple.internal.JimpleLocal;
 import tau.verification.sphereInterval.FactoidsConjunction;
-import tau.verification.sphereInterval.function.TransformerFunction;
 
-public class SphereConstructorTransformer extends TransformerFunction {
+public class SphereConstructorTransformer extends BaseTransformer {
 
     public final JimpleLocal sphereVariable;
     public final JimpleLocal sphereOtherVariablePointer;
@@ -29,6 +26,8 @@ public class SphereConstructorTransformer extends TransformerFunction {
             IntConstant edgeB,
             IntConstant edgeC,
             IntConstant radios) {
+        super(1 /* numberOfArguments */);
+
         this.sphereVariable = sphereVariable;
         this.x0 = x0;
         this.y0 = y0;
@@ -56,6 +55,8 @@ public class SphereConstructorTransformer extends TransformerFunction {
             IntConstant y0,
             IntConstant z0,
             IntConstant radios) {
+        super(1 /* numberOfArguments */);
+
         this.sphereVariable = sphereVariable;
         this.x0 = x0;
         this.y0 = y0;
@@ -78,8 +79,9 @@ public class SphereConstructorTransformer extends TransformerFunction {
     public SphereConstructorTransformer(
             JimpleLocal sphereVariable,
             JimpleLocal sphereOtherVariablePointer,
-            JimpleLocal sphereOtherVariableRadios)
-    {
+            JimpleLocal sphereOtherVariableRadios) {
+        super(1 /* numberOfArguments */);
+
         this.sphereVariable = sphereVariable;
         this.sphereOtherVariableRadios = sphereOtherVariableRadios;
         this.sphereOtherVariablePointer =sphereOtherVariablePointer;
@@ -97,8 +99,9 @@ public class SphereConstructorTransformer extends TransformerFunction {
     public SphereConstructorTransformer(
             JimpleLocal sphereVariable,
             JimpleLocal sphereOtherVariablePointer,
-            IntConstant radios)
-    {
+            IntConstant radios) {
+        super(1 /* numberOfArguments */);
+
         this.sphereVariable = sphereVariable;
         this.sphereOtherVariableRadios = null;
         this.sphereOtherVariablePointer =sphereOtherVariablePointer;
@@ -122,6 +125,8 @@ public class SphereConstructorTransformer extends TransformerFunction {
             IntConstant edgeA,
             IntConstant edgeB,
             IntConstant edgeC) {
+        super(1 /* numberOfArguments */);
+
         this.sphereVariable = sphereVariable;
         this.x0 = x0;
         this.y0 = y0;

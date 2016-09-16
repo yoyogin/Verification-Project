@@ -1,18 +1,19 @@
-package tau.verification.sphereInterval.function;
+package tau.verification.sphereInterval.transformer;
 
 import tau.verification.sphereInterval.FactoidsConjunction;
 import tau.verification.sphereInterval.chaoticIteration.WorkListItem;
 
 import java.util.List;
 
-public abstract class Function {
-    public Function() {
+public abstract class BaseTransformer {
+    private int argumentsCount;
+
+    public BaseTransformer(int argumentsCount) {
+        this.argumentsCount = argumentsCount;
     }
 
-    public abstract int arguments();
-
     public FactoidsConjunction invoke(List<WorkListItem> inputs) {
-        switch (this.arguments()) {
+        switch (this.argumentsCount) {
         case 0:
             return invoke();
         case 1:
@@ -47,7 +48,7 @@ public abstract class Function {
     public String invocationToString(List<WorkListItem> arguments) {
         StringBuilder result = new StringBuilder(this.toString() + "(");
 
-        for (int i = 0; i < this.arguments(); ++i) {
+        for (int i = 0; i < this.argumentsCount; i++) {
             result.append(arguments.get(i));
             if (i < arguments.size() - 1)
                 result.append(", ");

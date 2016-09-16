@@ -4,14 +4,13 @@ import soot.Value;
 import soot.jimple.*;
 import soot.jimple.internal.JSpecialInvokeExpr;
 import soot.jimple.internal.JimpleLocal;
-import tau.verification.sphereInterval.function.TransformerFunction;
 
 import java.util.List;
 
 public class TransformerSwitch extends AbstractStmtSwitch {
-    TransformerFunction transformer = null;
+    BaseTransformer transformer = null;
 
-    public TransformerFunction getStatmentTransformer(Stmt stmt) {
+    public BaseTransformer getStatmentTransformer(Stmt stmt) {
         transformer = null;
 
         stmt.apply(this);
@@ -22,7 +21,7 @@ public class TransformerSwitch extends AbstractStmtSwitch {
         return transformer;
     }
 
-    public TransformerFunction getIfTransformer(IfStmt stmt, boolean trueOrFalse) {
+    public BaseTransformer getIfTransformer(IfStmt stmt, boolean trueOrFalse) {
         transformer = null;
 
         //matchAssume(stmt, trueOrFalse);

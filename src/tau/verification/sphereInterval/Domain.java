@@ -1,12 +1,8 @@
 package tau.verification.sphereInterval;
 
 import soot.jimple.internal.JimpleLocal;
-import tau.verification.sphereInterval.function.Function;
-import soot.Local;
-import tau.verification.sphereInterval.chaoticIteration.WorkListItem;
 import tau.verification.sphereInterval.transformer.TransformerSwitch;
 
-import java.util.List;
 import java.util.Set;
 
 // TODO: consider refinement by equalities

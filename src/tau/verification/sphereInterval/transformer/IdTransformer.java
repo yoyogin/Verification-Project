@@ -2,12 +2,12 @@ package tau.verification.sphereInterval.transformer;
 
 import tau.verification.sphereInterval.FactoidsConjunction;
 import tau.verification.sphereInterval.chaoticIteration.WorkListItem;
-import tau.verification.sphereInterval.function.TransformerFunction;
 
 import java.util.List;
 
-public final class IdTransformer extends TransformerFunction {
+public final class IdTransformer extends BaseTransformer {
     public IdTransformer() {
+        super(1 /* numberOfArguments */);
     }
 
     @Override

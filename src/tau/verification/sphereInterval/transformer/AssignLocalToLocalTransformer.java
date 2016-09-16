@@ -2,13 +2,14 @@ package tau.verification.sphereInterval.transformer;
 
 import soot.jimple.internal.JimpleLocal;
 import tau.verification.sphereInterval.FactoidsConjunction;
-import tau.verification.sphereInterval.function.TransformerFunction;
 
-public class AssignLocalToLocalTransformer extends TransformerFunction {
+public class AssignLocalToLocalTransformer extends BaseTransformer {
     protected final JimpleLocal lhs;
     protected final JimpleLocal rhs;
 
     public AssignLocalToLocalTransformer(JimpleLocal lhs, JimpleLocal rhs) {
+        super(1 /* numberOfArguments */);
+
         this.lhs = lhs;
         this.rhs = rhs;
     }

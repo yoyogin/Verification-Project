@@ -11,10 +11,8 @@ import soot.toolkits.graph.ExceptionalUnitGraph;
 import soot.toolkits.graph.UnitGraph;
 import tau.verification.sphereInterval.Domain;
 import tau.verification.sphereInterval.FactoidsConjunction;
-import tau.verification.sphereInterval.function.Function;
-import tau.verification.sphereInterval.function.TransformerFunction;
+import tau.verification.sphereInterval.transformer.BaseTransformer;
 import tau.verification.sphereInterval.transformer.TransformerSwitch;
-import tau.verification.sphereInterval.util.StringUtils;
 
 import java.util.*;
 
@@ -68,12 +66,7 @@ public class EquationsSystemBuilder {
         // Add an equation to initialize entry variable to top
         Equation setTopToEntryWorkListItem = new Equation(
                 this.entryWorkListItem,
-                new Function() {
-                    @Override
-                    public int arguments() {
-                        return 0;
-                    }
-
+                new BaseTransformer(0 /* numberOfArguments */) {
                     @Override
                     public FactoidsConjunction invoke() {
                         return domain.getTop();
@@ -94,12 +87,7 @@ public class EquationsSystemBuilder {
                 WorkListItem workListItem1 = inputWorkListItems.get(0);
                 WorkListItem workListItem2 = inputWorkListItems.get(1);
                 WorkListItem joinWorkListItem = unitToLoopJoinWorkListItem.get(unit);
-                Function joinFunction = new Function() {
-                    @Override
-                    public int arguments() {
-                        return 2;
-                    }
-
+                BaseTransformer joinTransformer = new BaseTransformer(2 /* numberOfArguments */) {
                     @Override
                     public FactoidsConjunction invoke(FactoidsConjunction first, FactoidsConjunction second) {
                         return domain.upperBound(first, second);
@@ -107,11 +95,11 @@ public class EquationsSystemBuilder {
 
                     @Override
                     public String toString() {
-                        return "Join Function";
+                        return "Join BaseTransformer";
                     }
                 };
 
-                Equation joinEquation = new Equation(joinWorkListItem, joinFunction, workListItem1, workListItem2, getUnitDescription(unit));
+                Equation joinEquation = new Equation(joinWorkListItem, joinTransformer, workListItem1, workListItem2, getUnitDescription(unit));
                 equationSystem.addEquation(joinEquation);
                 equationToUnit.put(joinEquation, unit);
             }
@@ -125,21 +113,21 @@ public class EquationsSystemBuilder {
                 IfStmt ifStmt = (IfStmt) unit;
 
                 WorkListItem assumeTrueWorkListItem = unitToOutputWorkListItem.get(unit);
-                TransformerFunction assumeTrueTransformer = transformerSwitch.getIfTransformer(ifStmt, true);
+                BaseTransformer assumeTrueTransformer = transformerSwitch.getIfTransformer(ifStmt, true);
 
                 Equation assumeTrueEquation = new Equation(assumeTrueWorkListItem, assumeTrueTransformer, inputWorkListItem, getUnitDescription(unit));
                 equationSystem.addEquation(assumeTrueEquation);
                 equationToUnit.put(assumeTrueEquation, unit);
 
                 WorkListItem assumeFalseWorkListItem = ifStmtToAssumeFalseWorkListItem.get(ifStmt);
-                TransformerFunction assumeFalseTransformer = transformerSwitch.getIfTransformer(ifStmt, false);
+                BaseTransformer assumeFalseTransformer = transformerSwitch.getIfTransformer(ifStmt, false);
 
                 Equation assumeFalseEquation = new Equation(assumeFalseWorkListItem, assumeFalseTransformer, inputWorkListItem, getUnitDescription(unit));
                 equationSystem.addEquation(assumeFalseEquation);
                 equationToUnit.put(assumeFalseEquation, unit);
             } else {
                 WorkListItem lhsVar = unitToOutputWorkListItem.get(unit);
-                TransformerFunction unitTransformer = transformerSwitch.getStatmentTransformer((Stmt) unit);
+                BaseTransformer unitTransformer = transformerSwitch.getStatmentTransformer((Stmt) unit);
                 Equation unitEquation = new Equation(lhsVar,unitTransformer, inputWorkListItem, getUnitDescription(unit));
                 equationSystem.addEquation(unitEquation);
                 equationToUnit.put(unitEquation, unit);
