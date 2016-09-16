@@ -4,15 +4,7 @@ import soot.jimple.internal.JimpleLocal;
 
 import java.util.Set;
 
-// TODO: consider refinement by equalities
-
-/**
- * Implementation of the sphere interval abstract domain.
- */
 public class LatticeOperations {
-    public LatticeOperations() {
-    }
-
     public static FactoidsConjunction getBottom() {
         return FactoidsConjunction.getBottom();
     }
@@ -70,7 +62,9 @@ public class LatticeOperations {
     }
 
     /**
-     * The order relation of the domain
+     * The order relation of the lattice
+
+     * @return true if first is less than or equals the second based on the Factoids Conjunction lattice order relation
      */
     public static boolean lessThanEquals(FactoidsConjunction first, FactoidsConjunction second) {
         if (first.isBottom()) {

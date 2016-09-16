@@ -8,19 +8,17 @@ import java.util.*;
 
 public class ChaoticIteration {
     private EquationSystem equationSystem;
-    private LatticeOperations latticeOperations;
     private int iterationCounter;
 
     /**
      * Solves an equation equationSystem using chaotic iteration
      */
-    public void iterate(EquationSystem equationSystem, LatticeOperations latticeOperations) {
+    public void iterate(EquationSystem equationSystem) {
         this.equationSystem = equationSystem;
-        this.latticeOperations = latticeOperations;
         this.iterationCounter = 0;
 
         System.out.println("Solving equation system = \n" + equationSystem);
-        this.equationSystem.resetWorkListItems(latticeOperations.getBottom());
+        this.equationSystem.resetWorkListItems(LatticeOperations.getBottom());
 
         System.out.println("Begin Chaotic Iterations");
         internalIterate();
@@ -54,7 +52,7 @@ public class ChaoticIteration {
             System.out.println("\t\t\t updated " + currentEquation.getLhsWorkListItem() + " : " + currentEquation.getLhsWorkListItem().value);
 
 
-            if (latticeOperations.lessThanEquals(currentEquation.getLhsWorkListItem().value, previousValue)) {
+            if (LatticeOperations.lessThanEquals(currentEquation.getLhsWorkListItem().value, previousValue)) {
                 // evaluate takes a conjunction upwards so there
                 // was no change to the value in this iteration
                 continue;

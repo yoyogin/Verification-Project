@@ -17,11 +17,9 @@ import java.util.HashSet;
 import java.util.Map;
 
 public class Analysis extends BodyTransformer {
-    private LatticeOperations latticeOperations;
     private Collection<String> ignoreMethodList;
 
     public Analysis() {
-        this.latticeOperations = new LatticeOperations();
         this.ignoreMethodList = Arrays.asList(new String[] { "<init>", "addPoint", "addRadios", "setPoint", "setRadios", "isContained", "contains", "error" });
     }
 
@@ -35,13 +33,13 @@ public class Analysis extends BodyTransformer {
         System.out.println(">>>>> Analyzing method '" + methodName + "' <<<<<");
 
         System.out.println("\nBuilding Equation System from '" + methodName + "' body");
-        EquationsSystemBuilder equationsSystemBuilder = new EquationsSystemBuilder(body, latticeOperations);
+        EquationsSystemBuilder equationsSystemBuilder = new EquationsSystemBuilder(body);
         System.out.println("Equation system body = \n" + equationsSystemBuilder.getEquationSystemBodyDescription());
         EquationSystem equationSystem = equationsSystemBuilder.build();
 
         System.out.println("Running Chaotic Iteration on equation system");
         ChaoticIteration chaoticIteration = new ChaoticIteration();
-        chaoticIteration.iterate(equationSystem, latticeOperations);
+        chaoticIteration.iterate(equationSystem);
 
         System.out.println("\n>>>>> Error report for method '" + methodName + "' <<<<<\n\n");
         reportErrors(equationsSystemBuilder.getEquationToUnit());
@@ -56,7 +54,7 @@ public class Analysis extends BodyTransformer {
 
             if (unit instanceof InvokeStmt) {
                 InvokeStmt invokeStmt = (InvokeStmt) unit;
-                boolean isInvocationReachable = !equation.getLhsWorkListItem().value.equals(latticeOperations.getBottom());
+                boolean isInvocationReachable = !equation.getLhsWorkListItem().value.equals(LatticeOperations.getBottom());
                 boolean isErrorInvocation = invokeStmt.getInvokeExpr().getMethod().getName().equals("error");
 
                 if (isInvocationReachable && isErrorInvocation) {

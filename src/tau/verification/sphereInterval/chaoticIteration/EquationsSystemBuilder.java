@@ -18,7 +18,6 @@ import java.util.*;
 
 public class EquationsSystemBuilder {
     private Body body;
-    private LatticeOperations latticeOperations;
     private WorkListItem entryWorkListItem = null;
     private UnitGraph unitGraph;
     private TransformerSwitch transformerSwitch;
@@ -31,9 +30,8 @@ public class EquationsSystemBuilder {
     private Map<Equation, Unit> equationToUnit = new HashMap<>();
     private Set<Unit> loopHeads = new HashSet<>();
 
-    public EquationsSystemBuilder(Body body, LatticeOperations latticeOperations) {
+    public EquationsSystemBuilder(Body body) {
         this.body = body;
-        this.latticeOperations = latticeOperations;
         this.transformerSwitch = new TransformerSwitch();
         this.unitGraph = new ExceptionalUnitGraph(body);
     }
@@ -69,7 +67,7 @@ public class EquationsSystemBuilder {
                 new BaseTransformer(0 /* numberOfArguments */) {
                     @Override
                     public FactoidsConjunction invoke() {
-                        return latticeOperations.getTop();
+                        return LatticeOperations.getTop();
                     }
 
                     @Override
@@ -90,7 +88,7 @@ public class EquationsSystemBuilder {
                 BaseTransformer joinTransformer = new BaseTransformer(2 /* numberOfArguments */) {
                     @Override
                     public FactoidsConjunction invoke(FactoidsConjunction first, FactoidsConjunction second) {
-                        return latticeOperations.upperBound(first, second);
+                        return LatticeOperations.upperBound(first, second);
                     }
 
                     @Override
