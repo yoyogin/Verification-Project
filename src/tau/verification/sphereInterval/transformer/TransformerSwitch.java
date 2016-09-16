@@ -1,9 +1,14 @@
 package tau.verification.sphereInterval.transformer;
 
 import soot.jimple.*;
-import soot.jimple.internal.JNewExpr;
 import soot.jimple.internal.JSpecialInvokeExpr;
+import soot.jimple.internal.JVirtualInvokeExpr;
 import soot.jimple.internal.JimpleLocal;
+import tau.verification.sphereInterval.transformer.assume.AssumeSphereContainsTransformer;
+import tau.verification.sphereInterval.transformer.statement.AssignLocalToLocalTransformer;
+import tau.verification.sphereInterval.transformer.statement.ForgetLocalTransformer;
+import tau.verification.sphereInterval.transformer.statement.IdTransformer;
+import tau.verification.sphereInterval.transformer.statement.SphereConstructorTransformer;
 
 import java.util.List;
 
@@ -21,15 +26,30 @@ public class TransformerSwitch extends AbstractStmtSwitch {
         return transformer;
     }
 
-    public BaseTransformer getIfTransformer(IfStmt stmt, boolean trueOrFalse) {
+    public BaseTransformer getAssumeTransformer(JVirtualInvokeExpr ifExpressionStmt, boolean assumeValue) {
         transformer = null;
 
-        //matchAssume(stmt, trueOrFalse);
-        if (transformer == null) {
-            transformer = new IdTransformer();
+        String className = ifExpressionStmt.getMethod().getDeclaringClass().toString();
+        String methodName = ifExpressionStmt.getMethod().getName();
+
+        if(!(className.equals("Sphere") && methodName.equals("contains"))) {
+            return new IdTransformer();
         }
 
-        return transformer;
+        JimpleLocal receiverVariable = (JimpleLocal) ifExpressionStmt.getBaseBox().getValue();
+        List arguments = ifExpressionStmt.getArgs();
+
+        if(arguments.size() != 1) {
+            return new IdTransformer();
+        }
+
+        if(!(arguments.get(0) instanceof JimpleLocal)) {
+            return new IdTransformer();
+        }
+
+        JimpleLocal argumentVariable = (JimpleLocal) arguments.get(0);
+
+        return new AssumeSphereContainsTransformer(receiverVariable, argumentVariable, assumeValue);
     }
 
     /**
@@ -67,10 +87,9 @@ public class TransformerSwitch extends AbstractStmtSwitch {
             return;
         }
 
-        JimpleLocal recieverVariable = (JimpleLocal) specialInvokeExpr.getBaseBox().getValue(); //TODO: do this without casting
+        JimpleLocal recieverVariable = (JimpleLocal) specialInvokeExpr.getBaseBox().getValue();
         List arguments = specialInvokeExpr.getArgs();
         if(arguments.size() == 4) {
-            //TODO: is it right to assume that all four would be IntConstants?
             IntConstant x = (IntConstant) arguments.get(0);
             IntConstant y = (IntConstant) arguments.get(1);
             IntConstant z = (IntConstant) arguments.get(2);
@@ -91,6 +110,7 @@ public class TransformerSwitch extends AbstractStmtSwitch {
      * Examples:
      * > temp$0 = new Sphere
      * > y = temp$1
+     * > temp$2 = virtualinvoke x.<Sphere: boolean contains(Sphere)>(y)
      */
     @Override
     public void caseAssignStmt(AssignStmt stmt) {
@@ -105,8 +125,6 @@ public class TransformerSwitch extends AbstractStmtSwitch {
         Class rhsClass = stmt.getRightOp().getClass();
         if (rhsClass.equals(JimpleLocal.class)) {
             assignLocalToLocalTransformerResolution(lhs, (JimpleLocal) stmt.getRightOp());
-//        } else if (rhsClass.equals(JNewExpr.class)) { //TODO: delete if not needed
-//            assignNewExprToLocalTransformerResolution(lhs, (JNewExpr) stmt.getRightOp());
         } else {
             // Best practice - lets forget it what we know about it
             transformer = new ForgetLocalTransformer(lhs);
@@ -119,10 +137,6 @@ public class TransformerSwitch extends AbstractStmtSwitch {
         } else {
             transformer = new AssignLocalToLocalTransformer(lhs, rhs);
         }
-    }
-
-    private void assignNewExprToLocalTransformerResolution(JimpleLocal lhs, JNewExpr rhs) {
-        transformer = new IdTransformer();
     }
 
     /**

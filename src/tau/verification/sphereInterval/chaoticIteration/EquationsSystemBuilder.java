@@ -1,12 +1,11 @@
 package tau.verification.sphereInterval.chaoticIteration;
 
 import soot.Body;
+import soot.BooleanType;
 import soot.Unit;
-import soot.jimple.GotoStmt;
-import soot.jimple.IfStmt;
-import soot.jimple.Stmt;
-import soot.jimple.toolkits.annotation.logic.Loop;
-import soot.jimple.toolkits.annotation.logic.LoopFinder;
+import soot.jimple.*;
+import soot.jimple.internal.JVirtualInvokeExpr;
+import soot.jimple.internal.JimpleLocal;
 import soot.toolkits.graph.ExceptionalUnitGraph;
 import soot.toolkits.graph.UnitGraph;
 import tau.verification.sphereInterval.lattice.FactoidsConjunction;
@@ -24,10 +23,9 @@ public class EquationsSystemBuilder {
     private Map<Unit, List<WorkListItem>> unitToInputWorkListItems = new HashMap<>();
     private Map<Unit, WorkListItem> unitToOutputWorkListItem = new HashMap<>();
     private Map<Unit, WorkListItem> ifStmtToAssumeFalseWorkListItem = new HashMap<>();
-    private Map<Unit, WorkListItem> unitToLoopJoinWorkListItem = new HashMap<>();
+    private Map<Unit, WorkListItem> unitToJoinWorkListItem = new HashMap<>();
 
     private Map<Equation, Unit> equationToUnit = new HashMap<>();
-    private Set<Unit> loopHeads = new HashSet<>();
 
     public EquationsSystemBuilder(Body body) {
         this.body = body;
@@ -36,16 +34,14 @@ public class EquationsSystemBuilder {
     }
 
     public EquationSystem build() {
-        findAllLoopHeads();
-        generateWorkListItemsBasedOnUnitGraph();
-
+        generateWorkListItemGraph();
         return createEquations();
     }
 
     public String getEquationSystemBodyDescription() {
         StringBuilder stringBuilder = new StringBuilder();
 
-        for (Unit unit : body.getUnits()) {
+        for (Unit unit : this.body.getUnits()) {
             stringBuilder.append(getUnitDescription(unit));
             stringBuilder.append("\n");
         }
@@ -71,19 +67,19 @@ public class EquationsSystemBuilder {
 
                     @Override
                     public String invocationToString(List<WorkListItem> arguments) {
-                        return "Get Top function";
+                        return "Top transformer";
                     }
                 },
                 "Entry work list item");
         equationSystem.addEquation(setTopToEntryWorkListItem);
-        this.equationToUnit.put(setTopToEntryWorkListItem, unitGraph.getHeads().get(0));
+        this.equationToUnit.put(setTopToEntryWorkListItem, this.unitGraph.getHeads().get(0));
 
-        for (Unit unit : body.getUnits()) {
-            List<WorkListItem> inputWorkListItems = unitToInputWorkListItems.get(unit);
+        for (Unit unit : this.body.getUnits()) {
+            List<WorkListItem> inputWorkListItems = this.unitToInputWorkListItems.get(unit);
             if (inputWorkListItems.size() == 2) {
                 WorkListItem workListItem1 = inputWorkListItems.get(0);
                 WorkListItem workListItem2 = inputWorkListItems.get(1);
-                WorkListItem joinWorkListItem = unitToLoopJoinWorkListItem.get(unit);
+                WorkListItem joinWorkListItem = this.unitToJoinWorkListItem.get(unit);
                 BaseTransformer joinTransformer = new BaseTransformer(2 /* numberOfArguments */) {
                     @Override
                     public FactoidsConjunction invoke(FactoidsConjunction first, FactoidsConjunction second) {
@@ -98,40 +94,98 @@ public class EquationsSystemBuilder {
 
                 Equation joinEquation = new Equation(joinWorkListItem, joinTransformer, workListItem1, workListItem2, getUnitDescription(unit));
                 equationSystem.addEquation(joinEquation);
-                equationToUnit.put(joinEquation, unit);
+                this.equationToUnit.put(joinEquation, unit);
             }
-            //TODO: handle cases of more than two? (e.g. loop continue)
+            assert inputWorkListItems.size() > 2; //TODO: handle cases of more than two? (e.g. loop continue)
 
             WorkListItem inputWorkListItem = inputWorkListItems.size() == 1
                     ? inputWorkListItems.get(0)
-                    : unitToLoopJoinWorkListItem.get(unit);
+                    : this.unitToJoinWorkListItem.get(unit);
 
             if (unit instanceof IfStmt) {
                 IfStmt ifStmt = (IfStmt) unit;
 
-                WorkListItem assumeTrueWorkListItem = unitToOutputWorkListItem.get(unit);
-                BaseTransformer assumeTrueTransformer = transformerSwitch.getIfTransformer(ifStmt, true);
+                WorkListItem assumeTrueWorkListItem = this.unitToOutputWorkListItem.get(unit);
+                BaseTransformer assumeTrueTransformer = this.transformerSwitch.getAssumeTransformer(this.getIfSphereVirtualInvokeExpr(ifStmt), true);
 
                 Equation assumeTrueEquation = new Equation(assumeTrueWorkListItem, assumeTrueTransformer, inputWorkListItem, getUnitDescription(unit));
                 equationSystem.addEquation(assumeTrueEquation);
-                equationToUnit.put(assumeTrueEquation, unit);
+                this.equationToUnit.put(assumeTrueEquation, unit);
 
-                WorkListItem assumeFalseWorkListItem = ifStmtToAssumeFalseWorkListItem.get(ifStmt);
-                BaseTransformer assumeFalseTransformer = transformerSwitch.getIfTransformer(ifStmt, false);
+                WorkListItem assumeFalseWorkListItem = this.ifStmtToAssumeFalseWorkListItem.get(ifStmt);
+                BaseTransformer assumeFalseTransformer = this.transformerSwitch.getAssumeTransformer(this.getIfSphereVirtualInvokeExpr(ifStmt), false);
 
                 Equation assumeFalseEquation = new Equation(assumeFalseWorkListItem, assumeFalseTransformer, inputWorkListItem, getUnitDescription(unit));
                 equationSystem.addEquation(assumeFalseEquation);
-                equationToUnit.put(assumeFalseEquation, unit);
+                this.equationToUnit.put(assumeFalseEquation, unit);
             } else {
-                WorkListItem lhsWorkListItem = unitToOutputWorkListItem.get(unit);
-                BaseTransformer unitTransformer = transformerSwitch.getStatmentTransformer((Stmt) unit);
+                WorkListItem lhsWorkListItem = this.unitToOutputWorkListItem.get(unit);
+                BaseTransformer unitTransformer = this.transformerSwitch.getStatmentTransformer((Stmt) unit);
                 Equation unitEquation = new Equation(lhsWorkListItem,unitTransformer, inputWorkListItem, getUnitDescription(unit));
                 equationSystem.addEquation(unitEquation);
-                equationToUnit.put(unitEquation, unit);
+                this.equationToUnit.put(unitEquation, unit);
             }
         }
 
         return equationSystem;
+    }
+
+    private JVirtualInvokeExpr getIfSphereVirtualInvokeExpr(IfStmt ifStmt) {
+        List<Unit> ifPreds = this.unitGraph.getPredsOf(ifStmt);
+        if(ifPreds.size() != 1) {
+            assert false; // we don't expect this case for our test files
+            return null;
+        }
+
+        if(!(ifPreds.get(0) instanceof AssignStmt)){
+            assert false; // we don't expect this case for our test files
+            throw null;
+        }
+
+        AssignStmt assignStmt = (AssignStmt) ifPreds.get(0);
+
+        if(!(assignStmt.getLeftOp() instanceof JimpleLocal)) {
+            assert false; // we don't expect this case for our test files
+            throw null;
+        }
+
+        JimpleLocal lhs = (JimpleLocal) assignStmt.getLeftOp();
+
+        if(!(ifStmt.getCondition() instanceof EqExpr)) {
+            assert false; // we don't expect this case for our test files
+            throw null;
+        }
+
+        EqExpr expr = (EqExpr) ifStmt.getCondition();
+
+        if(!(expr.getOp1() instanceof JimpleLocal)) {
+            assert false; // we don't expect this case for our test files
+            throw null;
+        }
+
+        if(!(expr.getOp1().equals(lhs))) {
+            // making sure that the variable the if use is the same as the
+            // variable we believe the Sphere conditional expression is assigned to
+            assert false; // we don't expect this case for our test files
+            throw null;
+        }
+
+        if(!(lhs.getType() instanceof BooleanType)) {
+            assert false; // we don't expect this case for our test files
+            throw null;
+        }
+
+        if(!(lhs.getName().startsWith("temp$"))) {
+            assert false; // we don't expect this case for our test files
+            throw null;
+        }
+
+        if(!(assignStmt.getRightOp() instanceof JVirtualInvokeExpr)) {
+            assert false; // we don't expect this case for our test files
+            throw null;
+        }
+
+        return (JVirtualInvokeExpr) assignStmt.getRightOp();
     }
 
     private String getUnitDescription(Unit unit) {
@@ -146,10 +200,10 @@ public class EquationsSystemBuilder {
     }
 
     private void addInputWorkListItemToUnit(Unit unit, WorkListItem workListItem) {
-        List<WorkListItem> inputWorkListItems = unitToInputWorkListItems.get(unit);
+        List<WorkListItem> inputWorkListItems = this.unitToInputWorkListItems.get(unit);
         if (inputWorkListItems == null) {
             inputWorkListItems = new ArrayList<>();
-            unitToInputWorkListItems.put(unit, inputWorkListItems);
+            this.unitToInputWorkListItems.put(unit, inputWorkListItems);
         }
 
         if(!inputWorkListItems.contains(workListItem)) {
@@ -157,16 +211,7 @@ public class EquationsSystemBuilder {
         }
     }
 
-    private void findAllLoopHeads() {
-        LoopFinder loopFinder = new LoopFinder();
-        loopFinder.transform(body);
-        Collection<Loop> loops = loopFinder.loops();
-        for (Loop loop : loops) {
-            loopHeads.add(loop.getHead());
-        }
-    }
-
-    private void generateWorkListItemsBasedOnUnitGraph() {
+    private void generateWorkListItemGraph() {
         this.entryWorkListItem = WorkListItem.getFreshWorkListItem();
 
         // Traverse the nodes of the unit graph, attach a single work list items for output of each unit and resolve all input units
@@ -197,20 +242,20 @@ public class EquationsSystemBuilder {
                 Unit target = gotoStmt.getTarget();
                 addInputWorkListItemToUnit(target, outputWorkListItem);
             } else {
-                List<Unit> successors = unitGraph.getSuccsOf(unit);
+                List<Unit> successors = this.unitGraph.getSuccsOf(unit);
                 for (Unit target : successors) {
                     addInputWorkListItemToUnit(target, outputWorkListItem);
                 }
             }
 
-            if (unitGraph.getPredsOf(unit).isEmpty()) {
-                addInputWorkListItemToUnit(unit, entryWorkListItem);
+            if (this.unitGraph.getPredsOf(unit).isEmpty()) {
+                addInputWorkListItemToUnit(unit, this.entryWorkListItem);
             }
 
-            // In a case of a loop we need another variable to join predecessors
-            if (unitGraph.getPredsOf(unit).size() > 1) {
+            // In a case of branching (loop, if) we need another variable to join predecessors
+            if (this.unitGraph.getPredsOf(unit).size() > 1) {
                 outputWorkListItem = WorkListItem.getFreshWorkListItem();
-                unitToLoopJoinWorkListItem.put(unit, outputWorkListItem);
+                this.unitToJoinWorkListItem.put(unit, outputWorkListItem);
             }
         }
     }

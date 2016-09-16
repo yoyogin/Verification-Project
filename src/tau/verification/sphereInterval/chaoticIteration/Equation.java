@@ -49,14 +49,13 @@ public class Equation {
     }
 
     public void evaluate() {
-        this.lhsWorkListItem.value = this.transformer.invoke(rhsWorkListItems); //TODO: consider placing logging here
+        this.lhsWorkListItem.value = this.transformer.invoke(rhsWorkListItems);
     }
 
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
 
-        stringBuilder.append("// ");
         stringBuilder.append(lhsWorkListItem);
         stringBuilder.append(" = ");
         stringBuilder.append(transformer.invocationToString(rhsWorkListItems));
@@ -68,6 +67,7 @@ public class Equation {
             stringBuilder.append("\t");
         }
 
+        stringBuilder.append("// ");
         stringBuilder.append(unitDescription);
 
         return stringBuilder.toString();

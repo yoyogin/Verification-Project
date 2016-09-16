@@ -1,7 +1,8 @@
-package tau.verification.sphereInterval.transformer;
+package tau.verification.sphereInterval.transformer.statement;
 
 import tau.verification.sphereInterval.chaoticIteration.WorkListItem;
 import tau.verification.sphereInterval.lattice.FactoidsConjunction;
+import tau.verification.sphereInterval.transformer.BaseTransformer;
 
 import java.util.List;
 
@@ -18,10 +19,5 @@ public final class IdTransformer extends BaseTransformer {
     @Override
     public String toString() {
         return "Id";
-    }
-
-    @Override
-    public String invocationToString(List<WorkListItem> arguments) {
-        return arguments.get(0).toString();
     }
 }

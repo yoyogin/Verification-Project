@@ -6,10 +6,10 @@ public class SphereIntervalTest {
         Sphere x = new Sphere(0, 0, 0, 1);
         Sphere y = new Sphere(0, 0, 0, 0);
 
-        if (!x.contains(y)) {
-            error("Cannot prove that x.contains(y)");
+        if (x.contains(y)) {
+            error("Assume true");
         } else {
-            int z = 3;
+            error("Assume false");
         }
     }
 }
