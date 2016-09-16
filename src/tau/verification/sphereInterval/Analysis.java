@@ -1,8 +1,6 @@
 package tau.verification.sphereInterval;
 
-import soot.Body;
-import soot.BodyTransformer;
-import soot.Unit;
+import soot.*;
 import soot.jimple.InvokeStmt;
 import tau.verification.sphereInterval.chaoticIteration.ChaoticIteration;
 import tau.verification.sphereInterval.chaoticIteration.Equation;
@@ -18,6 +16,16 @@ import java.util.Map;
 
 public class Analysis extends BodyTransformer {
     private Collection<String> ignoreMethodList;
+
+    public static void main(String[] args) {
+        PackManager
+                .v()
+                .getPack("jtp")
+                .add(new Transform("jtp.Analysis",
+                        new Analysis()));
+
+        soot.Main.main(args);
+    }
 
     public Analysis() {
         this.ignoreMethodList = Arrays.asList(new String[] { "<init>", "addPoint", "addRadios", "setPoint", "setRadios", "isContained", "contains", "error" });

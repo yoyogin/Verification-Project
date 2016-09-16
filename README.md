@@ -4,7 +4,7 @@ How to run?
 1. Open the project with Intellij
 2. Create Run/Debug configuration with the following properties:
     > Name: SphereInterval
-    > Main class: tau.verification.sphereInterval.Main
+    > Main class: tau.verification.sphereInterval.Analysis
     > Program arguments: -cp .\test -pp -f J SphereIntervalTest
 3. Run 'SphereInterval' configuration
 
