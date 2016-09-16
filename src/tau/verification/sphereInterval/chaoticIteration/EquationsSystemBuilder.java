@@ -9,8 +9,8 @@ import soot.jimple.toolkits.annotation.logic.Loop;
 import soot.jimple.toolkits.annotation.logic.LoopFinder;
 import soot.toolkits.graph.ExceptionalUnitGraph;
 import soot.toolkits.graph.UnitGraph;
-import tau.verification.sphereInterval.lattice.LatticeOperations;
 import tau.verification.sphereInterval.lattice.FactoidsConjunction;
+import tau.verification.sphereInterval.lattice.LatticeOperations;
 import tau.verification.sphereInterval.transformer.BaseTransformer;
 import tau.verification.sphereInterval.transformer.TransformerSwitch;
 

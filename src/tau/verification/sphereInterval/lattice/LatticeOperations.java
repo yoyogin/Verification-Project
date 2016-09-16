@@ -1,8 +1,6 @@
 package tau.verification.sphereInterval.lattice;
 
 import soot.jimple.internal.JimpleLocal;
-import tau.verification.sphereInterval.lattice.Factoid;
-import tau.verification.sphereInterval.lattice.FactoidsConjunction;
 
 import java.util.Set;
 

@@ -1,7 +1,7 @@
 package tau.verification.sphereInterval.transformer;
 
-import tau.verification.sphereInterval.lattice.FactoidsConjunction;
 import tau.verification.sphereInterval.chaoticIteration.WorkListItem;
+import tau.verification.sphereInterval.lattice.FactoidsConjunction;
 
 import java.util.List;
 

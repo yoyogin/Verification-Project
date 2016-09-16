@@ -1,17 +1,20 @@
 package tau.verification.sphereInterval;
 
-import tau.verification.sphereInterval.chaoticIteration.EquationsSystemBuilder;
-import tau.verification.sphereInterval.chaoticIteration.ChaoticIteration;
-import tau.verification.sphereInterval.chaoticIteration.EquationSystem;
-import tau.verification.sphereInterval.chaoticIteration.Equation;
 import soot.Body;
 import soot.BodyTransformer;
 import soot.Unit;
 import soot.jimple.InvokeStmt;
+import tau.verification.sphereInterval.chaoticIteration.ChaoticIteration;
+import tau.verification.sphereInterval.chaoticIteration.Equation;
+import tau.verification.sphereInterval.chaoticIteration.EquationSystem;
+import tau.verification.sphereInterval.chaoticIteration.EquationsSystemBuilder;
 import tau.verification.sphereInterval.lattice.LatticeOperations;
 import tau.verification.sphereInterval.util.StringUtils;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Map;
 
 public class Analysis extends BodyTransformer {
     private LatticeOperations latticeOperations;
