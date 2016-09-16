@@ -1,7 +1,6 @@
 package tau.verification.sphereInterval.chaoticIteration;
 
 import tau.verification.sphereInterval.function.Function;
-import tau.verification.sphereInterval.chaoticIteration.WorkListItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,26 +10,26 @@ public class Equation {
     private final Function function;
     private final ArrayList<WorkListItem> rhsWorkListItems;
 
-    private final String originCodeFromUnit;
+    private final String unitDescription;
 
-    public Equation(WorkListItem lhsWorkListItem, Function function, String originCodeFromUnit) {
+    public Equation(WorkListItem lhsWorkListItem, Function function, String unitDescription) {
         this.lhsWorkListItem = lhsWorkListItem;
         this.function = function;
         this.rhsWorkListItems = new ArrayList<>();
-        this.originCodeFromUnit = originCodeFromUnit;
+        this.unitDescription = unitDescription;
     }
 
-    public Equation(WorkListItem lhsWorkListItem, Function function, WorkListItem argument, String originCodeFromUnit) {
+    public Equation(WorkListItem lhsWorkListItem, Function function, WorkListItem argument, String unitDescription) {
         this.lhsWorkListItem = lhsWorkListItem;
         this.function = function;
 
         this.rhsWorkListItems = new ArrayList<>();
         this.rhsWorkListItems.add(argument);
 
-        this.originCodeFromUnit = originCodeFromUnit;
+        this.unitDescription = unitDescription;
     }
 
-    public Equation(WorkListItem lhsWorkListItem, Function function, WorkListItem arg1, WorkListItem arg2, String originCodeFromUnit) {
+    public Equation(WorkListItem lhsWorkListItem, Function function, WorkListItem arg1, WorkListItem arg2, String unitDescription) {
         this.lhsWorkListItem = lhsWorkListItem;
         this.function = function;
 
@@ -38,7 +37,7 @@ public class Equation {
         this.rhsWorkListItems.add(arg1);
         this.rhsWorkListItems.add(arg2);
 
-        this.originCodeFromUnit = originCodeFromUnit;
+        this.unitDescription = unitDescription;
     }
 
     public WorkListItem getLhsWorkListItem() {
@@ -60,8 +59,8 @@ public class Equation {
         stringBuilder.append(lhsWorkListItem);
         stringBuilder.append(" = ");
         stringBuilder.append(function.invocationToString(rhsWorkListItems));
-        stringBuilder.append(" >> ");
-        stringBuilder.append(originCodeFromUnit);
+        stringBuilder.append("   <--->   ");
+        stringBuilder.append(unitDescription);
 
         return stringBuilder.toString();
     }

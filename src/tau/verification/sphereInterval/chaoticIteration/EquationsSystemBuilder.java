@@ -14,6 +14,7 @@ import tau.verification.sphereInterval.FactoidsConjunction;
 import tau.verification.sphereInterval.function.Function;
 import tau.verification.sphereInterval.function.TransformerFunction;
 import tau.verification.sphereInterval.transformer.TransformerSwitch;
+import tau.verification.sphereInterval.util.StringUtils;
 
 import java.util.*;
 
@@ -44,6 +45,17 @@ public class EquationsSystemBuilder {
         generateWorkListItemsBasedOnUnitGraph();
 
         return createEquations();
+    }
+
+    public String getEquationSystemBodyDescription() {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for (Unit unit : body.getUnits()) {
+            stringBuilder.append(getUnitDescription(unit));
+            stringBuilder.append("\n");
+        }
+
+        return stringBuilder.toString();
     }
 
     public Map<Equation, Unit> getEquationToUnit() {
@@ -81,7 +93,7 @@ public class EquationsSystemBuilder {
                     }
                 };
 
-                Equation joinEquation = new Equation(joinWorkListItem, joinFunction, workListItem1, workListItem2, unit.toString());
+                Equation joinEquation = new Equation(joinWorkListItem, joinFunction, workListItem1, workListItem2, getUnitDescription(unit));
                 equationSystem.addEquation(joinEquation);
                 equationToUnit.put(joinEquation, unit);
             }
@@ -97,26 +109,37 @@ public class EquationsSystemBuilder {
                 WorkListItem assumeTrueWorkListItem = unitToOutputWorkListItem.get(unit);
                 TransformerFunction assumeTrueTransformer = transformerSwitch.getIfTransformer(ifStmt, true);
 
-                Equation assumeTrueEquation = new Equation(assumeTrueWorkListItem, assumeTrueTransformer, inputWorkListItem, unit.toString());
+                Equation assumeTrueEquation = new Equation(assumeTrueWorkListItem, assumeTrueTransformer, inputWorkListItem, getUnitDescription(unit));
                 equationSystem.addEquation(assumeTrueEquation);
                 equationToUnit.put(assumeTrueEquation, unit);
 
                 WorkListItem assumeFalseWorkListItem = ifStmtToAssumeFalseWorkListItem.get(ifStmt);
                 TransformerFunction assumeFalseTransformer = transformerSwitch.getIfTransformer(ifStmt, false);
 
-                Equation assumeFalseEquation = new Equation(assumeFalseWorkListItem, assumeFalseTransformer, inputWorkListItem, unit.toString());
+                Equation assumeFalseEquation = new Equation(assumeFalseWorkListItem, assumeFalseTransformer, inputWorkListItem, getUnitDescription(unit));
                 equationSystem.addEquation(assumeFalseEquation);
                 equationToUnit.put(assumeFalseEquation, unit);
             } else {
                 WorkListItem lhsVar = unitToOutputWorkListItem.get(unit);
                 TransformerFunction unitTransformer = transformerSwitch.getStatmentTransformer((Stmt) unit);
-                Equation unitEquation = new Equation(lhsVar,unitTransformer, inputWorkListItem, unit.toString());
+                Equation unitEquation = new Equation(lhsVar,unitTransformer, inputWorkListItem, getUnitDescription(unit));
                 equationSystem.addEquation(unitEquation);
                 equationToUnit.put(unitEquation, unit);
             }
         }
 
         return equationSystem;
+    }
+
+    private String getUnitDescription(Unit unit) {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        stringBuilder.append("(");
+        stringBuilder.append(Integer.toString(unit.hashCode()));
+        stringBuilder.append(") ");
+        stringBuilder.append(unit.toString());
+
+        return stringBuilder.toString();
     }
 
     private void addInputWorkListItemToUnit(Unit unit, WorkListItem workListItem) {
