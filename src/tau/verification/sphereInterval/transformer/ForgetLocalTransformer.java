@@ -1,7 +1,7 @@
 package tau.verification.sphereInterval.transformer;
 
 import soot.jimple.internal.JimpleLocal;
-import tau.verification.sphereInterval.FactoidsConjunction;
+import tau.verification.sphereInterval.lattice.FactoidsConjunction;
 
 /**
  * A transformer to be used in cases where the state of the variable has changed

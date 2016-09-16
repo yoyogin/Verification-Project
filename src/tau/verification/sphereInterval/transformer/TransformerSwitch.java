@@ -1,7 +1,7 @@
 package tau.verification.sphereInterval.transformer;
 
-import soot.Value;
 import soot.jimple.*;
+import soot.jimple.internal.JNewExpr;
 import soot.jimple.internal.JSpecialInvokeExpr;
 import soot.jimple.internal.JimpleLocal;
 
@@ -96,24 +96,33 @@ public class TransformerSwitch extends AbstractStmtSwitch {
     public void caseAssignStmt(AssignStmt stmt) {
         assert transformer == null;
 
-        Value lhs = stmt.getLeftOp();
-        if(!(lhs instanceof JimpleLocal)) {
+        if(!(stmt.getLeftOp() instanceof JimpleLocal)) {
             return;
         }
 
-        Value rhs = stmt.getRightOp();
-        if (!(rhs instanceof JimpleLocal)) {
-            transformer = new ForgetLocalTransformer((JimpleLocal) lhs);
-            return;
-        }
+        JimpleLocal lhs = (JimpleLocal) stmt.getLeftOp();
 
+        Class rhsClass = stmt.getRightOp().getClass();
+        if (rhsClass.equals(JimpleLocal.class)) {
+            assignLocalToLocalTransformerResolution(lhs, (JimpleLocal) stmt.getRightOp());
+//        } else if (rhsClass.equals(JNewExpr.class)) { //TODO: delete if not needed
+//            assignNewExprToLocalTransformerResolution(lhs, (JNewExpr) stmt.getRightOp());
+        } else {
+            // Best practice - lets forget it what we know about it
+            transformer = new ForgetLocalTransformer(lhs);
+        }
+    }
+
+    private void assignLocalToLocalTransformerResolution(JimpleLocal lhs, JimpleLocal rhs) {
         if(lhs.equals(rhs)) {
             transformer = new IdTransformer();
         } else {
-            transformer = new AssignLocalToLocalTransformer((JimpleLocal) lhs, (JimpleLocal) rhs);
+            transformer = new AssignLocalToLocalTransformer(lhs, rhs);
         }
+    }
 
-        return;
+    private void assignNewExprToLocalTransformerResolution(JimpleLocal lhs, JNewExpr rhs) {
+        transformer = new IdTransformer();
     }
 
     /**

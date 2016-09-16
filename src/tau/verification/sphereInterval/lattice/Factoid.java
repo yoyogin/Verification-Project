@@ -1,6 +1,5 @@
-package tau.verification.sphereInterval;
+package tau.verification.sphereInterval.lattice;
 
-import soot.Local;
 import soot.jimple.IntConstant;
 import soot.jimple.internal.JimpleLocal;
 

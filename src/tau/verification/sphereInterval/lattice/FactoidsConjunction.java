@@ -1,4 +1,4 @@
-package tau.verification.sphereInterval;
+package tau.verification.sphereInterval.lattice;
 
 import soot.jimple.IntConstant;
 import soot.jimple.internal.JimpleLocal;
@@ -187,13 +187,13 @@ public class FactoidsConjunction {
             return "true (top)";
         }
 
-        StringBuilder result = new StringBuilder("and(");
+        StringBuilder result = new StringBuilder("Conjunction (");
         Set<JimpleLocal> vars = getVars();
         int size = vars.size();
         for (JimpleLocal var : vars) {
             Factoid factoid = getFactoid(var);
             result.append(factoid.toString());
-            --size;
+            size--;
             if (size > 0) {
                 result.append(", ");
             }

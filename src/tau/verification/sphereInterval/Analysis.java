@@ -8,16 +8,17 @@ import soot.Body;
 import soot.BodyTransformer;
 import soot.Unit;
 import soot.jimple.InvokeStmt;
+import tau.verification.sphereInterval.lattice.LatticeOperations;
 import tau.verification.sphereInterval.util.StringUtils;
 
 import java.util.*;
 
 public class Analysis extends BodyTransformer {
-    private Domain domain;
+    private LatticeOperations latticeOperations;
     private Collection<String> ignoreMethodList;
 
     public Analysis() {
-        this.domain = new Domain();
+        this.latticeOperations = new LatticeOperations();
         this.ignoreMethodList = Arrays.asList(new String[] { "<init>", "addPoint", "addRadios", "setPoint", "setRadios", "isContained", "contains", "error" });
     }
 
@@ -31,13 +32,13 @@ public class Analysis extends BodyTransformer {
         System.out.println(">>>>> Analyzing method '" + methodName + "' <<<<<");
 
         System.out.println("\nBuilding Equation System from '" + methodName + "' body");
-        EquationsSystemBuilder equationsSystemBuilder = new EquationsSystemBuilder(body, domain);
+        EquationsSystemBuilder equationsSystemBuilder = new EquationsSystemBuilder(body, latticeOperations);
         System.out.println("Equation system body = \n" + equationsSystemBuilder.getEquationSystemBodyDescription());
         EquationSystem equationSystem = equationsSystemBuilder.build();
 
         System.out.println("Running Chaotic Iteration on equation system");
         ChaoticIteration chaoticIteration = new ChaoticIteration();
-        chaoticIteration.iterate(equationSystem, domain);
+        chaoticIteration.iterate(equationSystem, latticeOperations);
 
         System.out.println("\n>>>>> Error report for method '" + methodName + "' <<<<<\n\n");
         reportErrors(equationsSystemBuilder.getEquationToUnit());
@@ -52,7 +53,7 @@ public class Analysis extends BodyTransformer {
 
             if (unit instanceof InvokeStmt) {
                 InvokeStmt invokeStmt = (InvokeStmt) unit;
-                boolean isInvocationReachable = !equation.getLhsWorkListItem().value.equals(domain.getBottom());
+                boolean isInvocationReachable = !equation.getLhsWorkListItem().value.equals(latticeOperations.getBottom());
                 boolean isErrorInvocation = invokeStmt.getInvokeExpr().getMethod().getName().equals("error");
 
                 if (isInvocationReachable && isErrorInvocation) {

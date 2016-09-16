@@ -1,6 +1,6 @@
 package tau.verification.sphereInterval.chaoticIteration;
 
-import tau.verification.sphereInterval.FactoidsConjunction;
+import tau.verification.sphereInterval.lattice.FactoidsConjunction;
 
 public class WorkListItem {
     public FactoidsConjunction value;

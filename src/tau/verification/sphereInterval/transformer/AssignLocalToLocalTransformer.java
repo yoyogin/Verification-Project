@@ -1,7 +1,8 @@
 package tau.verification.sphereInterval.transformer;
 
 import soot.jimple.internal.JimpleLocal;
-import tau.verification.sphereInterval.FactoidsConjunction;
+import tau.verification.sphereInterval.lattice.Factoid;
+import tau.verification.sphereInterval.lattice.FactoidsConjunction;
 
 public class AssignLocalToLocalTransformer extends BaseTransformer {
     protected final JimpleLocal lhs;
@@ -23,7 +24,13 @@ public class AssignLocalToLocalTransformer extends BaseTransformer {
         FactoidsConjunction result = FactoidsConjunction.getFactoidsConjunction(factoidsConjunction);
         result.removeVar(lhs);
 
-        //TODO: handle 'pointer' assignment in case both are truly sphere variables
+        Factoid rhsFactoid = result.getFactoid(rhs);
+        if(rhsFactoid == null) {
+            return result;
+        }
+
+        //TODO: consider whether we should validate that both a truly sphere variables? can we assume that this is guaranteed by the Java language compiler?
+        //result.add(new Factoid(lhs, rhsFactoid.getAbstractSphere()));
 
         return result;
     }

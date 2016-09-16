@@ -1,7 +1,8 @@
-package tau.verification.sphereInterval;
+package tau.verification.sphereInterval.lattice;
 
 import soot.jimple.internal.JimpleLocal;
-import tau.verification.sphereInterval.transformer.TransformerSwitch;
+import tau.verification.sphereInterval.lattice.Factoid;
+import tau.verification.sphereInterval.lattice.FactoidsConjunction;
 
 import java.util.Set;
 
@@ -10,21 +11,19 @@ import java.util.Set;
 /**
  * Implementation of the sphere interval abstract domain.
  */
-public class Domain {
-    private TransformerSwitch matcher = new TransformerSwitch();
-
-    public Domain() {
+public class LatticeOperations {
+    public LatticeOperations() {
     }
 
-    public FactoidsConjunction getBottom() {
+    public static FactoidsConjunction getBottom() {
         return FactoidsConjunction.getBottom();
     }
 
-    public FactoidsConjunction getTop() {
+    public static FactoidsConjunction getTop() {
         return FactoidsConjunction.getTop();
     }
 
-    public FactoidsConjunction upperBound(FactoidsConjunction first, FactoidsConjunction second) {
+    public static FactoidsConjunction upperBound(FactoidsConjunction first, FactoidsConjunction second) {
         if (first.isBottom()) {
             return second;
         }
@@ -50,7 +49,7 @@ public class Domain {
         return result;
     }
 
-    public FactoidsConjunction lowerBound(FactoidsConjunction first, FactoidsConjunction second) {
+    public static FactoidsConjunction lowerBound(FactoidsConjunction first, FactoidsConjunction second) {
         if (first.isBottom() || second.isBottom()) {
             return FactoidsConjunction.getBottom();
         }
@@ -75,7 +74,7 @@ public class Domain {
     /**
      * The order relation of the domain
      */
-    public boolean lessThanEquals(FactoidsConjunction first, FactoidsConjunction second) {
+    public static boolean lessThanEquals(FactoidsConjunction first, FactoidsConjunction second) {
         if (first.isBottom()) {
             return true;
         }

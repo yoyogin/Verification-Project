@@ -1,26 +1,26 @@
 package tau.verification.sphereInterval.chaoticIteration;
 
-import tau.verification.sphereInterval.Domain;
-import tau.verification.sphereInterval.FactoidsConjunction;
+import tau.verification.sphereInterval.lattice.LatticeOperations;
+import tau.verification.sphereInterval.lattice.FactoidsConjunction;
 import tau.verification.sphereInterval.util.StringUtils;
 
 import java.util.*;
 
 public class ChaoticIteration {
     private EquationSystem equationSystem;
-    private Domain domain;
+    private LatticeOperations latticeOperations;
     private int iterationCounter;
 
     /**
      * Solves an equation equationSystem using chaotic iteration
      */
-    public void iterate(EquationSystem equationSystem, Domain domain) {
+    public void iterate(EquationSystem equationSystem, LatticeOperations latticeOperations) {
         this.equationSystem = equationSystem;
-        this.domain = domain;
+        this.latticeOperations = latticeOperations;
         this.iterationCounter = 0;
 
         System.out.println("Solving equation system = \n" + equationSystem);
-        this.equationSystem.resetWorkListItems(domain.getBottom());
+        this.equationSystem.resetWorkListItems(latticeOperations.getBottom());
 
         System.out.println("Begin Chaotic Iterations");
         internalIterate();
@@ -54,7 +54,7 @@ public class ChaoticIteration {
             System.out.println("\t\t\t updated " + currentEquation.getLhsWorkListItem() + " : " + currentEquation.getLhsWorkListItem().value);
 
 
-            if (domain.lessThanEquals(currentEquation.getLhsWorkListItem().value, previousValue)) {
+            if (latticeOperations.lessThanEquals(currentEquation.getLhsWorkListItem().value, previousValue)) {
                 // evaluate takes a conjunction upwards so there
                 // was no change to the value in this iteration
                 continue;

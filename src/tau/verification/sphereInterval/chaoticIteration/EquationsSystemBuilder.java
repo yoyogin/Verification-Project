@@ -9,8 +9,8 @@ import soot.jimple.toolkits.annotation.logic.Loop;
 import soot.jimple.toolkits.annotation.logic.LoopFinder;
 import soot.toolkits.graph.ExceptionalUnitGraph;
 import soot.toolkits.graph.UnitGraph;
-import tau.verification.sphereInterval.Domain;
-import tau.verification.sphereInterval.FactoidsConjunction;
+import tau.verification.sphereInterval.lattice.LatticeOperations;
+import tau.verification.sphereInterval.lattice.FactoidsConjunction;
 import tau.verification.sphereInterval.transformer.BaseTransformer;
 import tau.verification.sphereInterval.transformer.TransformerSwitch;
 
@@ -18,7 +18,7 @@ import java.util.*;
 
 public class EquationsSystemBuilder {
     private Body body;
-    private Domain domain;
+    private LatticeOperations latticeOperations;
     private WorkListItem entryWorkListItem = null;
     private UnitGraph unitGraph;
     private TransformerSwitch transformerSwitch;
@@ -31,9 +31,9 @@ public class EquationsSystemBuilder {
     private Map<Equation, Unit> equationToUnit = new HashMap<>();
     private Set<Unit> loopHeads = new HashSet<>();
 
-    public EquationsSystemBuilder(Body body, Domain domain) {
+    public EquationsSystemBuilder(Body body, LatticeOperations latticeOperations) {
         this.body = body;
-        this.domain = domain;
+        this.latticeOperations = latticeOperations;
         this.transformerSwitch = new TransformerSwitch();
         this.unitGraph = new ExceptionalUnitGraph(body);
     }
@@ -69,7 +69,7 @@ public class EquationsSystemBuilder {
                 new BaseTransformer(0 /* numberOfArguments */) {
                     @Override
                     public FactoidsConjunction invoke() {
-                        return domain.getTop();
+                        return latticeOperations.getTop();
                     }
 
                     @Override
@@ -90,7 +90,7 @@ public class EquationsSystemBuilder {
                 BaseTransformer joinTransformer = new BaseTransformer(2 /* numberOfArguments */) {
                     @Override
                     public FactoidsConjunction invoke(FactoidsConjunction first, FactoidsConjunction second) {
-                        return domain.upperBound(first, second);
+                        return latticeOperations.upperBound(first, second);
                     }
 
                     @Override
