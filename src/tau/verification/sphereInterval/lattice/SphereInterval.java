@@ -2,7 +2,7 @@ package tau.verification.sphereInterval.lattice;
 
 import soot.jimple.IntConstant;
 
-public class AbstractSphere {
+public class SphereInterval {
     public final IntConstant x0;
     public final IntConstant y0;
     public final IntConstant z0;
@@ -11,7 +11,10 @@ public class AbstractSphere {
     public final IntConstant edgeC;
     public final IntConstant radios;
 
-    public AbstractSphere(
+    public final boolean isBottom;
+    // Add if necessary public final boolean isTop;
+
+    public SphereInterval(
             IntConstant x0,
             IntConstant y0,
             IntConstant z0,
@@ -19,6 +22,15 @@ public class AbstractSphere {
             IntConstant edgeB,
             IntConstant edgeC,
             IntConstant radios) {
+        this.isBottom = false;
+
+        assert x0 != null;
+        assert y0 != null;
+        assert z0 != null;
+        assert edgeA != null;
+        assert edgeB != null;
+        assert edgeC != null;
+
         this.x0 = x0;
         this.y0 = y0;
         this.z0 = z0;
@@ -28,18 +40,34 @@ public class AbstractSphere {
         this.radios = radios;
     }
 
+    private SphereInterval() {
+        this.isBottom = true;
+
+        this.x0 = null;
+        this.y0 = null;
+        this.z0 = null;
+        this.edgeA = null;
+        this.edgeB = null;
+        this.edgeC = null;
+        this.radios = null;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
 
-        result = prime * result + this.x0.hashCode();
-        result = prime * result + this.y0.hashCode();
-        result = prime * result + this.z0.hashCode();
-        result = prime * result + this.edgeA.hashCode();
-        result = prime * result + this.edgeB.hashCode();
-        result = prime * result + this.edgeC.hashCode();
-        result = prime * result + this.radios.hashCode();
+        if(this.isBottom) {
+            result = prime * result + 0;
+        } else {
+            result = prime * result + this.x0.hashCode();
+            result = prime * result + this.y0.hashCode();
+            result = prime * result + this.z0.hashCode();
+            result = prime * result + this.edgeA.hashCode();
+            result = prime * result + this.edgeB.hashCode();
+            result = prime * result + this.edgeC.hashCode();
+            result = prime * result + this.radios.hashCode();
+        }
 
         return result;
     }
@@ -48,16 +76,23 @@ public class AbstractSphere {
     public boolean equals(Object object) {
         boolean result = false;
 
-        if (object instanceof AbstractSphere) {
-            AbstractSphere other = (AbstractSphere) object;
-            result =
-                this.x0.equals(other.x0) &&
-                this.y0.equals(other.y0) &&
-                this.z0.equals(other.z0) &&
-                this.edgeA.equals(other.edgeA) &&
-                this.edgeB.equals(other.edgeB) &&
-                this.edgeC.equals(other.edgeC) &&
-                this.radios.equals(other.radios);
+        if (object instanceof SphereInterval) {
+            SphereInterval other = (SphereInterval) object;
+
+            if(this.isBottom && other.isBottom) {
+                result = true;
+            } else if(this.isBottom && !other.isBottom) {
+                result = false;
+            } else {
+                result =
+                    this.x0.equals(other.x0) &&
+                    this.y0.equals(other.y0) &&
+                    this.z0.equals(other.z0) &&
+                    this.edgeA.equals(other.edgeA) &&
+                    this.edgeB.equals(other.edgeB) &&
+                    this.edgeC.equals(other.edgeC) &&
+                    this.radios.equals(other.radios);
+            }
         }
 
         return result;
@@ -65,7 +100,11 @@ public class AbstractSphere {
 
     @Override
     public String toString() {
-        String result = String.format(
+        if(this.isBottom) {
+            return "bottom";
+        }
+
+        return String.format(
                 "(%s, %s, %s, %s, %s, %s, %s)",
                 this.x0,
                 this.y0,
@@ -74,8 +113,6 @@ public class AbstractSphere {
                 this.edgeB,
                 this.edgeC,
                 this.radios);
-
-        return result.toString();
     }
 
     private IntConstant getX1() {
@@ -90,7 +127,12 @@ public class AbstractSphere {
         return (IntConstant) this.z0.add(this.edgeC);
     }
 
-    public static AbstractSphere getUpperBound(AbstractSphere first, AbstractSphere second) {
+    public static SphereInterval getBottom() {
+        return new SphereInterval();
+    }
+
+    // TODO: what about infinity? (i.e. does IntConstant wraps around? or reach infy on Wrap?)
+    public static SphereInterval getUpperBound(SphereInterval first, SphereInterval second) {
         // Note that the implementation equals to the following:
         //
         // if (first.contains(second)) {
@@ -111,7 +153,7 @@ public class AbstractSphere {
 
         IntConstant maxRadios = (first.radios.lessThanOrEqual(second.radios).equivTo(1)) ? second.radios : first.radios;
 
-        AbstractSphere result = new AbstractSphere(
+        SphereInterval result = new SphereInterval(
                 minX0,
                 minY0,
                 minZ0,
@@ -123,7 +165,7 @@ public class AbstractSphere {
         return result;
     }
 
-    public static AbstractSphere getLowerBound(AbstractSphere first, AbstractSphere second) {
+    public static SphereInterval getLowerBound(SphereInterval first, SphereInterval second) {
         // Note that the implementation equals to the following:
         //
         // if (first.contains(second)) {
@@ -147,7 +189,7 @@ public class AbstractSphere {
                     jointEdgeA = (IntConstant) first.getX1().subtract(second.x0);
                 }
             } else {
-                return null; // there is no intersection on X axis
+                return SphereInterval.getBottom();
             }
         } else {
             if(first.x0.lessThanOrEqual(second.getX1()).equivTo(1)) {
@@ -158,7 +200,7 @@ public class AbstractSphere {
                     jointEdgeA = (IntConstant) second.getX1().subtract(first.x0);
                 }
             } else {
-                return null; // there is no intersection on X axis
+                return SphereInterval.getBottom();
             }
         }
 
@@ -174,7 +216,7 @@ public class AbstractSphere {
                     jointEdgeB = (IntConstant) first.getY1().subtract(second.y0);
                 }
             } else {
-                return null; // there is no intersection on Y axis
+                return SphereInterval.getBottom();
             }
         } else {
             if(first.y0.lessThanOrEqual(second.getY1()).equivTo(1)) {
@@ -185,7 +227,7 @@ public class AbstractSphere {
                     jointEdgeB = (IntConstant) second.getY1().subtract(first.y0);
                 }
             } else {
-                return null; // there is no intersection on Y axis
+                return SphereInterval.getBottom();
             }
         }
 
@@ -201,7 +243,7 @@ public class AbstractSphere {
                     jointEdgeC = (IntConstant) first.getZ1().subtract(second.z0);
                 }
             } else {
-                return null; // there is no intersection on Z axis
+                return SphereInterval.getBottom();
             }
         } else {
             if(first.z0.lessThanOrEqual(second.getZ1()).equivTo(1)) {
@@ -212,13 +254,13 @@ public class AbstractSphere {
                     jointEdgeC = (IntConstant) second.getZ1().subtract(first.z0);
                 }
             } else {
-                return null; // there is no intersection on Z axis
+                return SphereInterval.getBottom();
             }
         }
 
         IntConstant minRadios = (first.radios.lessThanOrEqual(second.radios).equivTo(1)) ? first.radios : second.radios;
 
-        AbstractSphere result = new AbstractSphere(
+        SphereInterval result = new SphereInterval(
                 jointX0,
                 jointY0,
                 jointZ0,

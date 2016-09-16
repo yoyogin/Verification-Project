@@ -10,7 +10,6 @@ import soot.jimple.toolkits.annotation.logic.LoopFinder;
 import soot.toolkits.graph.ExceptionalUnitGraph;
 import soot.toolkits.graph.UnitGraph;
 import tau.verification.sphereInterval.lattice.FactoidsConjunction;
-import tau.verification.sphereInterval.lattice.LatticeOperations;
 import tau.verification.sphereInterval.transformer.BaseTransformer;
 import tau.verification.sphereInterval.transformer.TransformerSwitch;
 
@@ -67,7 +66,7 @@ public class EquationsSystemBuilder {
                 new BaseTransformer(0 /* numberOfArguments */) {
                     @Override
                     public FactoidsConjunction invoke() {
-                        return LatticeOperations.getTop();
+                        return FactoidsConjunction.getTop();
                     }
 
                     @Override
@@ -75,7 +74,7 @@ public class EquationsSystemBuilder {
                         return "Get Top function";
                     }
                 },
-                "Entry Work List Item");
+                "Entry work list item");
         equationSystem.addEquation(setTopToEntryWorkListItem);
         this.equationToUnit.put(setTopToEntryWorkListItem, unitGraph.getHeads().get(0));
 
@@ -88,7 +87,7 @@ public class EquationsSystemBuilder {
                 BaseTransformer joinTransformer = new BaseTransformer(2 /* numberOfArguments */) {
                     @Override
                     public FactoidsConjunction invoke(FactoidsConjunction first, FactoidsConjunction second) {
-                        return LatticeOperations.upperBound(first, second);
+                        return FactoidsConjunction.upperBound(first, second);
                     }
 
                     @Override

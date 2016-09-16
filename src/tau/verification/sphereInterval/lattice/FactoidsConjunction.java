@@ -81,7 +81,7 @@ public class FactoidsConjunction {
         }
 
         for (Factoid factoid : this.factoids) {
-            vars.add(factoid.sphereVariable);
+            vars.add(factoid.variable);
         }
 
         return vars;
@@ -131,7 +131,7 @@ public class FactoidsConjunction {
         }
 
         for(Factoid factoid : this.factoids) {
-            if (factoid.sphereVariable.equals(sphereVariable)) {
+            if (factoid.variable.equals(sphereVariable)) {
                 return factoid;
             }
         }
@@ -143,7 +143,7 @@ public class FactoidsConjunction {
         boolean result = false;
         for (Iterator<Factoid> iterator = factoids.iterator(); iterator.hasNext();) {
             Factoid factoid = iterator.next();
-            if (factoid.sphereVariable.equals(sphereVariable)) {
+            if (factoid.variable.equals(sphereVariable)) {
                 iterator.remove();
                 result = true;
                 break;
@@ -184,5 +184,84 @@ public class FactoidsConjunction {
 
     public boolean isTop() {
         return (this.factoids != null) && (this.factoids.isEmpty());
+    }
+
+    public static FactoidsConjunction upperBound(FactoidsConjunction first, FactoidsConjunction second) {
+        if (first.isBottom()) {
+            return second;
+        }
+
+        if (second.isBottom()) {
+            return first;
+        }
+
+        FactoidsConjunction result = FactoidsConjunction.getFactoidsConjunction();
+        Set<JimpleLocal> vars = first.getVars();
+        vars.addAll(second.getVars());
+
+        for (JimpleLocal var : vars) {
+            Factoid firstFactoid = first.getFactoid(var);
+            Factoid secondFactoid = second.getFactoid(var);
+            Factoid jointFactoid = Factoid.getUpperBound(firstFactoid, secondFactoid);
+
+            if (jointFactoid != null) {
+                result.add(jointFactoid);
+            }
+        }
+
+        return result;
+    }
+
+    public static FactoidsConjunction lowerBound(FactoidsConjunction first, FactoidsConjunction second) {
+        if (first.isBottom() || second.isBottom()) {
+            return FactoidsConjunction.getBottom();
+        }
+
+        FactoidsConjunction result = FactoidsConjunction.getFactoidsConjunction();
+        Set<JimpleLocal> vars = first.getVars();
+        vars.addAll(second.getVars());
+
+        for (JimpleLocal var : vars) {
+            Factoid firstFactoid = first.getFactoid(var);
+            Factoid secondFactoid = second.getFactoid(var);
+            Factoid jointFactoid = Factoid.getLowerBound(firstFactoid, secondFactoid);
+
+            if (jointFactoid != null) {
+                result.add(jointFactoid);
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * The order relation of the lattice
+
+     * @return true if first is less than or equals the second based on the Factoids Conjunction lattice order relation
+     */
+    public static boolean lessThanEquals(FactoidsConjunction first, FactoidsConjunction second) {
+        if (first.isBottom()) {
+            return true;
+        }
+
+        if (second.isBottom() && !first.isBottom()) {
+            return false;
+        }
+
+        Set<JimpleLocal> vars = first.getVars();
+        vars.addAll(second.getVars());
+        for (JimpleLocal var : vars) {
+            Factoid firstFactoid = first.getFactoid(var);
+            Factoid secondFactoid = second.getFactoid(var);
+            if (secondFactoid == null) {
+                continue;
+            } else if (firstFactoid != null && secondFactoid.contains(firstFactoid)) {
+                continue;
+            } else {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

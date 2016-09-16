@@ -8,7 +8,7 @@ import tau.verification.sphereInterval.chaoticIteration.ChaoticIteration;
 import tau.verification.sphereInterval.chaoticIteration.Equation;
 import tau.verification.sphereInterval.chaoticIteration.EquationSystem;
 import tau.verification.sphereInterval.chaoticIteration.EquationsSystemBuilder;
-import tau.verification.sphereInterval.lattice.LatticeOperations;
+import tau.verification.sphereInterval.lattice.FactoidsConjunction;
 import tau.verification.sphereInterval.util.StringUtils;
 
 import java.util.Arrays;
@@ -54,7 +54,7 @@ public class Analysis extends BodyTransformer {
 
             if (unit instanceof InvokeStmt) {
                 InvokeStmt invokeStmt = (InvokeStmt) unit;
-                boolean isInvocationReachable = !equation.getLhsWorkListItem().value.equals(LatticeOperations.getBottom());
+                boolean isInvocationReachable = !equation.getLhsWorkListItem().value.equals(FactoidsConjunction.getBottom());
                 boolean isErrorInvocation = invokeStmt.getInvokeExpr().getMethod().getName().equals("error");
 
                 if (isInvocationReachable && isErrorInvocation) {

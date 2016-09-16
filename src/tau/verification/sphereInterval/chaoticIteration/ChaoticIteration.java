@@ -1,7 +1,6 @@
 package tau.verification.sphereInterval.chaoticIteration;
 
 import tau.verification.sphereInterval.lattice.FactoidsConjunction;
-import tau.verification.sphereInterval.lattice.LatticeOperations;
 import tau.verification.sphereInterval.util.StringUtils;
 
 import java.util.*;
@@ -18,7 +17,7 @@ public class ChaoticIteration {
         this.iterationCounter = 0;
 
         System.out.println("Solving equation system = \n" + equationSystem);
-        this.equationSystem.resetWorkListItems(LatticeOperations.getBottom());
+        this.equationSystem.resetWorkListItems(FactoidsConjunction.getBottom());
 
         System.out.println("Begin Chaotic Iterations");
         internalIterate();
@@ -52,7 +51,7 @@ public class ChaoticIteration {
             System.out.println("\t\t\t updated " + currentEquation.getLhsWorkListItem() + " : " + currentEquation.getLhsWorkListItem().value);
 
 
-            if (LatticeOperations.lessThanEquals(currentEquation.getLhsWorkListItem().value, previousValue)) {
+            if (FactoidsConjunction.lessThanEquals(currentEquation.getLhsWorkListItem().value, previousValue)) {
                 // evaluate takes a conjunction upwards so there
                 // was no change to the value in this iteration
                 continue;
@@ -89,7 +88,7 @@ public class ChaoticIteration {
     }
 
     private void printWorkList(Collection<WorkListItem> workList) {
-        StringBuilder result = new StringBuilder("\t\t\tworkSet = { ");
+        StringBuilder result = new StringBuilder("\t\t\twork list = { ");
         result.append(StringUtils.collectionWithSeparatorToString(workList, ", "));
         result.append("}");
 
