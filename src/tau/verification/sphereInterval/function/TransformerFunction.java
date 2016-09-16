@@ -12,4 +12,7 @@ public abstract class TransformerFunction extends Function {
     public FactoidsConjunction invoke(FactoidsConjunction input) {
         throw new UnsupportedOperationException();
     }
+
+
+
 }

@@ -84,6 +84,19 @@ public class FactoidsConjunction {
         return vars;
     }
 
+    /**
+     * This functions ads Factoid to the set if the same factoid exactly(defined by hashcode and equals) is not contained in set
+     *
+     * @param sphereVariable
+     * @param bottomLeft0
+     * @param bottomLeft1
+     * @param bottomLeft2
+     * @param edgeA
+     * @param edgeB
+     * @param edgeC
+     * @param radios
+     * @return true iff factoid added
+     */
     public boolean add(
             Local sphereVariable,
             NumericConstant bottomLeft0,
@@ -108,6 +121,10 @@ public class FactoidsConjunction {
                 edgeC,
                 radios);
 
+
+
+
+
         return this.factoids.add(factoid);
     }
 
@@ -117,6 +134,31 @@ public class FactoidsConjunction {
         }
 
         return this.factoids.add(factoid);
+    }
+
+    public FactoidsConjunction setFactoid(
+            Local sphereVariable,
+            NumericConstant bottomLeft0,
+            NumericConstant bottomLeft1,
+            NumericConstant bottomLeft2,
+            NumericConstant edgeA,
+            NumericConstant edgeB,
+            NumericConstant edgeC,
+            NumericConstant radios)
+    {
+        if(getFactoid(sphereVariable) != null)
+        {
+            removeVar(sphereVariable);
+        }
+
+        add(sphereVariable,bottomLeft0,bottomLeft1,bottomLeft2,edgeA,edgeB,edgeC,radios);
+        return this;
+    }
+
+
+    public FactoidsConjunction setFactoid(Factoid factoid)
+    {
+        return setFactoid(factoid.sphereVariable,factoid.x0,factoid.y0,factoid.z0,factoid.edgeA,factoid.edgeB,factoid.edgeC,factoid.radios);
     }
 
     public Factoid getFactoid(Local sphereVariable) {
