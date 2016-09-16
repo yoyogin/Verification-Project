@@ -37,115 +37,18 @@ public class AssumeSphereContainsTransformer extends AssumeSphereBaseTransformer
             return FactoidsConjunction.getBottom();
         }
 
-        FactoidsConjunction assumedFactoidsConjunction = FactoidsConjunction.getFactoidsConjunction();
-
         Factoid receiverFactoid = factoidsConjunction.getFactoid(receiverVariable);
         Factoid argumentFactoid = factoidsConjunction.getFactoid(argumentVariable);
         if(receiverFactoid == null || argumentFactoid == null) {
             return factoidsConjunction;
         }
 
+        FactoidsConjunction result = FactoidsConjunction.getFactoidsConjunction(factoidsConjunction);
         // TODO: we're loosing here information on whether they're pointing to the same variable
-        if(this.assumeValue == receiverFactoid.contains(argumentFactoid)) {
-            assumedFactoidsConjunction.update(new Factoid(
-                    argumentVariable,
-                    receiverFactoid.sphereInterval.x0,
-                    receiverFactoid.sphereInterval.y0,
-                    receiverFactoid.sphereInterval.z0,
-                    receiverFactoid.sphereInterval.edgeA,
-                    receiverFactoid.sphereInterval.edgeB,
-                    receiverFactoid.sphereInterval.edgeC,
-                    receiverFactoid.sphereInterval.radios));
-        } else {
-            assumedFactoidsConjunction.update(getFactoidNotContainedInReceiverFactoid(receiverFactoid));
+        if(!(this.assumeValue == receiverFactoid.sphereInterval.contains(argumentFactoid.sphereInterval))) {
+            result.update(Factoid.getBottom(argumentFactoid.variable));
         }
 
-        return FactoidsConjunction.lowerBound(factoidsConjunction, assumedFactoidsConjunction);
-    }
-
-    private Factoid getFactoidNotContainedInReceiverFactoid(Factoid receiverFactoid) {
-        Factoid result = null;
-
-        Factoid x0Plus1 = new Factoid(
-                argumentVariable,
-                (IntConstant) receiverFactoid.sphereInterval.x0.add(IntConstant.v(1)),
-                receiverFactoid.sphereInterval.y0,
-                receiverFactoid.sphereInterval.z0,
-                receiverFactoid.sphereInterval.edgeA,
-                receiverFactoid.sphereInterval.edgeB,
-                receiverFactoid.sphereInterval.edgeC,
-                receiverFactoid.sphereInterval.radios);
-
-        Factoid y0Plus1 = new Factoid(
-                argumentVariable,
-                receiverFactoid.sphereInterval.x0,
-                (IntConstant) receiverFactoid.sphereInterval.y0.add(IntConstant.v(1)),
-                receiverFactoid.sphereInterval.z0,
-                receiverFactoid.sphereInterval.edgeA,
-                receiverFactoid.sphereInterval.edgeB,
-                receiverFactoid.sphereInterval.edgeC,
-                receiverFactoid.sphereInterval.radios);
-
-        result = Factoid.getUpperBound(x0Plus1, y0Plus1);
-
-        Factoid z0Plus1 = new Factoid(
-                argumentVariable,
-                receiverFactoid.sphereInterval.x0,
-                receiverFactoid.sphereInterval.y0,
-                (IntConstant) receiverFactoid.sphereInterval.z0.add(IntConstant.v(1)),
-                receiverFactoid.sphereInterval.edgeA,
-                receiverFactoid.sphereInterval.edgeB,
-                receiverFactoid.sphereInterval.edgeC,
-                receiverFactoid.sphereInterval.radios);
-
-        result = Factoid.getUpperBound(result, z0Plus1);
-
-        Factoid edgeAPlus1 = new Factoid(
-                argumentVariable,
-                receiverFactoid.sphereInterval.x0,
-                receiverFactoid.sphereInterval.y0,
-                receiverFactoid.sphereInterval.z0,
-                (IntConstant) receiverFactoid.sphereInterval.edgeA.add(IntConstant.v(1)),
-                receiverFactoid.sphereInterval.edgeB,
-                receiverFactoid.sphereInterval.edgeC,
-                receiverFactoid.sphereInterval.radios);
-
-        result = Factoid.getUpperBound(result, edgeAPlus1);
-
-        Factoid edgeBPlus1 = new Factoid(
-                argumentVariable,
-                receiverFactoid.sphereInterval.x0,
-                receiverFactoid.sphereInterval.y0,
-                receiverFactoid.sphereInterval.z0,
-                receiverFactoid.sphereInterval.edgeA,
-                (IntConstant) receiverFactoid.sphereInterval.edgeB.add(IntConstant.v(1)),
-                receiverFactoid.sphereInterval.edgeC,
-                receiverFactoid.sphereInterval.radios);
-
-        result = Factoid.getUpperBound(result, edgeBPlus1);
-
-        Factoid edgeCPlus1 = new Factoid(
-                argumentVariable,
-                receiverFactoid.sphereInterval.x0,
-                receiverFactoid.sphereInterval.y0,
-                receiverFactoid.sphereInterval.z0,
-                receiverFactoid.sphereInterval.edgeA,
-                receiverFactoid.sphereInterval.edgeB,
-                (IntConstant) receiverFactoid.sphereInterval.edgeC.add(IntConstant.v(1)),
-                receiverFactoid.sphereInterval.radios);
-
-        result = Factoid.getUpperBound(result, edgeCPlus1);
-
-        Factoid radiosPlus1 = new Factoid(
-                argumentVariable,
-                receiverFactoid.sphereInterval.x0,
-                receiverFactoid.sphereInterval.y0,
-                receiverFactoid.sphereInterval.z0,
-                receiverFactoid.sphereInterval.edgeA,
-                receiverFactoid.sphereInterval.edgeB,
-                receiverFactoid.sphereInterval.edgeC,
-                (IntConstant) receiverFactoid.sphereInterval.radios.add(IntConstant.v(1)));
-
-        return Factoid.getUpperBound(result, radiosPlus1);
+        return result;
     }
 }

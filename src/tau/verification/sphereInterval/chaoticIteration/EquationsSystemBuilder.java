@@ -25,7 +25,7 @@ public class EquationsSystemBuilder {
     private Map<Unit, WorkListItem> ifStmtToAssumeFalseWorkListItem = new HashMap<>();
     private Map<Unit, WorkListItem> unitToJoinWorkListItem = new HashMap<>();
 
-    private Map<Equation, Unit> equationToUnit = new HashMap<>();
+    private Map<WorkListItem, Unit> workListItemToUnit = new HashMap<>();
 
     public EquationsSystemBuilder(Body body) {
         this.body = body;
@@ -49,10 +49,6 @@ public class EquationsSystemBuilder {
         return stringBuilder.toString();
     }
 
-    public Map<Equation, Unit> getEquationToUnit() {
-        return this.equationToUnit;
-    }
-
     private EquationSystem createEquations() {
         EquationSystem equationSystem = new EquationSystem();
 
@@ -72,7 +68,7 @@ public class EquationsSystemBuilder {
                 },
                 "Entry work list item");
         equationSystem.addEquation(setTopToEntryWorkListItem);
-        this.equationToUnit.put(setTopToEntryWorkListItem, this.unitGraph.getHeads().get(0));
+        this.workListItemToUnit.put(this.entryWorkListItem, this.unitGraph.getHeads().get(0));
 
         for (Unit unit : this.body.getUnits()) {
             List<WorkListItem> inputWorkListItems = this.unitToInputWorkListItems.get(unit);
@@ -82,8 +78,8 @@ public class EquationsSystemBuilder {
                 WorkListItem joinWorkListItem = this.unitToJoinWorkListItem.get(unit);
                 BaseTransformer joinTransformer = new BaseTransformer(2 /* numberOfArguments */) {
                     @Override
-                    public FactoidsConjunction invoke(FactoidsConjunction first, FactoidsConjunction second) {
-                        return FactoidsConjunction.upperBound(first, second);
+                    public FactoidsConjunction invoke(FactoidsConjunction firstFactoidsConjunction, FactoidsConjunction secondFactoidsConjunction) {
+                        return FactoidsConjunction.upperBound(firstFactoidsConjunction, secondFactoidsConjunction);
                     }
 
                     @Override
@@ -94,7 +90,7 @@ public class EquationsSystemBuilder {
 
                 Equation joinEquation = new Equation(joinWorkListItem, joinTransformer, workListItem1, workListItem2, getUnitDescription(unit));
                 equationSystem.addEquation(joinEquation);
-                this.equationToUnit.put(joinEquation, unit);
+                this.workListItemToUnit.put(joinWorkListItem, unit);
             }
             assert inputWorkListItems.size() > 2; //TODO: handle cases of more than two? (e.g. loop continue)
 
@@ -113,24 +109,28 @@ public class EquationsSystemBuilder {
 
                 Equation assumeTrueEquation = new Equation(assumeTrueWorkListItem, assumeTrueTransformer, inputWorkListItem, getUnitDescription(unit));
                 equationSystem.addEquation(assumeTrueEquation);
-                this.equationToUnit.put(assumeTrueEquation, unit);
+                this.workListItemToUnit.put(assumeTrueWorkListItem, unit);
 
                 WorkListItem assumeFalseWorkListItem = this.ifStmtToAssumeFalseWorkListItem.get(ifStmt);
                 BaseTransformer assumeFalseTransformer = this.transformerSwitch.getAssumeTransformer(ifSphereVirtualInvokeExpr, !assumeValue);
 
                 Equation assumeFalseEquation = new Equation(assumeFalseWorkListItem, assumeFalseTransformer, inputWorkListItem, getUnitDescription(unit));
                 equationSystem.addEquation(assumeFalseEquation);
-                this.equationToUnit.put(assumeFalseEquation, unit);
+                this.workListItemToUnit.put(assumeFalseWorkListItem, unit);
             } else {
                 WorkListItem lhsWorkListItem = this.unitToOutputWorkListItem.get(unit);
                 BaseTransformer unitTransformer = this.transformerSwitch.getStatmentTransformer((Stmt) unit);
                 Equation unitEquation = new Equation(lhsWorkListItem,unitTransformer, inputWorkListItem, getUnitDescription(unit));
                 equationSystem.addEquation(unitEquation);
-                this.equationToUnit.put(unitEquation, unit);
+                this.workListItemToUnit.put(lhsWorkListItem, unit);
             }
         }
 
         return equationSystem;
+    }
+
+    public Map<WorkListItem, Unit> getWorkListItemToUnit() {
+        return this.workListItemToUnit;
     }
 
     private boolean getIfAssumeValue(IfStmt ifStmt) {

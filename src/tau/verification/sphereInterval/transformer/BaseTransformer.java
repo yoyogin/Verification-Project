@@ -12,17 +12,17 @@ public abstract class BaseTransformer {
         this.argumentsCount = argumentsCount;
     }
 
-    public FactoidsConjunction invoke(List<WorkListItem> inputs) {
+    public FactoidsConjunction invoke(List<WorkListItem> workListItems) {
         switch (this.argumentsCount) {
         case 0:
             return invoke();
         case 1:
-            FactoidsConjunction input0 = inputs.get(0).value;
-            return invoke(input0);
+            FactoidsConjunction argument = workListItems.get(0).value;
+            return invoke(argument);
         case 2:
-            FactoidsConjunction input1 = inputs.get(0).value;
-            FactoidsConjunction input2 = inputs.get(1).value;
-            return invoke(input1, input2);
+            FactoidsConjunction firstArgument = workListItems.get(0).value;
+            FactoidsConjunction secondArgument = workListItems.get(1).value;
+            return invoke(firstArgument, secondArgument);
         default:
             throw new UnsupportedOperationException();
         }
@@ -32,11 +32,13 @@ public abstract class BaseTransformer {
         throw new UnsupportedOperationException();
     }
 
-    public FactoidsConjunction invoke(FactoidsConjunction input) {
+    public FactoidsConjunction invoke(FactoidsConjunction factoidsConjunction) {
         throw new UnsupportedOperationException();
     }
 
-    public FactoidsConjunction invoke(FactoidsConjunction input1, FactoidsConjunction input2) {
+    public FactoidsConjunction invoke(
+            FactoidsConjunction firstFactoidsConjunction,
+            FactoidsConjunction secondFactoidsConjunction) {
         throw new UnsupportedOperationException();
     }
 

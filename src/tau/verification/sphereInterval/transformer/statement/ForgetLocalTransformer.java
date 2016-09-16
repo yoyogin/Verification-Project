@@ -19,13 +19,13 @@ public class ForgetLocalTransformer extends BaseTransformer {
     }
 
     @Override
-    public FactoidsConjunction invoke(FactoidsConjunction input) {
-        if (input.isBottom()) {
+    public FactoidsConjunction invoke(FactoidsConjunction factoidsConjunction) {
+        if (factoidsConjunction.isBottom()) {
             return FactoidsConjunction.getBottom();
         }
 
-        FactoidsConjunction result = FactoidsConjunction.getFactoidsConjunction(input);
-        result.update(Factoid.getBottom(this.lhs));
+        FactoidsConjunction result = FactoidsConjunction.getFactoidsConjunction(factoidsConjunction);
+        result.removeFactoidByVariable(this.lhs);
 
         return result;
     }

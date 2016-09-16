@@ -7,9 +7,9 @@ public class SphereIntervalTest {
         Sphere y = new Sphere(0, 0, 0, 0);
 
         if (x.contains(y)) {
-            error("Assume true");
+            error("We were wrong, x does contain y!");
         } else {
-            error("Assume false");
+            error("We were wrong, x doesn't contain y!");
         }
     }
 }

@@ -12,8 +12,8 @@ public final class IdTransformer extends BaseTransformer {
     }
 
     @Override
-    public FactoidsConjunction invoke(FactoidsConjunction input) {
-        return input;
+    public FactoidsConjunction invoke(FactoidsConjunction factoidsConjunction) {
+        return factoidsConjunction;
     }
 
     @Override

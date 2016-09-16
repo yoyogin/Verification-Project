@@ -2,10 +2,7 @@ package tau.verification.sphereInterval;
 
 import soot.*;
 import soot.jimple.InvokeStmt;
-import tau.verification.sphereInterval.chaoticIteration.ChaoticIteration;
-import tau.verification.sphereInterval.chaoticIteration.Equation;
-import tau.verification.sphereInterval.chaoticIteration.EquationSystem;
-import tau.verification.sphereInterval.chaoticIteration.EquationsSystemBuilder;
+import tau.verification.sphereInterval.chaoticIteration.*;
 import tau.verification.sphereInterval.lattice.FactoidsConjunction;
 import tau.verification.sphereInterval.util.StringUtils;
 
@@ -50,19 +47,19 @@ public class Analysis extends BodyTransformer {
         chaoticIteration.iterate(equationSystem);
 
         System.out.println("\n>>>>> Error report for method '" + methodName + "' <<<<<");
-        reportErrors(equationsSystemBuilder.getEquationToUnit());
+        reportErrors(equationsSystemBuilder.getWorkListItemToUnit());
     }
 
-    private void reportErrors(Map<Equation, Unit> equationToUnit) {
+    private void reportErrors(Map<WorkListItem, Unit> equationToUnit) {
         Collection<Unit> errors = new HashSet<>();
 
-        for (Map.Entry<Equation, Unit> entry : equationToUnit.entrySet()) {
-            Equation equation = entry.getKey();
+        for (Map.Entry<WorkListItem, Unit> entry : equationToUnit.entrySet()) {
+            WorkListItem workList = entry.getKey();
             Unit unit = entry.getValue();
 
             if (unit instanceof InvokeStmt) {
                 InvokeStmt invokeStmt = (InvokeStmt) unit;
-                boolean isInvocationReachable = !equation.getLhsWorkListItem().value.equals(FactoidsConjunction.getBottom());
+                boolean isInvocationReachable = workList.value.evaluateConjunction();
                 boolean isErrorInvocation = invokeStmt.getInvokeExpr().getMethod().getName().equals("error");
 
                 if (isInvocationReachable && isErrorInvocation) {

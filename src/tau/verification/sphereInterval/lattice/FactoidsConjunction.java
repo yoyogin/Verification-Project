@@ -30,6 +30,16 @@ public class FactoidsConjunction {
         return new FactoidsConjunction(true);
     }
 
+    public boolean evaluateConjunction(){
+        for(Factoid factoid : this.factoids) {
+            if(factoid.isBottom()){
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     private FactoidsConjunction(boolean isBottom) {
         this.factoids = isBottom ? null : new TreeSet<Factoid>();
     }
@@ -166,7 +176,7 @@ public class FactoidsConjunction {
         return (this.factoids != null) && (this.factoids.isEmpty());
     }
 
-    private void removeFactoidByVariable(JimpleLocal variable) {
+    public void removeFactoidByVariable(JimpleLocal variable) {
         for (Iterator<Factoid> iterator = factoids.iterator(); iterator.hasNext();) {
             Factoid factoid = iterator.next();
             if (factoid.variable.equals(variable)) {

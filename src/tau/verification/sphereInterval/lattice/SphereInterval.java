@@ -126,6 +126,10 @@ public class SphereInterval {
         return String.format("%s", sphereIntervalDescription);
     }
 
+    public boolean contains(SphereInterval other) {
+        return SphereInterval.getLowerBound(this, other).equals(other);
+    }
+
     private IntConstant getX1() {
         return (IntConstant) this.x0.add(this.edgeA);
     }
