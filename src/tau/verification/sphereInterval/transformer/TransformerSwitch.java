@@ -1,10 +1,9 @@
 package tau.verification.sphereInterval.transformer;
 
-import soot.Local;
+import soot.Value;
 import soot.jimple.*;
 import soot.jimple.internal.JSpecialInvokeExpr;
 import soot.jimple.internal.JimpleLocal;
-import tau.verification.sphereInterval.function.IdTransformer;
 import tau.verification.sphereInterval.function.TransformerFunction;
 
 import java.util.List;
@@ -50,13 +49,13 @@ public class TransformerSwitch extends AbstractStmtSwitch {
      *
      * Examples:
      * > specialinvoke temp$0.<Sphere: void <init>(int,int,int,int)>(0, 0, 0, 1)
+     * > virtualinvoke this.<SphereIntervalTest: void error(java.lang.String)>("Cannot prove that x.contains(y)")
      */
     @Override
     public void caseInvokeStmt(InvokeStmt stmt) {
         assert transformer == null;
 
         if(!(stmt.getInvokeExpr() instanceof JSpecialInvokeExpr)) {
-            // TODO: decide what to do
             return;
         }
 
@@ -66,13 +65,13 @@ public class TransformerSwitch extends AbstractStmtSwitch {
         String methodName = specialInvokeExpr.getMethod().getName();
 
         if(!(className.equals("Sphere") && methodName.equals("<init>"))) {
-            // TODO: decide what to do
             return;
         }
 
         JimpleLocal recieverVariable = (JimpleLocal) specialInvokeExpr.getBaseBox().getValue(); //TODO: do this without casting
         List arguments = specialInvokeExpr.getArgs();
         if(arguments.size() == 4) {
+            //TODO: is it right to assume that all four would be IntConstants?
             IntConstant x = (IntConstant) arguments.get(0);
             IntConstant y = (IntConstant) arguments.get(1);
             IntConstant z = (IntConstant) arguments.get(2);
@@ -86,17 +85,34 @@ public class TransformerSwitch extends AbstractStmtSwitch {
     }
 
     /**
-     * It seems that these are not of our interest.
+     * We are interested in assignments in which the rhs is a sphere variable //TODO: should we make sure that the lhs is of type sphere?
      *
      * Note: that for Sphere variable 'Assignment from constructor' we look for the accompanying constructor call //TODO is this a valid assumption?
      *
      * Examples:
      * > temp$0 = new Sphere
-     * >
+     * > y = temp$1
      */
     @Override
     public void caseAssignStmt(AssignStmt stmt) {
         assert transformer == null;
+
+        Value lhs = stmt.getLeftOp();
+        if(!(lhs instanceof JimpleLocal)) {
+            return;
+        }
+
+        Value rhs = stmt.getRightOp();
+        if (!(rhs instanceof JimpleLocal)) {
+            transformer = new ForgetLocalTransformer((JimpleLocal) lhs);
+            return;
+        }
+
+        if(lhs.equals(rhs)) {
+            transformer = new IdTransformer();
+        } else {
+            transformer = new AssignLocalToLocalTransformer((JimpleLocal) lhs, (JimpleLocal) rhs);
+        }
 
         return;
     }
