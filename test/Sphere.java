@@ -24,7 +24,7 @@ public class Sphere {
                 this.x,
                 this.y,
                 this.z,
-                newRadios);
+                this.radios + radios);
     }
 
     public boolean isContainedIn(Sphere other) {
