@@ -2,7 +2,7 @@ public class Sphere {
     public int x;
     public int y;
     public int z;
-    private int radios;
+    public int radios;
 
     public Sphere(int x, int y, int z, int radios) {
         this.x = x;
