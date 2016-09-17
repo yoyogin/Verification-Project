@@ -51,6 +51,9 @@ public class TransformerSwitch extends AbstractStmtSwitch {
             return new AssumeSphereContainsTransformer(receiverVariable, argumentVariable, assumeValue);
         } else if (methodName.equals("isContainedIn")) {
             return new AssumeSphereIsContainedInTransformer(receiverVariable, argumentVariable, assumeValue);
+        }
+        else if(methodName.equals("isRadiosLessOrEqualThan")) {
+            return new AssumeSphereContainsTransformer(receiverVariable, argumentVariable, assumeValue);
         } else {
             return new IdTransformer();
         }

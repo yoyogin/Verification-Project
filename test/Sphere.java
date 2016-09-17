@@ -1,8 +1,8 @@
 public class Sphere {
-    public final int x;
-    public final int y;
-    public final int z;
-    public final int radios;
+    private final int x;
+    private final int y;
+    private final int z;
+    private final int radios;
 
     public Sphere(int x, int y, int z, int radios) {
         this.x = x;
@@ -17,6 +17,16 @@ public class Sphere {
                 this.y + y,
                 this.z + z,
                 this.radios);
+    }
+
+    public boolean isRadiosLessOrEqualThan(int constValue)
+    {
+        return this.radios <=constValue
+    }
+
+    public boolean isRadiosLessOrEqualThan(Sphere other)
+    {
+        return this.radios <=other.radios;
     }
 
     public Sphere addRadios(int radios) {
@@ -39,6 +49,8 @@ public class Sphere {
 
         return (sqrt_sum + this.radios) <= other.radios;
     }
+
+
 
     public boolean contains(Sphere other) {
         return other.isContainedIn(this);
