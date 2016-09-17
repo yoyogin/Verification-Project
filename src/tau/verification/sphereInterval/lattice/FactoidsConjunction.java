@@ -124,7 +124,7 @@ public class FactoidsConjunction {
             this.factoids = new TreeSet<>();
         }
 
-
+        this.removeFactoidByVariable(factoid.variable);
         this.factoids.add(factoid);
     }
 

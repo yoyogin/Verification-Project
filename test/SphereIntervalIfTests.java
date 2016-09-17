@@ -1,8 +1,9 @@
-public class SphereIntervalTest {
+public class SphereIntervalIfTests {
     private void error(String message) {
+        // dummy error function to be caught by analysis
     }
 
-    public void ifContainsExample() {
+    public void ifContainsSimpleExample() {
         Sphere x = new Sphere(0, 0, 0, 1);
         Sphere y = new Sphere(0, 0, 0, 0);
 
@@ -13,7 +14,7 @@ public class SphereIntervalTest {
         }
     }
 
-    public void ifIsContainedExample() {
+    public void ifIsContainedSimpleExample() {
         Sphere x = new Sphere(0, 0, 0, 1);
         Sphere y = new Sphere(0, 0, 0, 0);
 
