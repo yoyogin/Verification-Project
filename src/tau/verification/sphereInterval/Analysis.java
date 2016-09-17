@@ -27,7 +27,7 @@ public class Analysis extends BodyTransformer {
     }
 
     public Analysis() {
-        this.ignoreMethodList = Arrays.asList(new String[] { "Success", "Error", "<init>", "addPoint", "addRadios", "setPoint", "setRadios", "isContainedIn", "contains" });
+        this.ignoreMethodList = Arrays.asList(new String[] { "Note", "Success", "Error", "<init>", "addPoint", "addRadios", "setPoint", "setRadios", "isContainedIn", "contains" });
     }
 
     @Override
@@ -48,12 +48,12 @@ public class Analysis extends BodyTransformer {
         ChaoticIteration chaoticIteration = new ChaoticIteration();
         chaoticIteration.iterate(equationSystem);
 
-        System.out.println("\n>>>>> Report success and error for method '" + methodName + "' <<<<<");
-        reportSuccessAndError(equationsSystemBuilder.getWorkListItemToUnit());
+        System.out.println("\n>>>>> Report for method '" + methodName + "' <<<<<");
+        printReport(equationsSystemBuilder.getWorkListItemToUnit());
     }
 
-    private void reportSuccessAndError(Map<WorkListItem, Unit> equationToUnit) {
-        Collection<String> successAndErrorMessages = new HashSet<>();
+    private void printReport(Map<WorkListItem, Unit> equationToUnit) {
+        Collection<String> messages = new HashSet<>();
 
         for (Map.Entry<WorkListItem, Unit> entry : equationToUnit.entrySet()) {
             WorkListItem workList = entry.getKey();
@@ -63,22 +63,23 @@ public class Analysis extends BodyTransformer {
                 InvokeStmt invokeStmt = (InvokeStmt) unit;
                 boolean isInvocationReachable = workList.value.evaluateConjunction();
                 String methodName = invokeStmt.getInvokeExpr().getMethod().getName();
+                boolean isNoteInvocation = methodName.equals("Note");
                 boolean isSuccessInvocation = methodName.equals("Success");
                 boolean isErrorInvocation = methodName.equals("Error");
 
-                if (!(isInvocationReachable && (isSuccessInvocation || isErrorInvocation))) {
+                if (!(isInvocationReachable && (isSuccessInvocation || isErrorInvocation || isNoteInvocation))) {
                     continue;
                 }
 
                 StringBuilder stringBuilder = new StringBuilder(methodName + " ");
                 stringBuilder.append(invokeStmt.getInvokeExpr().getArg(0));
-                successAndErrorMessages.add(stringBuilder.toString());
+                messages.add(stringBuilder.toString());
             }
         }
 
-        System.out.println("Found " + successAndErrorMessages.size() + " Success and Error invocations");
-        if (!successAndErrorMessages.isEmpty()) {
-            System.out.println(StringUtils.collectionWithSeparatorToString(successAndErrorMessages, "\n"));
+        System.out.println("Found " + messages.size() + " messages");
+        if (!messages.isEmpty()) {
+            System.out.println(StringUtils.collectionWithSeparatorToString(messages, "\n"));
         }
 
         System.out.println("\n");

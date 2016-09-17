@@ -33,6 +33,8 @@ public class SphereIntervalWhileTests {
         Sphere x = new Sphere(0, 0, 0, 7);
         Sphere y = new Sphere(0, 0, 0, 0);
 
+        Report.Note("This test does not have errors or successes")
+
         while(!y.contains(x)) {
             //code that doesn't change x nor y
         }
