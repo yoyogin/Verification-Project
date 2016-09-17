@@ -39,7 +39,7 @@ public class ChaoticIteration {
             WorkListItem currentWorkListItem = removeItemFromWorkList(workList);
             Equation currentEquation = equationSystem.getEquation(currentWorkListItem);
 
-            System.out.println("Iteration " + iterationCounter + ": working on equation " + currentEquation.toString());
+            System.out.println("\nIteration " + iterationCounter + ": working on equation " + currentEquation.toString());
 
             System.out.println("\t\t\t" + currentEquation.getLhsWorkListItem() + " : " + currentEquation.getLhsWorkListItem().value);
             for (WorkListItem arg : currentEquation.getRhsWorkListItems()) {
@@ -48,7 +48,7 @@ public class ChaoticIteration {
 
             FactoidsConjunction previousValue = currentEquation.getLhsWorkListItem().value;
             currentEquation.evaluate();
-            System.out.println("\t\t\t updated " + currentEquation.getLhsWorkListItem() + " : " + currentEquation.getLhsWorkListItem().value);
+            System.out.println("\n\t\t\tUpdated " + currentEquation.getLhsWorkListItem() + " : " + currentEquation.getLhsWorkListItem().value);
 
 
             if (FactoidsConjunction.lessThanEquals(currentEquation.getLhsWorkListItem().value, previousValue)) {
