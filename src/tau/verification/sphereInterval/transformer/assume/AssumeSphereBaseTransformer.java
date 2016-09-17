@@ -7,19 +7,19 @@ import tau.verification.sphereInterval.transformer.BaseTransformer;
  * A transformer for assume statements.
  */
 public class AssumeSphereBaseTransformer extends BaseTransformer {
-    public final boolean assumeValue;
+    public final boolean assumeContains;
 
     public AssumeSphereBaseTransformer(
             JimpleLocal receiverVariable,
             JimpleLocal argumentVariable,
-            boolean assumeValue) {
+            boolean assumeContains) {
         super(1 /* numberOfArguments */);
 
-        this.assumeValue = assumeValue;
+        this.assumeContains = assumeContains;
     }
 
     protected String getDecoratedAssumeString(String assumeExpressionDescription) {
-        if (this.assumeValue) {
+        if (this.assumeContains) {
             return assumeExpressionDescription;
         } else {
             return "!" + assumeExpressionDescription;

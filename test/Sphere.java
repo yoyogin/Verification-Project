@@ -40,7 +40,7 @@ public class Sphere {
         this.radios = radios;
     }
 
-    public boolean isContained(Sphere other) {
+    public boolean isContainedIn(Sphere other) {
 
         double dist_x = (this.x-other.x) * (this.x-other.x);
         double dist_y = (this.y-other.y) * (this.y-other.y);
@@ -54,7 +54,7 @@ public class Sphere {
     }
 
     public boolean contains(Sphere other) {
-        return other.isContained(this);
+        return other.isContainedIn(this);
 
     }
 }

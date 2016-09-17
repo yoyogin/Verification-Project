@@ -41,8 +41,8 @@ public class AssumeSphereContainsTransformer extends AssumeSphereBaseTransformer
         }
 
         FactoidsConjunction result = FactoidsConjunction.getFactoidsConjunction(factoidsConjunction);
-        // TODO: we're loosing here information on whether they're pointing to the same variable
-        if(!(this.assumeValue == receiverFactoid.sphereInterval.contains(argumentFactoid.sphereInterval))) {
+        if (!(this.assumeContains == receiverFactoid.sphereInterval.contains(argumentFactoid.sphereInterval))) {
+            result.update(Factoid.getBottom(receiverFactoid.variable));
             result.update(Factoid.getBottom(argumentFactoid.variable));
         }
 

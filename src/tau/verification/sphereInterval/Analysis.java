@@ -1,6 +1,7 @@
 package tau.verification.sphereInterval;
 
 import soot.*;
+import soot.jimple.InvokeExpr;
 import soot.jimple.InvokeStmt;
 import tau.verification.sphereInterval.chaoticIteration.ChaoticIteration;
 import tau.verification.sphereInterval.chaoticIteration.EquationSystem;
@@ -27,7 +28,7 @@ public class Analysis extends BodyTransformer {
     }
 
     public Analysis() {
-        this.ignoreMethodList = Arrays.asList(new String[] { "<init>", "addPoint", "addRadios", "setPoint", "setRadios", "isContained", "contains", "error" });
+        this.ignoreMethodList = Arrays.asList(new String[] { "Success", "Error", "<init>", "addPoint", "addRadios", "setPoint", "setRadios", "isContainedIn", "contains" });
     }
 
     @Override
@@ -48,12 +49,12 @@ public class Analysis extends BodyTransformer {
         ChaoticIteration chaoticIteration = new ChaoticIteration();
         chaoticIteration.iterate(equationSystem);
 
-        System.out.println("\n>>>>> Error report for method '" + methodName + "' <<<<<");
-        reportErrors(equationsSystemBuilder.getWorkListItemToUnit());
+        System.out.println("\n>>>>> Report success and error for method '" + methodName + "' <<<<<");
+        reportSuccessAndError(equationsSystemBuilder.getWorkListItemToUnit());
     }
 
-    private void reportErrors(Map<WorkListItem, Unit> equationToUnit) {
-        Collection<Unit> errors = new HashSet<>();
+    private void reportSuccessAndError(Map<WorkListItem, Unit> equationToUnit) {
+        Collection<String> successAndErrorMessages = new HashSet<>();
 
         for (Map.Entry<WorkListItem, Unit> entry : equationToUnit.entrySet()) {
             WorkListItem workList = entry.getKey();
@@ -62,17 +63,23 @@ public class Analysis extends BodyTransformer {
             if (unit instanceof InvokeStmt) {
                 InvokeStmt invokeStmt = (InvokeStmt) unit;
                 boolean isInvocationReachable = workList.value.evaluateConjunction();
-                boolean isErrorInvocation = invokeStmt.getInvokeExpr().getMethod().getName().equals("error");
+                String methodName = invokeStmt.getInvokeExpr().getMethod().getName();
+                boolean isSuccessInvocation = methodName.equals("Success");
+                boolean isErrorInvocation = methodName.equals("Error");
 
-                if (isInvocationReachable && isErrorInvocation) {
-                    errors.add(unit);
+                if (!(isInvocationReachable && (isSuccessInvocation || isErrorInvocation))) {
+                    continue;
                 }
+
+                StringBuilder stringBuilder = new StringBuilder(methodName + " ");
+                stringBuilder.append(invokeStmt.getInvokeExpr().getArg(0));
+                successAndErrorMessages.add(stringBuilder.toString());
             }
         }
 
-        System.out.println("Found " + errors.size() + " errors");
-        if (!errors.isEmpty()) {
-            System.out.println(StringUtils.collectionWithSeparatorToString(errors, "\n"));
+        System.out.println("Found " + successAndErrorMessages.size() + " Success and Error invocations");
+        if (!successAndErrorMessages.isEmpty()) {
+            System.out.println(StringUtils.collectionWithSeparatorToString(successAndErrorMessages, "\n"));
         }
 
         System.out.println("\n");

@@ -4,11 +4,11 @@ import soot.jimple.internal.JimpleLocal;
 import tau.verification.sphereInterval.lattice.Factoid;
 import tau.verification.sphereInterval.lattice.FactoidsConjunction;
 
-public class AssumeSphereIsContainedTransformer extends AssumeSphereBaseTransformer {
+public class AssumeSphereIsContainedInTransformer extends AssumeSphereBaseTransformer {
     public final JimpleLocal receiverVariable;
     public final JimpleLocal argumentVariable;
 
-    public AssumeSphereIsContainedTransformer(
+    public AssumeSphereIsContainedInTransformer(
             JimpleLocal receiverVariable,
             JimpleLocal argumentVariable,
             boolean assumeValue) {
@@ -21,7 +21,7 @@ public class AssumeSphereIsContainedTransformer extends AssumeSphereBaseTransfor
     @Override
     public String toString() {
         String assumeExpressionDescription = String.format(
-                "%s.isContained(%s)",
+                "%s.isContainedIn(%s)",
                 this.receiverVariable.toString(),
                 this.argumentVariable.toString());
 
@@ -41,8 +41,8 @@ public class AssumeSphereIsContainedTransformer extends AssumeSphereBaseTransfor
         }
 
         FactoidsConjunction result = FactoidsConjunction.getFactoidsConjunction(factoidsConjunction);
-        // TODO: we're loosing here information on whether they're pointing to the same variable
-        if(!(this.assumeValue == argumentFactoid.sphereInterval.contains(receiverFactoid.sphereInterval))) {
+        if (!(this.assumeContains == argumentFactoid.sphereInterval.contains(receiverFactoid.sphereInterval))) {
+            result.update(Factoid.getBottom(receiverFactoid.variable));
             result.update(Factoid.getBottom(argumentFactoid.variable));
         }
 

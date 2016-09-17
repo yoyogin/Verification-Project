@@ -1,27 +1,45 @@
 public class SphereIntervalIfTests {
-    private void error(String message) {
-        // dummy error function to be caught by analysis
-    }
-
-    public void ifContainsSimpleExample() {
+    public void ifContainsSimpleTest() {
         Sphere x = new Sphere(0, 0, 0, 1);
         Sphere y = new Sphere(0, 0, 0, 0);
 
         if (x.contains(y)) {
-            error("We were wrong, x does contain y!");
+            Report.Success("x does contain y");
         } else {
-            error("We were wrong, x does *not* contain y!");
+            Report.Error("x should contain y");
         }
     }
 
-    public void ifIsContainedSimpleExample() {
+    public void ifIsContainedInSimpleTest() {
         Sphere x = new Sphere(0, 0, 0, 1);
         Sphere y = new Sphere(0, 0, 0, 0);
 
-        if (x.isContained(y)) {
-            error("We were wrong, y does contain x!");
+        if (x.isContainedIn(y)) {
+            Report.Error("x isn't contained in y");
         } else {
-            error("We were wrong, y doesn't *not* contain x!");
+            Report.Sucess("x isn't contained in y");
+        }
+    }
+
+    public void ifContainsNegatedSimpleTest() {
+        Sphere x = new Sphere(0, 0, 0, 1);
+        Sphere y = new Sphere(0, 0, 0, 0);
+
+        if (!x.contains(y)) {
+            Report.Error("x should contain y");
+        } else {
+            Report.Success("x does contain y");
+        }
+    }
+
+    public void ifIsContainedInNegatedSimpleTest() {
+        Sphere x = new Sphere(0, 0, 0, 1);
+        Sphere y = new Sphere(0, 0, 0, 0);
+
+        if (!x.isContainedIn(y)) {
+            Report.Sucess("x isn't contained in y");
+        } else {
+            Report.Error("x isn't contained in y");
         }
     }
 }

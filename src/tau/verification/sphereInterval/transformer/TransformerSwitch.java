@@ -5,7 +5,7 @@ import soot.jimple.internal.JSpecialInvokeExpr;
 import soot.jimple.internal.JVirtualInvokeExpr;
 import soot.jimple.internal.JimpleLocal;
 import tau.verification.sphereInterval.transformer.assume.AssumeSphereContainsTransformer;
-import tau.verification.sphereInterval.transformer.assume.AssumeSphereIsContainedTransformer;
+import tau.verification.sphereInterval.transformer.assume.AssumeSphereIsContainedInTransformer;
 import tau.verification.sphereInterval.transformer.statement.*;
 
 import java.util.List;
@@ -49,8 +49,8 @@ public class TransformerSwitch extends AbstractStmtSwitch {
         String methodName = ifExpressionStmt.getMethod().getName();
         if(methodName.equals("contains")) {
             return new AssumeSphereContainsTransformer(receiverVariable, argumentVariable, assumeValue);
-        } else if (methodName.equals("isContained")) {
-            return new AssumeSphereIsContainedTransformer(receiverVariable, argumentVariable, assumeValue);
+        } else if (methodName.equals("isContainedIn")) {
+            return new AssumeSphereIsContainedInTransformer(receiverVariable, argumentVariable, assumeValue);
         } else {
             return new IdTransformer();
         }
