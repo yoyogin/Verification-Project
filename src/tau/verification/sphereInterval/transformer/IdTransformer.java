@@ -1,7 +1,6 @@
 package tau.verification.sphereInterval.transformer;
 
 import tau.verification.sphereInterval.lattice.FactoidsConjunction;
-import tau.verification.sphereInterval.transformer.BaseTransformer;
 
 public final class IdTransformer extends BaseTransformer {
     public IdTransformer() {

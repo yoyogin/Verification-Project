@@ -6,7 +6,10 @@ import soot.jimple.internal.JVirtualInvokeExpr;
 import soot.jimple.internal.JimpleLocal;
 import tau.verification.sphereInterval.transformer.assume.AssumeSphereContainsTransformer;
 import tau.verification.sphereInterval.transformer.assume.AssumeSphereIsContainedInTransformer;
-import tau.verification.sphereInterval.transformer.statement.*;
+import tau.verification.sphereInterval.transformer.statement.AssignLocalToLocalTransformer;
+import tau.verification.sphereInterval.transformer.statement.ForgetLocalTransformer;
+import tau.verification.sphereInterval.transformer.statement.SphereAddRadiosTransformer;
+import tau.verification.sphereInterval.transformer.statement.SphereConstructorTransformer;
 
 import java.util.List;
 

@@ -1,7 +1,6 @@
 package tau.verification.sphereInterval;
 
 import soot.*;
-import soot.jimple.InvokeExpr;
 import soot.jimple.InvokeStmt;
 import tau.verification.sphereInterval.chaoticIteration.ChaoticIteration;
 import tau.verification.sphereInterval.chaoticIteration.EquationSystem;
