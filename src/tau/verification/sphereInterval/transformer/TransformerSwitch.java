@@ -6,10 +6,7 @@ import soot.jimple.internal.JVirtualInvokeExpr;
 import soot.jimple.internal.JimpleLocal;
 import tau.verification.sphereInterval.transformer.assume.AssumeSphereContainsTransformer;
 import tau.verification.sphereInterval.transformer.assume.AssumeSphereIsContainedTransformer;
-import tau.verification.sphereInterval.transformer.statement.AssignLocalToLocalTransformer;
-import tau.verification.sphereInterval.transformer.statement.ForgetLocalTransformer;
-import tau.verification.sphereInterval.transformer.statement.IdTransformer;
-import tau.verification.sphereInterval.transformer.statement.SphereConstructorTransformer;
+import tau.verification.sphereInterval.transformer.statement.*;
 
 import java.util.List;
 
@@ -81,34 +78,58 @@ public class TransformerSwitch extends AbstractStmtSwitch {
     public void caseInvokeStmt(InvokeStmt stmt) {
         assert transformer == null;
 
+        String className = stmt.getInvokeExpr().getMethod().getDeclaringClass().toString();
+        if(!(className.equals("Sphere"))) {
+            return;
+        }
+
+        String methodName = stmt.getInvokeExpr().getMethod().getName();
+
+        if(methodName.equals("<init>")) {
+            sphereConstructorInvokeStmt(stmt);
+        } else if (methodName.equals("addRadios")) {
+            sphereAddRadiosInvokeStmt(stmt);
+        }
+
+        return;
+    }
+
+    private void sphereAddRadiosInvokeStmt(InvokeStmt stmt) {
+        if(!(stmt.getInvokeExpr() instanceof JVirtualInvokeExpr)) {
+            return;
+        }
+
+        JVirtualInvokeExpr virtualInvokeExpr = (JVirtualInvokeExpr) stmt.getInvokeExpr();
+
+        JimpleLocal receiverVariable = (JimpleLocal) virtualInvokeExpr.getBaseBox().getValue();
+
+        List arguments = virtualInvokeExpr.getArgs();
+        if (arguments.size() == 1) {
+            IntConstant additionToRadios = (IntConstant) arguments.get(0);
+
+            transformer = new SphereAddRadiosTransformer(receiverVariable, additionToRadios);
+        }
+    }
+
+    private void sphereConstructorInvokeStmt(InvokeStmt stmt) {
         if(!(stmt.getInvokeExpr() instanceof JSpecialInvokeExpr)) {
             return;
         }
 
         JSpecialInvokeExpr specialInvokeExpr = (JSpecialInvokeExpr) stmt.getInvokeExpr();
 
-        String className = specialInvokeExpr.getMethod().getDeclaringClass().toString();
-        String methodName = specialInvokeExpr.getMethod().getName();
+        JimpleLocal receiverVariable = (JimpleLocal) specialInvokeExpr.getBaseBox().getValue();
 
-        if(!(className.equals("Sphere") && methodName.equals("<init>"))) {
-            return;
-        }
-
-        JimpleLocal recieverVariable = (JimpleLocal) specialInvokeExpr.getBaseBox().getValue();
         List arguments = specialInvokeExpr.getArgs();
-        if(arguments.size() == 4) {
+        if (arguments.size() == 4) {
             IntConstant x = (IntConstant) arguments.get(0);
             IntConstant y = (IntConstant) arguments.get(1);
             IntConstant z = (IntConstant) arguments.get(2);
             IntConstant radios = (IntConstant) arguments.get(3);
 
-            transformer = new SphereConstructorTransformer(recieverVariable, x, y, z, radios);
+            transformer = new SphereConstructorTransformer(receiverVariable, x, y, z, radios);
         }
-
-
-        return;
     }
-
     /**
      * We are interested in assignments in which the rhs is a sphere variable //TODO: should we make sure that the lhs is of type sphere?
      *
@@ -186,7 +207,7 @@ public class TransformerSwitch extends AbstractStmtSwitch {
     /**
      *
      * Examples:
-     * >
+     * > goto [?=nop]
      */
     @Override
     public void caseGotoStmt(GotoStmt stmt) {
@@ -222,7 +243,7 @@ public class TransformerSwitch extends AbstractStmtSwitch {
     /**
      *
      * Examples:
-     * >
+     * > nop
      */
     @Override
     public void caseNopStmt(NopStmt stmt) {

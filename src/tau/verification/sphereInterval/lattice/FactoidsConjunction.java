@@ -153,9 +153,9 @@ public class FactoidsConjunction {
         }
 
         StringBuilder result = new StringBuilder("Conjunction (");
-        Set<JimpleLocal> vars = getVariables();
-        int size = vars.size();
-        for (JimpleLocal variable : vars) {
+        Set<JimpleLocal> variables = this.getVariables();
+        int size = variables.size();
+        for (JimpleLocal variable : variables) {
             Factoid factoid = getFactoid(variable);
             result.append(factoid.toString());
             size--;
