@@ -1,5 +1,5 @@
 public class SphereIntervalWhileTests {
-    public void whileAddRadiosSingleStepSimpleTest() {
+    public void addRadiosSingleStepTest() {
         Sphere x = new Sphere(0, 0, 0, 1);
         Sphere y = new Sphere(0, 0, 0, 0);
 
@@ -14,7 +14,7 @@ public class SphereIntervalWhileTests {
         }
     }
 
-    public void whileAddRadiosevenStepsSimpleTest() {
+    public void addRadioSevenStepsTest() {
         Sphere x = new Sphere(0, 0, 0, 7);
         Sphere y = new Sphere(0, 0, 0, 0);
 
@@ -29,7 +29,7 @@ public class SphereIntervalWhileTests {
         }
     }
 
-    public void whileInfiniteTest() {
+    public void infiniteTest() {
         Sphere x = new Sphere(0, 0, 0, 7);
         Sphere y = new Sphere(0, 0, 0, 0);
 

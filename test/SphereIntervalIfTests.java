@@ -1,5 +1,5 @@
 public class SphereIntervalIfTests {
-    public void ifContainsSimpleTest() {
+    public void containsTest() {
         Sphere x = new Sphere(0, 0, 0, 1);
         Sphere y = new Sphere(0, 0, 0, 0);
 
@@ -10,7 +10,7 @@ public class SphereIntervalIfTests {
         }
     }
 
-    public void ifIsContainedInSimpleTest() {
+    public void isContainedInTest() {
         Sphere x = new Sphere(0, 0, 0, 1);
         Sphere y = new Sphere(0, 0, 0, 0);
 
@@ -21,7 +21,7 @@ public class SphereIntervalIfTests {
         }
     }
 
-    public void ifContainsNegatedSimpleTest() {
+    public void containsNegatedTest() {
         Sphere x = new Sphere(0, 0, 0, 1);
         Sphere y = new Sphere(0, 0, 0, 0);
 
@@ -32,7 +32,7 @@ public class SphereIntervalIfTests {
         }
     }
 
-    public void ifIsContainedInNegatedSimpleTest() {
+    public void isContainedInNegatedTest() {
         Sphere x = new Sphere(0, 0, 0, 1);
         Sphere y = new Sphere(0, 0, 0, 0);
 
