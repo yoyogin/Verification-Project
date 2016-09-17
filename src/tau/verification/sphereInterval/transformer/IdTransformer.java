@@ -1,4 +1,4 @@
-package tau.verification.sphereInterval.transformer.statement;
+package tau.verification.sphereInterval.transformer;
 
 import tau.verification.sphereInterval.lattice.FactoidsConjunction;
 import tau.verification.sphereInterval.transformer.BaseTransformer;
