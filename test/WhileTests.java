@@ -4,7 +4,7 @@ public class WhileTests {
         Sphere y = new Sphere(0, 0, 0, 0);
 
         while(!y.contains(x)) {
-            y.addRadios(1);
+            y = y.addRadios(1);
         }
 
         if(!y.contains(x)) {
@@ -19,7 +19,7 @@ public class WhileTests {
         Sphere y = new Sphere(0, 0, 0, 0);
 
         while(!y.contains(x)) {
-            y.addRadios(1);
+            y = y.addRadios(1);
         }
 
         if(!y.contains(x)) {
