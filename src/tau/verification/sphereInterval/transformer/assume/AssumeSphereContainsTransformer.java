@@ -12,7 +12,7 @@ public class AssumeSphereContainsTransformer extends AssumeSphereBaseTransformer
             JimpleLocal receiverVariable,
             JimpleLocal argumentVariable,
             boolean assumeValue) {
-        super(receiverVariable, argumentVariable, assumeValue);
+        super(assumeValue);
 
         this.receiverVariable = receiverVariable;
         this.argumentVariable = argumentVariable;

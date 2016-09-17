@@ -9,10 +9,7 @@ import tau.verification.sphereInterval.transformer.BaseTransformer;
 public class AssumeSphereBaseTransformer extends BaseTransformer {
     public final boolean assumeContains;
 
-    public AssumeSphereBaseTransformer(
-            JimpleLocal receiverVariable,
-            JimpleLocal argumentVariable,
-            boolean assumeContains) {
+    public AssumeSphereBaseTransformer(boolean assumeContains) {
         super(1 /* numberOfArguments */);
 
         this.assumeContains = assumeContains;

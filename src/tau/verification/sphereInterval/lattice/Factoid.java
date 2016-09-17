@@ -31,34 +31,14 @@ public class Factoid implements Comparable<Factoid> {
         this.sphereInterval = new SphereInterval(x0, y0, z0, edgeA, edgeB, edgeC, radios);
     }
 
-    //TODO: consider making this public when reference to Spheres is introduced
-    private Factoid(
-            JimpleLocal variable,
-            SphereInterval sphereInterval) {
+    public Factoid(JimpleLocal variable, SphereInterval sphereInterval) {
         if(variable == null || sphereInterval == null) {
-            // TODO: should we  || sphereInterval.isBottom ? maybe when we introduce references as we don't want two references to same bottom
             assert false;
             throw new IllegalArgumentException();
         }
 
         this.variable = variable;
-        this.sphereInterval = sphereInterval;
-
-        // We're maintaining the same pointer on purpose for 'x = y' assignments
-        assert this.sphereInterval == sphereInterval;
-    }
-
-    /**
-     * Private constructor for getBottom static method
-     */
-    private Factoid(JimpleLocal variable) {
-        if(variable == null) {
-            assert false;
-            throw new IllegalArgumentException("Factoid lattice requires a named factoid at all times");
-        }
-
-        this.variable = variable;
-        this.sphereInterval = SphereInterval.getBottom();
+        this.sphereInterval = new SphereInterval(sphereInterval);
     }
 
     @Override
@@ -112,7 +92,7 @@ public class Factoid implements Comparable<Factoid> {
     }
 
     public static Factoid getBottom(JimpleLocal variable) {
-        return new Factoid(variable);
+        return new Factoid(variable, SphereInterval.getBottom());
     }
 
     public static Factoid getUpperBound(Factoid first, Factoid second) {

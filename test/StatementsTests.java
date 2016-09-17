@@ -1,14 +1,14 @@
 public class StatementsTests {
     public void addPointWithConstantsTest() {
         Sphere x = new Sphere(0, 0, 0, 0);
-        x.addPoint(1, 1, 1);
+        x = x.addPoint(1, 1, 1);
 
         Report.Note("x should change state during this test")
     }
 
     public void addRadiosWithConstantTest() {
         Sphere x = new Sphere(0, 0, 0, 0);
-        x.addRadios(3);
+        x = x.addRadios(3);
 
         Report.Note("x should change state during this test")
     }
@@ -17,17 +17,17 @@ public class StatementsTests {
         Sphere x = new Sphere(0, 0, 0, 0);
         Sphere y = new Sphere(1, 1, 1, 1);
 
-        x.addRadios(y.radios);
+        x = x.addRadios(y.radios);
 
-        Report.Note("neither x nor y should change state during this test")
+        Report.Note("x should be forgotten and y should not change state during this test")
     }
 
     public void addPointWithFieldsTest() {
         Sphere x = new Sphere(0, 0, 0, 0);
         Sphere y = new Sphere(1, 1, 1, 1);
 
-        x.addPoint(y.x, y.y, y.z);
+        x = x.addPoint(y.x, y.y, y.z);
 
-        Report.Note("neither x nor y should change state during this test")
+        Report.Note("x should be forgotten and y should not change state during this test")
     }
 }

@@ -87,61 +87,9 @@ public class TransformerSwitch extends AbstractStmtSwitch {
 
         if(methodName.equals("<init>")) {
             sphereConstructorInvokeStmt(stmt);
-        } else if (methodName.equals("addRadios")) {
-            sphereAddRadiosInvokeStmt(stmt);
-        } else if (methodName.equals("addPoint")) {
-            sphereAddPointInvokeStmt(stmt);
         }
 
         return;
-    }
-
-    private void sphereAddPointInvokeStmt(InvokeStmt stmt) {
-        if(!(stmt.getInvokeExpr() instanceof JVirtualInvokeExpr)) {
-            return;
-        }
-
-        JVirtualInvokeExpr virtualInvokeExpr = (JVirtualInvokeExpr) stmt.getInvokeExpr();
-
-        JimpleLocal receiverVariable = (JimpleLocal) virtualInvokeExpr.getBaseBox().getValue();
-
-        List arguments = virtualInvokeExpr.getArgs();
-        if (arguments.size() != 3) {
-            return;
-        }
-
-        for(int i = 0; i < 3; i++) {
-            if (!(arguments.get(i) instanceof IntConstant)) {
-                return;
-            }
-        }
-
-        IntConstant additionToX0 = (IntConstant) arguments.get(0);
-        IntConstant additionToY0 = (IntConstant) arguments.get(1);
-        IntConstant additionToZ0 = (IntConstant) arguments.get(2);
-        transformer = new SphereAddPointTransformer(receiverVariable, additionToX0, additionToY0, additionToZ0);
-    }
-
-    private void sphereAddRadiosInvokeStmt(InvokeStmt stmt) {
-        if(!(stmt.getInvokeExpr() instanceof JVirtualInvokeExpr)) {
-            return;
-        }
-
-        JVirtualInvokeExpr virtualInvokeExpr = (JVirtualInvokeExpr) stmt.getInvokeExpr();
-
-        JimpleLocal receiverVariable = (JimpleLocal) virtualInvokeExpr.getBaseBox().getValue();
-
-        List arguments = virtualInvokeExpr.getArgs();
-        if (arguments.size() != 1) {
-            return;
-        }
-
-        if (!(arguments.get(0) instanceof IntConstant)) {
-            return;
-        }
-
-        IntConstant additionToRadios = (IntConstant) arguments.get(0);
-        transformer = new SphereAddRadiosTransformer(receiverVariable, additionToRadios);
     }
 
     private void sphereConstructorInvokeStmt(InvokeStmt stmt) {
@@ -186,10 +134,65 @@ public class TransformerSwitch extends AbstractStmtSwitch {
         Class rhsClass = stmt.getRightOp().getClass();
         if (rhsClass.equals(JimpleLocal.class)) {
             assignLocalToLocalTransformerResolution(lhs, (JimpleLocal) stmt.getRightOp());
-        } else {
+        } else if (rhsClass.equals(JVirtualInvokeExpr.class)) {
+            assignVirtualInvokeToLocalTransformerResolution(lhs, (JVirtualInvokeExpr) stmt.getRightOp());
+        }
+
+        if(transformer == null) {
             // Best practice - lets forget it what we know about it
             transformer = new ForgetLocalTransformer(lhs);
         }
+    }
+
+    private void assignVirtualInvokeToLocalTransformerResolution(JimpleLocal lhs, JVirtualInvokeExpr rhs) {
+        String className = rhs.getMethod().getDeclaringClass().toString();
+        if(!(className.equals("Sphere"))) {
+            return;
+        }
+
+        String methodName = rhs.getMethod().getName();
+
+        if (methodName.equals("addRadios")) {
+            sphereAddRadiosInvokeStmt(lhs, rhs);
+        } else if (methodName.equals("addPoint")) {
+            sphereAddPointInvokeStmt(lhs, rhs);
+        }
+    }
+
+    private void sphereAddPointInvokeStmt(JimpleLocal lhs, JVirtualInvokeExpr virtualInvokeExpr) {
+        JimpleLocal rhsVariable = (JimpleLocal) virtualInvokeExpr.getBaseBox().getValue();
+
+        List arguments = virtualInvokeExpr.getArgs();
+        if (arguments.size() != 3) {
+            return;
+        }
+
+        for(int i = 0; i < 3; i++) {
+            if (!(arguments.get(i) instanceof IntConstant)) {
+                return;
+            }
+        }
+
+        IntConstant additionToX0 = (IntConstant) arguments.get(0);
+        IntConstant additionToY0 = (IntConstant) arguments.get(1);
+        IntConstant additionToZ0 = (IntConstant) arguments.get(2);
+        transformer = new AssignLocalToSphereAddPointTransformer(lhs, rhsVariable, additionToX0, additionToY0, additionToZ0);
+    }
+
+    private void sphereAddRadiosInvokeStmt(JimpleLocal lhs, JVirtualInvokeExpr virtualInvokeExpr) {
+        JimpleLocal rhsVariable = (JimpleLocal) virtualInvokeExpr.getBaseBox().getValue();
+
+        List arguments = virtualInvokeExpr.getArgs();
+        if (arguments.size() != 1) {
+            return;
+        }
+
+        if (!(arguments.get(0) instanceof IntConstant)) {
+            return;
+        }
+
+        IntConstant additionToRadios = (IntConstant) arguments.get(0);
+        transformer = new AssignLocalToSphereAddRadiosTransformer(lhs, rhsVariable, additionToRadios);
     }
 
     private void assignLocalToLocalTransformerResolution(JimpleLocal lhs, JimpleLocal rhs) {

@@ -12,10 +12,6 @@ public class SphereInterval {
     public final IntConstant radios;
 
     public final boolean isBottom;
-    // Add if necessary public final boolean isTop;
-    private static int uniqueIdentifierCounter = 0;
-    private final int uniqueIdentifier;
-
 
     public SphereInterval(
             IntConstant x0,
@@ -26,7 +22,6 @@ public class SphereInterval {
             IntConstant edgeC,
             IntConstant radios) {
         this.isBottom = false;
-        this.uniqueIdentifier = SphereInterval.uniqueIdentifierCounter++;
 
         assert x0 != null;
         assert y0 != null;
@@ -41,12 +36,44 @@ public class SphereInterval {
         this.edgeA = edgeA;
         this.edgeB = edgeB;
         this.edgeC = edgeC;
-        this.radios = radios;
+        this.radios = (radios.lessThan(IntConstant.v(0)).equals(IntConstant.v(1))) ? IntConstant.v(0) : radios;
+    }
+
+    public SphereInterval(SphereInterval other) {
+        if(other.isBottom){
+            this.isBottom = true;
+
+            this.x0 = null;
+            this.y0 = null;
+            this.z0 = null;
+            this.edgeA = null;
+            this.edgeB = null;
+            this.edgeC = null;
+            this.radios = null;
+
+            return;
+        }
+
+        this.isBottom = false;
+
+        assert other.x0 != null;
+        assert other.y0 != null;
+        assert other.z0 != null;
+        assert other.edgeA != null;
+        assert other.edgeB != null;
+        assert other.edgeC != null;
+
+        this.x0 = other.x0;
+        this.y0 = other.y0;
+        this.z0 = other.z0;
+        this.edgeA = other.edgeA;
+        this.edgeB = other.edgeB;
+        this.edgeC = other.edgeC;
+        this.radios = other.radios;
     }
 
     private SphereInterval() {
         this.isBottom = true;
-        this.uniqueIdentifier = SphereInterval.uniqueIdentifierCounter++;
 
         this.x0 = null;
         this.y0 = null;
@@ -122,7 +149,6 @@ public class SphereInterval {
                         this.radios);
         }
 
-//        return String.format("(%d) %s", this.uniqueIdentifier, sphereIntervalDescription); //TODO: consider adding back when moving to reference sphere
         return String.format("%s", sphereIntervalDescription);
     }
 

@@ -6,17 +6,19 @@ import tau.verification.sphereInterval.lattice.Factoid;
 import tau.verification.sphereInterval.lattice.FactoidsConjunction;
 import tau.verification.sphereInterval.transformer.BaseTransformer;
 
-public class SphereAddRadiosTransformer extends BaseTransformer {
-
-    public final JimpleLocal receiverVariable;
+public class AssignLocalToSphereAddRadiosTransformer extends BaseTransformer {
+    public final JimpleLocal lhsVariable;
+    public final JimpleLocal rhsVariable;
     public final IntConstant additionToRadios;
 
-    public SphereAddRadiosTransformer(
-            JimpleLocal receiverVariable,
+    public AssignLocalToSphereAddRadiosTransformer(
+            JimpleLocal lhsVariable,
+            JimpleLocal rhsVariable,
             IntConstant additionToRadios) {
         super(1 /* numberOfArguments */);
 
-        this.receiverVariable = receiverVariable;
+        this.lhsVariable = lhsVariable;
+        this.rhsVariable = rhsVariable;
         this.additionToRadios = additionToRadios;
     }
 
@@ -27,20 +29,20 @@ public class SphereAddRadiosTransformer extends BaseTransformer {
         }
 
         FactoidsConjunction result = FactoidsConjunction.getFactoidsConjunction(factoidsConjunction);
-        Factoid receiverFactoid = result.getFactoid(this.receiverVariable);
-        if(receiverFactoid == null) {
+        Factoid rhsFactoid = result.getFactoid(this.rhsVariable);
+        if(rhsFactoid == null) {
             return result;
         }
 
         result.update(new Factoid(
-                receiverVariable,
-                receiverFactoid.sphereInterval.x0,
-                receiverFactoid.sphereInterval.y0,
-                receiverFactoid.sphereInterval.z0,
-                receiverFactoid.sphereInterval.edgeA,
-                receiverFactoid.sphereInterval.edgeB,
-                receiverFactoid.sphereInterval.edgeC,
-                (IntConstant) receiverFactoid.sphereInterval.radios.add(this.additionToRadios)));
+                this.lhsVariable,
+                rhsFactoid.sphereInterval.x0,
+                rhsFactoid.sphereInterval.y0,
+                rhsFactoid.sphereInterval.z0,
+                rhsFactoid.sphereInterval.edgeA,
+                rhsFactoid.sphereInterval.edgeB,
+                rhsFactoid.sphereInterval.edgeC,
+                (IntConstant) rhsFactoid.sphereInterval.radios.add(this.additionToRadios)));
 
         return result;
     }
