@@ -1,4 +1,4 @@
-public class SphereIntervalIfTests {
+public class IfTests {
     public void containsTest() {
         Sphere x = new Sphere(0, 0, 0, 1);
         Sphere y = new Sphere(0, 0, 0, 0);
@@ -15,9 +15,9 @@ public class SphereIntervalIfTests {
         Sphere y = new Sphere(0, 0, 0, 0);
 
         if (x.isContainedIn(y)) {
-            Report.Error("x isn't contained in y");
+            Report.Error("x is not contained in y");
         } else {
-            Report.Sucess("x isn't contained in y");
+            Report.Success("x is not contained in y");
         }
     }
 
@@ -37,9 +37,9 @@ public class SphereIntervalIfTests {
         Sphere y = new Sphere(0, 0, 0, 0);
 
         if (!x.isContainedIn(y)) {
-            Report.Sucess("x isn't contained in y");
+            Report.Success("x is not contained in y");
         } else {
-            Report.Error("x isn't contained in y");
+            Report.Error("x is not contained in y");
         }
     }
 }

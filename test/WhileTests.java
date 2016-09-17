@@ -1,4 +1,4 @@
-public class SphereIntervalWhileTests {
+public class WhileTests {
     public void addRadiosSingleStepTest() {
         Sphere x = new Sphere(0, 0, 0, 1);
         Sphere y = new Sphere(0, 0, 0, 0);
@@ -33,7 +33,7 @@ public class SphereIntervalWhileTests {
         Sphere x = new Sphere(0, 0, 0, 7);
         Sphere y = new Sphere(0, 0, 0, 0);
 
-        Report.Note("This test does not have errors or successes")
+        Report.Note("This test should not have Error nor Success - indication of a successful pass")
 
         while(!y.contains(x)) {
             //code that doesn't change x nor y
