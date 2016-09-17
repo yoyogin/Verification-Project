@@ -39,6 +39,30 @@ public class WhileTests {
             //code that doesn't change x nor y
         }
 
-        Report.Error("The analysis cannot resolve the (infinte) loop");
+        Report.Error("The analysis should not be able to resolve the (infinte) loop");
+    }
+
+    public void misleadingUpdateInWhileBodyTest() {
+        Sphere x = new Sphere(0, 0, 0, 7);
+        Sphere y = new Sphere(0, 0, 0, 3);
+
+        Report.Note("The analysis should not be able to resolve the loop becuase Join(Sphere(0,0,0,7), Sphere(0,0,0,1)) == Sphere(0,0,0,7)");
+
+        while(!y.contains(x)) {
+            x = new Sphere(0, 0, 0, 1);
+        }
+
+        Report.Error("The analysis should not be able to resolve the misleading loop");
+    }
+
+    public void updateInWhileBodyTest() {
+        Sphere x = new Sphere(0, 0, 0, 7);
+        Sphere y = new Sphere(0, 0, 0, 3);
+
+        while(!y.contains(x)) {
+            y = new Sphere(0, 0, 0, 13);
+        }
+
+        Report.Success("The analysis resolved the loop becuase Join(Sphere(0,0,0,3), Sphere(0,0,0,13)) == Sphere(0,0,0,13)");
     }
 }
