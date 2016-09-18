@@ -22,19 +22,17 @@ public class Factoid implements Comparable<Factoid> {
             IntConstant edgeB,
             IntConstant edgeC,
             IntConstant radios) {
-        if(variable == null) {
+        if (variable == null) {
             assert false;
             throw new IllegalArgumentException();
         }
 
-
         this.variable = variable;
-
         this.sphereInterval = new SphereInterval(x0, y0, z0, edgeA, edgeB, edgeC, radios);
     }
 
     public Factoid(JimpleLocal variable, SphereInterval sphereInterval) {
-        if(variable == null || sphereInterval == null) {
+        if (variable == null || sphereInterval == null) {
             assert false;
             throw new IllegalArgumentException();
         }
@@ -60,9 +58,8 @@ public class Factoid implements Comparable<Factoid> {
 
         if (object instanceof Factoid) {
             Factoid other = (Factoid) object;
-            result =
-                this.variable.equals(other.variable) &&
-                this.sphereInterval.equals(other.sphereInterval);
+            result = this.variable.equals(other.variable) &&
+                     this.sphereInterval.equals(other.sphereInterval);
         }
 
         return result;
@@ -100,7 +97,7 @@ public class Factoid implements Comparable<Factoid> {
     public static Factoid getUpperBound(Factoid first, Factoid second) {
         assert first != null && second != null;
 
-        if(!first.variable.equals(second.variable)) {
+        if (!first.variable.equals(second.variable)) {
             assert false;
             throw new IllegalArgumentException("Factoids with different variables belong to different lattices");
         }
@@ -115,7 +112,7 @@ public class Factoid implements Comparable<Factoid> {
     public static Factoid getLowerBound(Factoid first, Factoid second) {
         assert first != null && second != null;
 
-        if(!first.variable.equals(second.variable)) {
+        if (!first.variable.equals(second.variable)) {
             assert false;
             throw new IllegalArgumentException("Factoids with different variables belong to different lattices");
         }
@@ -125,11 +122,10 @@ public class Factoid implements Comparable<Factoid> {
                 SphereInterval.getLowerBound(first.sphereInterval, second.sphereInterval));
     }
 
-    public static Factoid widen(Factoid first,Factoid second)
-    {
+    public static Factoid widen(Factoid first, Factoid second) {
         assert first != null && second != null;
 
-        if(!first.variable.equals(second.variable)) {
+        if (!first.variable.equals(second.variable)) {
             assert false;
             throw new IllegalArgumentException("Factoids with different variables belong to different lattices");
         }
@@ -139,11 +135,10 @@ public class Factoid implements Comparable<Factoid> {
                 SphereInterval.widen(first.sphereInterval, second.sphereInterval));
     }
 
-    public static Factoid narrow(Factoid first,Factoid second)
-    {
+    public static Factoid narrow(Factoid first, Factoid second) {
         assert first != null && second != null;
 
-        if(!first.variable.equals(second.variable)) {
+        if (!first.variable.equals(second.variable)) {
             assert false;
             throw new IllegalArgumentException("Factoids with different variables belong to different lattices");
         }

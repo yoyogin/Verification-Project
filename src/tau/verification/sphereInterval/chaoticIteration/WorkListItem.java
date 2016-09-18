@@ -14,8 +14,7 @@ public class WorkListItem {
         return result;
     }
 
-    public static void clean()
-    {
+    public static void clean() {
         workListItemCounter = 0;
     }
 

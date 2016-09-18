@@ -19,14 +19,12 @@ public class Sphere {
                 this.radios);
     }
 
-    public boolean isRadiosLessOrEqualThan(int constValue)
-    {
-        return this.radios <=constValue
+    public boolean isRadiosLessOrEqualThan(int constValue) {
+        return this.radios <= constValue
     }
 
-    public boolean isRadiosLessOrEqualThan(Sphere other)
-    {
-        return this.radios <=other.radios;
+    public boolean isRadiosLessOrEqualThan(Sphere other) {
+        return this.radios <= other.radios;
     }
 
     public Sphere addRadios(int radios) {
@@ -46,10 +44,8 @@ public class Sphere {
         double sum = dist_x + dist_y + dist_z;
         double sqrt_sum = Math.sqrt(sum);
 
-
         return (sqrt_sum + this.radios) <= other.radios;
     }
-
 
 
     public boolean contains(Sphere other) {

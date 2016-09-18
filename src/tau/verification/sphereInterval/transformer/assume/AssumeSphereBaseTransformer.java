@@ -1,6 +1,5 @@
 package tau.verification.sphereInterval.transformer.assume;
 
-import soot.jimple.internal.JimpleLocal;
 import tau.verification.sphereInterval.transformer.BaseTransformer;
 
 /**

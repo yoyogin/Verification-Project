@@ -32,41 +32,38 @@ public class AssumeSphereIsContainedInTransformer extends AssumeSphereBaseTransf
 
     @Override
     public FactoidsConjunction invoke(FactoidsConjunction factoidsConjunction) {
-        if(assumeContains == false)
-        {
+        if (assumeContains == false) {
             //TODO handle false by returning bottom if 100% contained in.
             //We are able to check it only for trivial cases like dot spheres
-            return  factoidsConjunction;
+            return factoidsConjunction;
         }
 
-        if(factoidsConjunction.isBottom()) {
+        if (factoidsConjunction.isBottom()) {
             return FactoidsConjunction.getBottom();
         }
 
-
         Factoid receiverFactoid = factoidsConjunction.getFactoid(receiverVariable);
         Factoid argumentFactoid = factoidsConjunction.getFactoid(argumentVariable);
-        if(receiverFactoid == null || argumentFactoid == null) {
+        if (receiverFactoid == null || argumentFactoid == null) {
             return factoidsConjunction;
         }
 
         // Create a meet with SI element by algorithm described documentation
         SphereInterval meetWithElement = new SphereInterval(
-                (IntConstant)argumentFactoid.sphereInterval.x0.subtract(argumentFactoid.sphereInterval.radios),
-                (IntConstant)argumentFactoid.sphereInterval.y0.subtract(argumentFactoid.sphereInterval.radios),
-                (IntConstant)argumentFactoid.sphereInterval.z0.subtract(argumentFactoid.sphereInterval.radios),
-                (IntConstant)argumentFactoid.sphereInterval.edgeA.add(argumentFactoid.sphereInterval.radios.multiply(IntConstant.v(2))),
-                (IntConstant)argumentFactoid.sphereInterval.edgeB.add(argumentFactoid.sphereInterval.radios.multiply(IntConstant.v(2))),
-                (IntConstant)argumentFactoid.sphereInterval.edgeC.add(argumentFactoid.sphereInterval.radios.multiply(IntConstant.v(2))),
+                (IntConstant) argumentFactoid.sphereInterval.x0.subtract(argumentFactoid.sphereInterval.radios),
+                (IntConstant) argumentFactoid.sphereInterval.y0.subtract(argumentFactoid.sphereInterval.radios),
+                (IntConstant) argumentFactoid.sphereInterval.z0.subtract(argumentFactoid.sphereInterval.radios),
+                (IntConstant) argumentFactoid.sphereInterval.edgeA.add(argumentFactoid.sphereInterval.radios.multiply(IntConstant.v(2))),
+                (IntConstant) argumentFactoid.sphereInterval.edgeB.add(argumentFactoid.sphereInterval.radios.multiply(IntConstant.v(2))),
+                (IntConstant) argumentFactoid.sphereInterval.edgeC.add(argumentFactoid.sphereInterval.radios.multiply(IntConstant.v(2))),
                 argumentFactoid.sphereInterval.radios);
 
-        SphereInterval meetWithElementResult = SphereInterval.getLowerBound(receiverFactoid.sphereInterval,meetWithElement);
-        Factoid assumedContainsFactoid = new Factoid(receiverFactoid.variable,meetWithElementResult);
+        SphereInterval meetWithElementResult = SphereInterval.getLowerBound(receiverFactoid.sphereInterval, meetWithElement);
+        Factoid assumedContainsFactoid = new Factoid(receiverFactoid.variable, meetWithElementResult);
 
         FactoidsConjunction result = FactoidsConjunction.getFactoidsConjunction(factoidsConjunction);
         result.update(assumedContainsFactoid);
 
         return result;
-
     }
 }

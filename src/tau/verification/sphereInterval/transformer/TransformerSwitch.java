@@ -30,59 +30,42 @@ public class TransformerSwitch extends AbstractStmtSwitch {
 
         String className = ifExpressionStmt.getMethod().getDeclaringClass().toString();
 
-        if(!(className.equals("Sphere"))) {
+        if (!(className.equals("Sphere"))) {
             return new IdTransformer();
         }
 
         JimpleLocal receiverVariable = (JimpleLocal) ifExpressionStmt.getBaseBox().getValue();
         List arguments = ifExpressionStmt.getArgs();
 
-        if(arguments.size() != 1) {
+        if (arguments.size() != 1) {
             return new IdTransformer();
         }
 
-        if((arguments.get(0) instanceof JimpleLocal)) {
+        if ((arguments.get(0) instanceof JimpleLocal)) {
             JimpleLocal argumentVariable = (JimpleLocal) arguments.get(0);
 
             String methodName = ifExpressionStmt.getMethod().getName();
-            if(methodName.equals("contains")) {
+            if (methodName.equals("contains")) {
                 return new AssumeSphereContainsTransformer(receiverVariable, argumentVariable, assumeValue);
             } else if (methodName.equals("isContainedIn")) {
                 return new AssumeSphereIsContainedInTransformer(receiverVariable, argumentVariable, assumeValue);
-            }
-            else if(methodName.equals("isRadiosLessOrEqualThan")) {
+            } else if (methodName.equals("isRadiosLessOrEqualThan")) {
                 return new AssumeIsRadiosLessOrEqualThanTransformer(receiverVariable, argumentVariable, assumeValue);
             }
-        }else if(arguments.get(0) instanceof IntConstant)
-        {
+        } else if (arguments.get(0) instanceof IntConstant) {
             IntConstant argumentConstant = (IntConstant) arguments.get(0);
 
             String methodName = ifExpressionStmt.getMethod().getName();
 
-            if(methodName.equals("isRadiosLessOrEqualThan")) {
+            if (methodName.equals("isRadiosLessOrEqualThan")) {
                 return new AssumeIsRadiosLessOrEqualThanTransformer(receiverVariable, argumentConstant, assumeValue);
             }
         }
 
         return new IdTransformer();
-
-
     }
 
     /**
-     *
-     * Examples:
-     * >
-     */
-    @Override
-    public void caseBreakpointStmt(BreakpointStmt stmt) {
-        assert transformer == null;
-
-        return;
-    }
-
-    /**
-     *
      * Examples:
      * > specialinvoke temp$0.<Sphere: void <init>(int,int,int,int)>(0, 0, 0, 1)
      * > virtualinvoke this.<SphereIntervalTest: void error(java.lang.String)>("Cannot prove that x.contains(y)")
@@ -92,13 +75,13 @@ public class TransformerSwitch extends AbstractStmtSwitch {
         assert transformer == null;
 
         String className = stmt.getInvokeExpr().getMethod().getDeclaringClass().toString();
-        if(!(className.equals("Sphere"))) {
+        if (!(className.equals("Sphere"))) {
             return;
         }
 
         String methodName = stmt.getInvokeExpr().getMethod().getName();
 
-        if(methodName.equals("<init>")) {
+        if (methodName.equals("<init>")) {
             sphereConstructorInvokeStmt(stmt);
         }
 
@@ -106,7 +89,7 @@ public class TransformerSwitch extends AbstractStmtSwitch {
     }
 
     private void sphereConstructorInvokeStmt(InvokeStmt stmt) {
-        if(!(stmt.getInvokeExpr() instanceof JSpecialInvokeExpr)) {
+        if (!(stmt.getInvokeExpr() instanceof JSpecialInvokeExpr)) {
             return;
         }
 
@@ -124,11 +107,12 @@ public class TransformerSwitch extends AbstractStmtSwitch {
             transformer = new SphereConstructorTransformer(receiverVariable, x, y, z, radios);
         }
     }
+
     /**
      * We are interested in assignments in which the rhs is a sphere variable //TODO: should we make sure that the lhs is of type sphere?
-     *
+     * <p>
      * Note: that for Sphere variable 'Assignment from constructor' we look for the accompanying constructor call //TODO is this a valid assumption?
-     *
+     * <p>
      * Examples:
      * > temp$0 = new Sphere
      * > y = temp$1
@@ -138,7 +122,7 @@ public class TransformerSwitch extends AbstractStmtSwitch {
     public void caseAssignStmt(AssignStmt stmt) {
         assert transformer == null;
 
-        if(!(stmt.getLeftOp() instanceof JimpleLocal)) {
+        if (!(stmt.getLeftOp() instanceof JimpleLocal)) {
             return;
         }
 
@@ -151,7 +135,7 @@ public class TransformerSwitch extends AbstractStmtSwitch {
             assignVirtualInvokeToLocalTransformerResolution(lhs, (JVirtualInvokeExpr) stmt.getRightOp());
         }
 
-        if(transformer == null) {
+        if (transformer == null) {
             // Best practice - lets forget it what we know about it
             transformer = new ForgetLocalTransformer(lhs);
         }
@@ -159,7 +143,7 @@ public class TransformerSwitch extends AbstractStmtSwitch {
 
     private void assignVirtualInvokeToLocalTransformerResolution(JimpleLocal lhs, JVirtualInvokeExpr rhs) {
         String className = rhs.getMethod().getDeclaringClass().toString();
-        if(!(className.equals("Sphere"))) {
+        if (!(className.equals("Sphere"))) {
             return;
         }
 
@@ -180,7 +164,7 @@ public class TransformerSwitch extends AbstractStmtSwitch {
             return;
         }
 
-        for(int i = 0; i < 3; i++) {
+        for (int i = 0; i < 3; i++) {
             if (!(arguments.get(i) instanceof IntConstant)) {
                 return;
             }
@@ -209,156 +193,10 @@ public class TransformerSwitch extends AbstractStmtSwitch {
     }
 
     private void assignLocalToLocalTransformerResolution(JimpleLocal lhs, JimpleLocal rhs) {
-        if(lhs.equals(rhs)) {
+        if (lhs.equals(rhs)) {
             transformer = new IdTransformer();
         } else {
             transformer = new AssignLocalToLocalTransformer(lhs, rhs);
         }
-    }
-
-    /**
-     * It seems that these are not of our interest
-     * Examples:
-     * > this := @this: SphereIntervalTest
-     *
-     */
-    @Override
-    public void caseIdentityStmt(IdentityStmt stmt) {
-        assert transformer == null;
-
-        return;
-    }
-
-    /**
-     *
-     * Examples:
-     * >
-     */
-    @Override
-    public void caseEnterMonitorStmt(EnterMonitorStmt stmt) {
-        assert transformer == null;
-
-        return;
-    }
-
-    /**
-     *
-     * Examples:
-     * >
-     */
-    @Override
-    public void caseExitMonitorStmt(ExitMonitorStmt stmt) {
-        assert transformer == null;
-
-        return;
-    }
-
-    /**
-     *
-     * Examples:
-     * > goto [?=nop]
-     */
-    @Override
-    public void caseGotoStmt(GotoStmt stmt) {
-        assert transformer == null;
-
-        return;
-    }
-
-    /**
-     *
-     * Examples:
-     * >
-     */
-    @Override
-    public void caseIfStmt(IfStmt stmt) {
-        assert transformer == null;
-
-        return;
-    }
-
-    /**
-     *
-     * Examples:
-     * >
-     */
-    @Override
-    public void caseLookupSwitchStmt(LookupSwitchStmt stmt) {
-        assert transformer == null;
-
-        return;
-    }
-
-    /**
-     *
-     * Examples:
-     * > nop
-     */
-    @Override
-    public void caseNopStmt(NopStmt stmt) {
-        assert transformer == null;
-
-        return;
-    }
-
-    /**
-     *
-     * Examples:
-     * >
-     */
-    @Override
-    public void caseRetStmt(RetStmt stmt) {
-        assert transformer == null;
-
-        return;
-    }
-
-    /**
-     *
-     * Examples:
-     * >
-     */
-    @Override
-    public void caseReturnStmt(ReturnStmt stmt) {
-        assert transformer == null;
-
-        return;
-    }
-
-    /**
-     *
-     * Examples:
-     * >
-     */
-    @Override
-    public void caseReturnVoidStmt(ReturnVoidStmt stmt) {
-        assert transformer == null;
-
-        return;
-    }
-
-    /**
-     *
-     * Examples:
-     * >
-     */
-    @Override
-    public void caseTableSwitchStmt(TableSwitchStmt stmt) {
-        assert transformer == null;
-
-        return;
-    }
-
-    /**
-     *
-     * Examples:
-     * >
-     */
-
-    @Override
-    public void caseThrowStmt(ThrowStmt stmt) {
-        assert transformer == null;
-
-        return;
     }
 }

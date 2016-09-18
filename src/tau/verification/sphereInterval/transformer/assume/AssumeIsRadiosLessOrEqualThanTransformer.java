@@ -6,10 +6,7 @@ import tau.verification.sphereInterval.lattice.Factoid;
 import tau.verification.sphereInterval.lattice.FactoidsConjunction;
 import tau.verification.sphereInterval.lattice.SphereInterval;
 
-/**
- * Created by Lior on 16/09/18.
- */
-public class AssumeIsRadiosLessOrEqualThanTransformer extends AssumeSphereBaseTransformer  {
+public class AssumeIsRadiosLessOrEqualThanTransformer extends AssumeSphereBaseTransformer {
 
     public final JimpleLocal receiverVariable;
     public final JimpleLocal argumentVariable;
@@ -39,50 +36,46 @@ public class AssumeIsRadiosLessOrEqualThanTransformer extends AssumeSphereBaseTr
 
     @Override
     public String toString() {
-
-
         String assumeExpressionDescription = String.format(
-                    "%s.isRadiosLessOrEqualThan(%s)",
-                    this.receiverVariable.toString(),
-                    this.argumentVariable == null ? this.argumentConstant .toString() : this.argumentVariable.toString());
-
-
+                "%s.isRadiosLessOrEqualThan(%s)",
+                this.receiverVariable.toString(),
+                this.argumentVariable == null ? this.argumentConstant.toString() : this.argumentVariable.toString());
 
         return this.getDecoratedAssumeString(assumeExpressionDescription);
     }
 
     @Override
-    public FactoidsConjunction invoke(FactoidsConjunction factoidsConjunction){
-
-        if(assumeContains == false)
-        {
-            //we cant handle false assume
+    public FactoidsConjunction invoke(FactoidsConjunction factoidsConjunction) {
+        if (assumeContains == false) {
+            // we cant handle false assume
             return factoidsConjunction;
         }
 
-        if(factoidsConjunction.isBottom()) {
+        if (factoidsConjunction.isBottom()) {
             return FactoidsConjunction.getBottom();
         }
 
         Factoid receiverFactoid = factoidsConjunction.getFactoid(receiverVariable);
-        if(receiverFactoid == null ) {
+        if (receiverFactoid == null) {
             return factoidsConjunction;
         }
 
         IntConstant radios;
 
-        if(argumentConstant != null)
-        {
-            radios = ((IntConstant)(receiverFactoid.sphereInterval.radios.lessThanOrEqual(argumentConstant))).value == 1? receiverFactoid.sphereInterval.radios : argumentConstant;
+        if (argumentConstant != null) {
+            radios = (((IntConstant) (receiverFactoid.sphereInterval.radios.lessThanOrEqual(argumentConstant))).value == 1)
+                    ? receiverFactoid.sphereInterval.radios
+                    : argumentConstant;
 
-        }else
-        {
+        } else {
             Factoid argumentFactoid = factoidsConjunction.getFactoid(argumentVariable);
-            if(argumentFactoid == null ) {
+            if (argumentFactoid == null) {
                 return factoidsConjunction;
             }
 
-            radios = ((IntConstant)(receiverFactoid.sphereInterval.radios.lessThanOrEqual(argumentFactoid.sphereInterval.radios))).value == 1? receiverFactoid.sphereInterval.radios : argumentFactoid.sphereInterval.radios;
+            radios = (((IntConstant) (receiverFactoid.sphereInterval.radios.lessThanOrEqual(argumentFactoid.sphereInterval.radios))).value == 1)
+                    ? receiverFactoid.sphereInterval.radios
+                    : argumentFactoid.sphereInterval.radios;
         }
 
         SphereInterval si = new SphereInterval(
@@ -94,13 +87,11 @@ public class AssumeIsRadiosLessOrEqualThanTransformer extends AssumeSphereBaseTr
                 receiverFactoid.sphereInterval.edgeC,
                 radios
         );
-        Factoid resultFactoid = new Factoid(receiverVariable,si);
-
+        Factoid resultFactoid = new Factoid(receiverVariable, si);
 
         FactoidsConjunction result = FactoidsConjunction.getFactoidsConjunction(factoidsConjunction);
         result.update(resultFactoid);
+
         return result;
-
-
     }
 }

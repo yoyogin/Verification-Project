@@ -21,20 +21,15 @@ public class SphereInterval {
             IntConstant edgeB,
             IntConstant edgeC,
             IntConstant radios) {
-
-
-        if(     x0== null &&
-                y0 == null &&
-                z0 == null &&
-                edgeA == null &&
-                edgeB == null &&
-                edgeC == null &&
-                radios == null
-            )
-        {
+        if (x0 == null &&
+            y0 == null &&
+            z0 == null &&
+            edgeA == null &&
+            edgeB == null &&
+            edgeC == null &&
+            radios == null) {
             this.isBottom = true;
-        }else
-        {
+        } else {
             this.isBottom = false;
         }
 
@@ -45,18 +40,15 @@ public class SphereInterval {
         this.edgeB = edgeB;
         this.edgeC = edgeC;
 
-
-        if(radios != null)
-        {
+        if (radios != null) {
             this.radios = (radios.lessThan(IntConstant.v(0)).equals(IntConstant.v(1))) ? IntConstant.v(0) : radios;
-        }else
-        {
+        } else {
             this.radios = radios;
         }
     }
 
     public SphereInterval(SphereInterval other) {
-        if(other.isBottom){
+        if (other.isBottom) {
             this.isBottom = true;
 
             this.x0 = null;
@@ -105,7 +97,7 @@ public class SphereInterval {
         final int prime = 31;
         int result = 1;
 
-        if(this.isBottom) {
+        if (this.isBottom) {
             result = prime * result + 0;
         } else {
             result = prime * result + this.x0.hashCode();
@@ -127,19 +119,19 @@ public class SphereInterval {
         if (object instanceof SphereInterval) {
             SphereInterval other = (SphereInterval) object;
 
-            if(this.isBottom && other.isBottom) {
+            if (this.isBottom && other.isBottom) {
                 result = true;
-            } else if(this.isBottom && !other.isBottom) {
+            } else if (this.isBottom && !other.isBottom) {
                 result = false;
             } else {
                 result =
-                    this.x0.equals(other.x0) &&
-                    this.y0.equals(other.y0) &&
-                    this.z0.equals(other.z0) &&
-                    this.edgeA.equals(other.edgeA) &&
-                    this.edgeB.equals(other.edgeB) &&
-                    this.edgeC.equals(other.edgeC) &&
-                    this.radios.equals(other.radios);
+                        this.x0.equals(other.x0) &&
+                        this.y0.equals(other.y0) &&
+                        this.z0.equals(other.z0) &&
+                        this.edgeA.equals(other.edgeA) &&
+                        this.edgeB.equals(other.edgeB) &&
+                        this.edgeC.equals(other.edgeC) &&
+                        this.radios.equals(other.radios);
             }
         }
 
@@ -150,12 +142,12 @@ public class SphereInterval {
     public String toString() {
         String sphereIntervalDescription;
 
-        if(this.isBottom) {
+        if (this.isBottom) {
             sphereIntervalDescription = "bottom";
         } else {
             sphereIntervalDescription =
                     String.format(
-                        "(%s, %s, %s, %s, %s, %s, %s)",
+                            "(%s, %s, %s, %s, %s, %s, %s)",
                             handleInfinity(this.x0),
                             handleInfinity(this.y0),
                             handleInfinity(this.z0),
@@ -168,14 +160,10 @@ public class SphereInterval {
         return String.format("%s", sphereIntervalDescription);
     }
 
-    private String handleInfinity(IntConstant constant)
-    {
-        if(constant.value == Integer.MAX_VALUE)
-        {
+    private String handleInfinity(IntConstant constant) {
+        if (constant.value == Integer.MAX_VALUE) {
             return "Infinity";
-        }
-        else if(constant.value == Integer.MIN_VALUE)
-        {
+        } else if (constant.value == Integer.MIN_VALUE) {
             return "-Infinity";
         }
         return constant.toString();
@@ -186,24 +174,21 @@ public class SphereInterval {
     }
 
     private IntConstant getX1() {
-        if(this.edgeA.value == Integer.MAX_VALUE)
-        {
+        if (this.edgeA.value == Integer.MAX_VALUE) {
             return IntConstant.v(Integer.MAX_VALUE);
         }
         return (IntConstant) this.x0.add(this.edgeA);
     }
 
     private IntConstant getY1() {
-        if(this.edgeB.value == Integer.MAX_VALUE)
-        {
+        if (this.edgeB.value == Integer.MAX_VALUE) {
             return IntConstant.v(Integer.MAX_VALUE);
         }
         return (IntConstant) this.y0.add(this.edgeB);
     }
 
     private IntConstant getZ1() {
-        if(this.edgeC.value == Integer.MAX_VALUE)
-        {
+        if (this.edgeC.value == Integer.MAX_VALUE) {
             return IntConstant.v(Integer.MAX_VALUE);
         }
         return (IntConstant) this.z0.add(this.edgeC);
@@ -225,9 +210,9 @@ public class SphereInterval {
         //      return 'Sphere Interval which contains both first and second';
         // }
 
-        if(first.isBottom && second.isBottom) {
+        if (first.isBottom && second.isBottom) {
             return SphereInterval.getBottom();
-        } else if(first.isBottom && !second.isBottom) {
+        } else if (first.isBottom && !second.isBottom) {
             return new SphereInterval(
                     second.x0,
                     second.y0,
@@ -280,7 +265,7 @@ public class SphereInterval {
         //      return 'Sphere interval which is contained in both';
         // }
 
-        if(first.isBottom || second.isBottom) {
+        if (first.isBottom || second.isBottom) {
             return SphereInterval.getBottom();
         }
 
@@ -289,10 +274,10 @@ public class SphereInterval {
         IntConstant jointX0;
         IntConstant jointEdgeA;
         if (first.x0.lessThanOrEqual(second.x0).equals(IntConstant.v(1))) {
-            if(second.x0.lessThanOrEqual(first.getX1()).equals(IntConstant.v(1))) {
+            if (second.x0.lessThanOrEqual(first.getX1()).equals(IntConstant.v(1))) {
                 jointX0 = second.x0;
-                if(second.getX1().lessThanOrEqual(first.getX1()).equals(IntConstant.v(1))) {
-                    jointEdgeA = (IntConstant)second.getX1().subtract(jointX0);
+                if (second.getX1().lessThanOrEqual(first.getX1()).equals(IntConstant.v(1))) {
+                    jointEdgeA = (IntConstant) second.getX1().subtract(jointX0);
                 } else {
                     jointEdgeA = (IntConstant) first.getX1().subtract(jointX0);
                 }
@@ -300,10 +285,10 @@ public class SphereInterval {
                 return SphereInterval.getBottom();
             }
         } else {
-            if(first.x0.lessThanOrEqual(second.getX1()).equals(IntConstant.v(1))) {
+            if (first.x0.lessThanOrEqual(second.getX1()).equals(IntConstant.v(1))) {
                 jointX0 = first.x0;
-                if(first.getX1().lessThanOrEqual(second.getX1()).equals(IntConstant.v(1))) {
-                    jointEdgeA = (IntConstant)first.getX1().subtract(jointX0);
+                if (first.getX1().lessThanOrEqual(second.getX1()).equals(IntConstant.v(1))) {
+                    jointEdgeA = (IntConstant) first.getX1().subtract(jointX0);
                 } else {
                     jointEdgeA = (IntConstant) second.getX1().subtract(jointX0);
                 }
@@ -316,10 +301,10 @@ public class SphereInterval {
         IntConstant jointY0;
         IntConstant jointEdgeB;
         if (first.y0.lessThanOrEqual(second.y0).equals(IntConstant.v(1))) {
-            if(second.y0.lessThanOrEqual(first.getY1()).equals(IntConstant.v(1))) {
+            if (second.y0.lessThanOrEqual(first.getY1()).equals(IntConstant.v(1))) {
                 jointY0 = second.y0;
-                if(second.getY1().lessThanOrEqual(first.getY1()).equals(IntConstant.v(1))) {
-                    jointEdgeB = (IntConstant)second.getY1().subtract(jointY0);
+                if (second.getY1().lessThanOrEqual(first.getY1()).equals(IntConstant.v(1))) {
+                    jointEdgeB = (IntConstant) second.getY1().subtract(jointY0);
                 } else {
                     jointEdgeB = (IntConstant) first.getY1().subtract(second.getY1());
                 }
@@ -327,12 +312,12 @@ public class SphereInterval {
                 return SphereInterval.getBottom();
             }
         } else {
-            if(first.y0.lessThanOrEqual(second.getY1()).equals(IntConstant.v(1))) {
+            if (first.y0.lessThanOrEqual(second.getY1()).equals(IntConstant.v(1))) {
                 jointY0 = first.y0;
-                if(first.getY1().lessThanOrEqual(second.getY1()).equals(IntConstant.v(1))) {
-                    jointEdgeB = (IntConstant)first.getY1().subtract(jointY0);
+                if (first.getY1().lessThanOrEqual(second.getY1()).equals(IntConstant.v(1))) {
+                    jointEdgeB = (IntConstant) first.getY1().subtract(jointY0);
                 } else {
-                    jointEdgeB = (IntConstant)second.getY1().subtract(jointY0);
+                    jointEdgeB = (IntConstant) second.getY1().subtract(jointY0);
                 }
             } else {
                 return SphereInterval.getBottom();
@@ -343,10 +328,10 @@ public class SphereInterval {
         IntConstant jointZ0;
         IntConstant jointEdgeC;
         if (first.z0.lessThanOrEqual(second.z0).equals(IntConstant.v(1))) {
-            if(second.z0.lessThanOrEqual(first.getZ1()).equals(IntConstant.v(1))) {
+            if (second.z0.lessThanOrEqual(first.getZ1()).equals(IntConstant.v(1))) {
                 jointZ0 = second.z0;
-                if(second.getZ1().lessThanOrEqual(first.getZ1()).equals(IntConstant.v(1))) {
-                    jointEdgeC = (IntConstant)second.getZ1().subtract(jointZ0);
+                if (second.getZ1().lessThanOrEqual(first.getZ1()).equals(IntConstant.v(1))) {
+                    jointEdgeC = (IntConstant) second.getZ1().subtract(jointZ0);
                 } else {
                     jointEdgeC = (IntConstant) first.getZ1().subtract(jointZ0);
                 }
@@ -354,9 +339,9 @@ public class SphereInterval {
                 return SphereInterval.getBottom();
             }
         } else {
-            if(first.z0.lessThanOrEqual(second.getZ1()).equals(IntConstant.v(1))) {
+            if (first.z0.lessThanOrEqual(second.getZ1()).equals(IntConstant.v(1))) {
                 jointZ0 = first.z0;
-                if(first.getZ1().lessThanOrEqual(second.getZ1()).equals(IntConstant.v(1))) {
+                if (first.getZ1().lessThanOrEqual(second.getZ1()).equals(IntConstant.v(1))) {
                     jointEdgeC = (IntConstant) first.getZ1().subtract(jointZ0);
                 } else {
                     jointEdgeC = (IntConstant) second.getZ1().subtract(jointZ0);
@@ -381,71 +366,59 @@ public class SphereInterval {
     }
 
 
-    public static SphereInterval widen(SphereInterval first,SphereInterval second)
-    {
-        if(first.isBottom)
-        {
+    public static SphereInterval widen(SphereInterval first, SphereInterval second) {
+        if (first.isBottom) {
             return second;
         }
         return new SphereInterval(
-                getLowerWidening(first.x0,second.x0),
-                getLowerWidening(first.y0,second.y0),
-                getLowerWidening(first.z0,second.z0),
-                getUpperWidening(first.edgeA,second.edgeA),
-                getUpperWidening(first.edgeB,second.edgeB),
-                getUpperWidening(first.edgeC,second.edgeC),
-                getUpperWidening(first.radios,second.radios)
+                getLowerWidening(first.x0, second.x0),
+                getLowerWidening(first.y0, second.y0),
+                getLowerWidening(first.z0, second.z0),
+                getUpperWidening(first.edgeA, second.edgeA),
+                getUpperWidening(first.edgeB, second.edgeB),
+                getUpperWidening(first.edgeC, second.edgeC),
+                getUpperWidening(first.radios, second.radios)
         );
     }
 
-    public static SphereInterval narrow(SphereInterval first,SphereInterval second)
-    {
-        if(second.isBottom)
-        {
+    public static SphereInterval narrow(SphereInterval first, SphereInterval second) {
+        if (second.isBottom) {
             return first;
         }
         return new SphereInterval(
-                getUpperNarrowing(first.x0,second.x0),
-                getUpperNarrowing(first.y0,second.y0),
-                getUpperNarrowing(first.z0,second.z0),
-                getLowerNarrowing(first.edgeA,second.edgeA),
-                getLowerNarrowing(first.edgeB,second.edgeB),
-                getLowerNarrowing(first.edgeC,second.edgeC),
-                getLowerNarrowing(first.radios,second.radios)
+                getUpperNarrowing(first.x0, second.x0),
+                getUpperNarrowing(first.y0, second.y0),
+                getUpperNarrowing(first.z0, second.z0),
+                getLowerNarrowing(first.edgeA, second.edgeA),
+                getLowerNarrowing(first.edgeB, second.edgeB),
+                getLowerNarrowing(first.edgeC, second.edgeC),
+                getLowerNarrowing(first.radios, second.radios)
         );
     }
 
-    private static IntConstant getLowerWidening(IntConstant v1,IntConstant v2)
-    {
-        if(((IntConstant)v1.lessThanOrEqual(v2)).value == 1)
-        {
+    private static IntConstant getLowerWidening(IntConstant v1, IntConstant v2) {
+        if (((IntConstant) v1.lessThanOrEqual(v2)).value == 1) {
             return v1;
         }
         return IntConstant.v(Integer.MIN_VALUE);
     }
 
-    private static IntConstant getUpperWidening(IntConstant v1,IntConstant v2)
-    {
-        if(((IntConstant)v1.greaterThanOrEqual(v2)).value == 1)
-        {
+    private static IntConstant getUpperWidening(IntConstant v1, IntConstant v2) {
+        if (((IntConstant) v1.greaterThanOrEqual(v2)).value == 1) {
             return v1;
         }
         return IntConstant.v(Integer.MAX_VALUE);
     }
 
-    private static IntConstant getUpperNarrowing(IntConstant v1,IntConstant v2)
-    {
-        if(((IntConstant)v1.equalEqual(IntConstant.v(Integer.MIN_VALUE))).value == 1)
-        {
+    private static IntConstant getUpperNarrowing(IntConstant v1, IntConstant v2) {
+        if (((IntConstant) v1.equalEqual(IntConstant.v(Integer.MIN_VALUE))).value == 1) {
             return v2;
         }
         return v1;
     }
 
-    private static IntConstant getLowerNarrowing(IntConstant v1,IntConstant v2)
-    {
-        if(((IntConstant)v1.equalEqual(IntConstant.v(Integer.MAX_VALUE))).value == 1)
-        {
+    private static IntConstant getLowerNarrowing(IntConstant v1, IntConstant v2) {
+        if (((IntConstant) v1.equalEqual(IntConstant.v(Integer.MAX_VALUE))).value == 1) {
             return v2;
         }
         return v1;

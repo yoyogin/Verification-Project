@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Map;
 
 public class EquationsSystemBuilder {
-
     private static final boolean IS_WIDENING_NAROWING_OPTIMINAZION = Analysis.IS_WIDENING_NARROWING_OPTIMIZATION;
 
     private Body body;
@@ -45,8 +44,6 @@ public class EquationsSystemBuilder {
         return createEquations();
     }
 
-
-
     public String getEquationSystemBodyDescription() {
         StringBuilder stringBuilder = new StringBuilder();
 
@@ -57,7 +54,6 @@ public class EquationsSystemBuilder {
 
         return stringBuilder.toString();
     }
-
 
     private EquationSystem createEquations() {
         EquationSystem equationSystem = new EquationSystem();
@@ -103,15 +99,15 @@ public class EquationsSystemBuilder {
                 equationSystem.addEquation(joinEquation);
                 this.workListItemToUnit.put(joinWorkListItem, unit);
 
-                if(IS_WIDENING_NAROWING_OPTIMINAZION)
-                {
-                WorkListItem optimizationWorkList = WorkListItem.getFreshWorkListItem();
+                if (IS_WIDENING_NAROWING_OPTIMINAZION) {
+                    WorkListItem optimizationWorkList = WorkListItem.getFreshWorkListItem();
 
-                BaseTransformer optimizationTransformer = new BaseTransformer(2 /* numberOfArguments */) {
+                    BaseTransformer optimizationTransformer = new BaseTransformer(2 /* numberOfArguments */) {
                         @Override
                         public FactoidsConjunction invoke(FactoidsConjunction firstFactoidsConjunction, FactoidsConjunction secondFactoidsConjunction) {
                             return FactoidsConjunction.widen(firstFactoidsConjunction, secondFactoidsConjunction);
                         }
+
                         @Override
                         public String toString() {
                             return "Widening";
@@ -119,10 +115,10 @@ public class EquationsSystemBuilder {
                     };
 
 
-                Equation optimizationEquation = new Equation(optimizationWorkList, optimizationTransformer, optimizationWorkList, joinWorkListItem, getUnitDescription(unit));
-                equationSystem.addOptimizingEquation(optimizationEquation);
-                this.workListItemToUnit.put(optimizationWorkList, unit);
-                this.unitToJoinWorkListItem.put(unit,optimizationWorkList);
+                    Equation optimizationEquation = new Equation(optimizationWorkList, optimizationTransformer, optimizationWorkList, joinWorkListItem, getUnitDescription(unit));
+                    equationSystem.addOptimizingEquation(optimizationEquation);
+                    this.workListItemToUnit.put(optimizationWorkList, unit);
+                    this.unitToJoinWorkListItem.put(unit, optimizationWorkList);
                 }
 
             }
@@ -154,7 +150,7 @@ public class EquationsSystemBuilder {
             } else {
                 WorkListItem lhsWorkListItem = this.unitToOutputWorkListItem.get(unit);
                 BaseTransformer unitTransformer = this.transformerSwitch.getStatmentTransformer((Stmt) unit);
-                Equation unitEquation = new Equation(lhsWorkListItem,unitTransformer, inputWorkListItem, getUnitDescription(unit));
+                Equation unitEquation = new Equation(lhsWorkListItem, unitTransformer, inputWorkListItem, getUnitDescription(unit));
                 equationSystem.addEquation(unitEquation);
                 this.workListItemToUnit.put(lhsWorkListItem, unit);
             }
@@ -168,14 +164,14 @@ public class EquationsSystemBuilder {
     }
 
     private boolean getIfAssumeValue(IfStmt ifStmt) {
-        if(!(ifStmt.getCondition() instanceof EqExpr)) {
+        if (!(ifStmt.getCondition() instanceof EqExpr)) {
             assert false; // we don't expect this case for our test files
             throw null;
         }
 
         EqExpr expr = (EqExpr) ifStmt.getCondition();
 
-        if(!(expr.getOp2() instanceof IntConstant)) {
+        if (!(expr.getOp2() instanceof IntConstant)) {
             assert false; // we don't expect this case for our test files
             throw null;
         }
@@ -184,57 +180,58 @@ public class EquationsSystemBuilder {
 
         return intConstant.equivTo(IntConstant.v(1));
     }
+
     private JVirtualInvokeExpr getIfSphereVirtualInvokeExpr(IfStmt ifStmt) {
         List<Unit> ifPreds = this.unitGraph.getPredsOf(ifStmt);
-        if(ifPreds.size() != 1) {
+        if (ifPreds.size() != 1) {
             assert false; // we don't expect this case for our test files
             return null;
         }
 
-        if(!(ifPreds.get(0) instanceof AssignStmt)){
+        if (!(ifPreds.get(0) instanceof AssignStmt)) {
             assert false; // we don't expect this case for our test files
             throw null;
         }
 
         AssignStmt assignStmt = (AssignStmt) ifPreds.get(0);
 
-        if(!(assignStmt.getLeftOp() instanceof JimpleLocal)) {
+        if (!(assignStmt.getLeftOp() instanceof JimpleLocal)) {
             assert false; // we don't expect this case for our test files
             throw null;
         }
 
         JimpleLocal lhs = (JimpleLocal) assignStmt.getLeftOp();
 
-        if(!(ifStmt.getCondition() instanceof EqExpr)) {
+        if (!(ifStmt.getCondition() instanceof EqExpr)) {
             assert false; // we don't expect this case for our test files
             throw null;
         }
 
         ConditionExpr expr = (ConditionExpr) ifStmt.getCondition();
 
-        if(!(expr.getOp1() instanceof JimpleLocal)) {
+        if (!(expr.getOp1() instanceof JimpleLocal)) {
             assert false; // we don't expect this case for our test files
             throw null;
         }
 
-        if(!(expr.getOp1().equals(lhs))) {
+        if (!(expr.getOp1().equals(lhs))) {
             // making sure that the variable the if use is the same as the
             // variable we believe the Sphere conditional expression is assigned to
             assert false; // we don't expect this case for our test files
             throw null;
         }
 
-        if(!(lhs.getType() instanceof BooleanType )) {
+        if (!(lhs.getType() instanceof BooleanType)) {
             assert false; // we don't expect this case for our test files
             throw null;
         }
 
-        if(!(lhs.getName().startsWith("temp$"))) {
+        if (!(lhs.getName().startsWith("temp$"))) {
             assert false; // we don't expect this case for our test files
             throw null;
         }
 
-        if(!(assignStmt.getRightOp() instanceof JVirtualInvokeExpr ||
+        if (!(assignStmt.getRightOp() instanceof JVirtualInvokeExpr ||
                 assignStmt.getRightOp() instanceof InstanceFieldRef)) {
             assert false; // we don't expect this case for our test files
             throw null;
@@ -261,7 +258,7 @@ public class EquationsSystemBuilder {
             this.unitToInputWorkListItems.put(unit, inputWorkListItems);
         }
 
-        if(!inputWorkListItems.contains(workListItem)) {
+        if (!inputWorkListItems.contains(workListItem)) {
             inputWorkListItems.add(workListItem);
         }
     }

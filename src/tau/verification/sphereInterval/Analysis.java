@@ -31,18 +31,17 @@ public class Analysis extends BodyTransformer {
     }
 
     public Analysis() {
-        this.ignoreMethodList = Arrays.asList(new String[] { "Note", "Success", "Error", "<init>", "addPoint", "addRadios", "setPoint", "setRadios", "isContainedIn", "contains","isRadiosLessOrEqualThan" });
+        this.ignoreMethodList = Arrays.asList(new String[]{"Note", "Success", "Error", "<init>", "addPoint", "addRadios", "setPoint", "setRadios", "isContainedIn", "contains", "isRadiosLessOrEqualThan"});
     }
 
     @Override
     protected void internalTransform(Body body, String phaseName, Map options) {
         String methodName = body.getMethod().getName();
-        if(ignoreMethodList.contains(methodName)){
+        if (ignoreMethodList.contains(methodName)) {
             return;
         }
 
-        if(IS_WIDENING_NARROWING_OPTIMIZATION)
-        {
+        if (IS_WIDENING_NARROWING_OPTIMIZATION) {
             System.out.println(">>>>> Analyzing method with widening/narrowing optimization'" + methodName + "' <<<<<");
 
             System.out.println("\nBuilding Equation System from '" + methodName + "' body");
@@ -51,16 +50,16 @@ public class Analysis extends BodyTransformer {
             EquationSystem optimizingEquationSystem = equationsSystemBuilder.build();
 
 
-
             System.out.println("Running Widening Chaotic Iteration on equation system");
             ChaoticIteration chaoticIteration = new ChaoticIteration();
-            chaoticIteration.iterate(optimizingEquationSystem,true);
+            chaoticIteration.iterate(optimizingEquationSystem, true);
 
             optimizingEquationSystem.getOptimizingEquation().updateTransformer(new BaseTransformer(2) {
                 @Override
                 public FactoidsConjunction invoke(FactoidsConjunction firstFactoidsConjunction, FactoidsConjunction secondFactoidsConjunction) {
                     return FactoidsConjunction.narrow(firstFactoidsConjunction, secondFactoidsConjunction);
                 }
+
                 @Override
                 public String toString() {
                     return "Narrowing";
@@ -68,12 +67,12 @@ public class Analysis extends BodyTransformer {
             });
 
             System.out.println("Running Narrowing Chaotic Iteration on equation system");
-            chaoticIteration.iterate(optimizingEquationSystem,false);
+            chaoticIteration.iterate(optimizingEquationSystem, false);
 
             System.out.println("\n>>>>> Report for method '" + methodName + "' <<<<<");
             printReport(equationsSystemBuilder.getWorkListItemToUnit());
 
-        }else{
+        } else {
 
             System.out.println(">>>>> Analyzing method '" + methodName + "' <<<<<");
 

@@ -17,27 +17,23 @@ public class EquationSystem {
         workListItemToEquation.put(lhsWorkListItem, equation);
 
         for (WorkListItem rhsWorkListItem : equation.getRhsWorkListItems()) {
+            Set<WorkListItem> dependentWorkListItems = workListItemToDependentWorkListItems.get(rhsWorkListItem);
 
-                Set<WorkListItem> dependentWorkListItems = workListItemToDependentWorkListItems.get(rhsWorkListItem);
+            if (dependentWorkListItems == null) {
+                dependentWorkListItems = new HashSet<>();
+                workListItemToDependentWorkListItems.put(rhsWorkListItem, dependentWorkListItems);
+            }
 
-                if (dependentWorkListItems == null) {
-                    dependentWorkListItems = new HashSet<>();
-                    workListItemToDependentWorkListItems.put(rhsWorkListItem, dependentWorkListItems);
-                }
-
-                dependentWorkListItems.add(lhsWorkListItem);
-
+            dependentWorkListItems.add(lhsWorkListItem);
         }
     }
 
-    public void addOptimizingEquation(Equation equation)
-    {
+    public void addOptimizingEquation(Equation equation) {
         optimizingEquation = equation;
         addEquation(equation);
     }
 
-    public Equation getOptimizingEquation()
-    {
+    public Equation getOptimizingEquation() {
         return optimizingEquation;
     }
 

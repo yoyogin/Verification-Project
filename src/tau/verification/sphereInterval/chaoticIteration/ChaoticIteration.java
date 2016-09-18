@@ -1,6 +1,5 @@
 package tau.verification.sphereInterval.chaoticIteration;
 
-import tau.verification.sphereInterval.Analysis;
 import tau.verification.sphereInterval.lattice.FactoidsConjunction;
 import tau.verification.sphereInterval.util.StringUtils;
 
@@ -14,16 +13,15 @@ public class ChaoticIteration {
      * Solves an equation equationSystem using chaotic iteration
      */
     public void iterate(EquationSystem equationSystem) {
-        iterate(equationSystem,true);
+        iterate(equationSystem, true);
     }
 
-    public void iterate(EquationSystem equationSystem,boolean cleanWorkListItems) {
+    public void iterate(EquationSystem equationSystem, boolean cleanWorkListItems) {
         this.equationSystem = equationSystem;
         this.iterationCounter = 0;
 
         System.out.println("Solving equation system = \n" + equationSystem);
-        if(cleanWorkListItems)
-        {
+        if (cleanWorkListItems) {
             this.equationSystem.resetWorkListItems(FactoidsConjunction.getBottom());
         }
 
@@ -59,14 +57,11 @@ public class ChaoticIteration {
             System.out.println("\n\t\t\tUpdated " + currentEquation.getLhsWorkListItem() + " : " + currentEquation.getLhsWorkListItem().value);
 
 
-                if (FactoidsConjunction.lessThanEquals(currentEquation.getLhsWorkListItem().value, previousValue)) {
-                    // evaluate takes a conjunction upwards so there
-                    // was no change to the value in this iteration
-                    continue;
-                }
-
-
-
+            if (FactoidsConjunction.lessThanEquals(currentEquation.getLhsWorkListItem().value, previousValue)) {
+                // evaluate takes a conjunction upwards so there
+                // was no change to the value in this iteration
+                continue;
+            }
 
             Collection<WorkListItem> newWorkListItemsToWorkingSet = new ArrayList<>();
             for (WorkListItem dependentWorkListItem : equationSystem.getDependentWorkListItems(currentWorkListItem)) {
@@ -87,7 +82,7 @@ public class ChaoticIteration {
         Iterator<WorkListItem> iterator = workList.iterator();
 
         assert iterator.hasNext(); // we shouldn't get to this point
-        if(!iterator.hasNext()) {
+        if (!iterator.hasNext()) {
             return null;
         }
 

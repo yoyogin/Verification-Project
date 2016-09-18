@@ -2,7 +2,6 @@ package tau.verification.sphereInterval.chaoticIteration;
 
 import tau.verification.sphereInterval.transformer.BaseTransformer;
 
-import javax.xml.transform.Transformer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +9,6 @@ public class Equation {
     private final WorkListItem lhsWorkListItem;
     private final ArrayList<WorkListItem> rhsWorkListItems;
     private BaseTransformer transformer;
-
     private final String unitDescription;
 
     public Equation(WorkListItem lhsWorkListItem, BaseTransformer transformer, String unitDescription) {
