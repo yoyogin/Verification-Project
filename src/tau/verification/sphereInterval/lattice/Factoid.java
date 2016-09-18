@@ -123,5 +123,33 @@ public class Factoid implements Comparable<Factoid> {
                 SphereInterval.getLowerBound(first.sphereInterval, second.sphereInterval));
     }
 
+    public static Factoid widen(Factoid first,Factoid second)
+    {
+        assert first != null && second != null;
+
+        if(!first.variable.equals(second.variable)) {
+            assert false;
+            throw new IllegalArgumentException("Factoids with different variables belong to different lattices");
+        }
+
+        return new Factoid(
+                first.variable, // first.variable == second.variable
+                SphereInterval.widen(first.sphereInterval, second.sphereInterval));
+    }
+
+    public static Factoid narrow(Factoid first,Factoid second)
+    {
+        assert first != null && second != null;
+
+        if(!first.variable.equals(second.variable)) {
+            assert false;
+            throw new IllegalArgumentException("Factoids with different variables belong to different lattices");
+        }
+
+        return new Factoid(
+                first.variable, // first.variable == second.variable
+                SphereInterval.narrow(first.sphereInterval, second.sphereInterval));
+    }
+
 
 }

@@ -338,4 +338,75 @@ public class SphereInterval {
 
         return result;
     }
+
+
+    public static SphereInterval widen(SphereInterval first,SphereInterval second)
+    {
+        if(first.isBottom)
+        {
+            return second;
+        }
+        return new SphereInterval(
+                getLowerWidening(first.x0,second.x0),
+                getLowerWidening(first.y0,second.y0),
+                getLowerWidening(first.z0,second.z0),
+                getUpperWidening(first.edgeA,second.edgeA),
+                getUpperWidening(first.edgeB,second.edgeB),
+                getUpperWidening(first.edgeC,second.edgeC),
+                getUpperWidening(first.radios,second.radios)
+        );
+    }
+
+    public static SphereInterval narrow(SphereInterval first,SphereInterval second)
+    {
+        if(second.isBottom)
+        {
+            return first;
+        }
+        return new SphereInterval(
+                getUpperNarrowing(first.x0,second.x0),
+                getUpperNarrowing(first.y0,second.y0),
+                getUpperNarrowing(first.z0,second.z0),
+                getLowerNarrowing(first.edgeA,second.edgeA),
+                getLowerNarrowing(first.edgeB,second.edgeB),
+                getLowerNarrowing(first.edgeC,second.edgeC),
+                getLowerNarrowing(first.radios,second.radios)
+        );
+    }
+
+    private static IntConstant getLowerWidening(IntConstant v1,IntConstant v2)
+    {
+        if(((IntConstant)v1.lessThanOrEqual(v2)).value == 1)
+        {
+            return v1;
+        }
+        return IntConstant.v(Integer.MIN_VALUE);
+    }
+
+    private static IntConstant getUpperWidening(IntConstant v1,IntConstant v2)
+    {
+        if(((IntConstant)v1.greaterThanOrEqual(v2)).value == 1)
+        {
+            return v1;
+        }
+        return IntConstant.v(Integer.MAX_VALUE);
+    }
+
+    private static IntConstant getUpperNarrowing(IntConstant v1,IntConstant v2)
+    {
+        if(((IntConstant)v1.equalEqual(IntConstant.v(Integer.MIN_VALUE))).value == 1)
+        {
+            return v2;
+        }
+        return v1;
+    }
+
+    private static IntConstant getLowerNarrowing(IntConstant v1,IntConstant v2)
+    {
+        if(((IntConstant)v1.equalEqual(IntConstant.v(Integer.MAX_VALUE))).value == 1)
+        {
+            return v2;
+        }
+        return v1;
+    }
 }

@@ -213,6 +213,58 @@ public class FactoidsConjunction {
         return result;
     }
 
+    public static FactoidsConjunction widen(FactoidsConjunction first, FactoidsConjunction second) {
+        if (first.isBottom()) {
+            return second;
+        }
+
+
+
+        FactoidsConjunction result = FactoidsConjunction.getFactoidsConjunction();
+        Set<JimpleLocal> variables = first.getVariables();
+        variables.addAll(second.getVariables());
+
+        for (JimpleLocal variable : variables) {
+            Factoid firstFactoid = first.getFactoid(variable);
+            Factoid secondFactoid = second.getFactoid(variable);
+
+            if(firstFactoid == null || secondFactoid == null) {
+                continue;
+            }
+
+            result.update(Factoid.widen(firstFactoid, secondFactoid));
+        }
+
+        return result;
+    }
+
+    public static FactoidsConjunction narrow(FactoidsConjunction first, FactoidsConjunction second) {
+        if (second.isBottom()) {
+            return first;
+        }
+
+
+
+        FactoidsConjunction result = FactoidsConjunction.getFactoidsConjunction();
+        Set<JimpleLocal> variables = first.getVariables();
+        variables.addAll(second.getVariables());
+
+        for (JimpleLocal variable : variables) {
+            Factoid firstFactoid = first.getFactoid(variable);
+            Factoid secondFactoid = second.getFactoid(variable);
+
+            if(firstFactoid == null || secondFactoid == null) {
+                continue;
+            }
+
+            result.update(Factoid.narrow(firstFactoid, secondFactoid));
+        }
+
+        return result;
+    }
+
+
+
     public static FactoidsConjunction lowerBound(FactoidsConjunction first, FactoidsConjunction second) {
         if (first.isBottom() || second.isBottom()) {
             return FactoidsConjunction.getBottom();

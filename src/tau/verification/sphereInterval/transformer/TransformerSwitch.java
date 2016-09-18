@@ -4,6 +4,7 @@ import soot.jimple.*;
 import soot.jimple.internal.JSpecialInvokeExpr;
 import soot.jimple.internal.JVirtualInvokeExpr;
 import soot.jimple.internal.JimpleLocal;
+import tau.verification.sphereInterval.transformer.assume.AssumeIsRadiosLessOrEqualThanTransformer;
 import tau.verification.sphereInterval.transformer.assume.AssumeSphereContainsTransformer;
 import tau.verification.sphereInterval.transformer.assume.AssumeSphereIsContainedInTransformer;
 import tau.verification.sphereInterval.transformer.statement.*;
@@ -40,23 +41,32 @@ public class TransformerSwitch extends AbstractStmtSwitch {
             return new IdTransformer();
         }
 
-        if(!(arguments.get(0) instanceof JimpleLocal)) {
-            return new IdTransformer();
+        if((arguments.get(0) instanceof JimpleLocal)) {
+            JimpleLocal argumentVariable = (JimpleLocal) arguments.get(0);
+
+            String methodName = ifExpressionStmt.getMethod().getName();
+            if(methodName.equals("contains")) {
+                return new AssumeSphereContainsTransformer(receiverVariable, argumentVariable, assumeValue);
+            } else if (methodName.equals("isContainedIn")) {
+                return new AssumeSphereIsContainedInTransformer(receiverVariable, argumentVariable, assumeValue);
+            }
+            else if(methodName.equals("isRadiosLessOrEqualThan")) {
+                return new AssumeIsRadiosLessOrEqualThanTransformer(receiverVariable, argumentVariable, assumeValue);
+            }
+        }else if(arguments.get(0) instanceof IntConstant)
+        {
+            IntConstant argumentConstant = (IntConstant) arguments.get(0);
+
+            String methodName = ifExpressionStmt.getMethod().getName();
+
+            if(methodName.equals("isRadiosLessOrEqualThan")) {
+                return new AssumeIsRadiosLessOrEqualThanTransformer(receiverVariable, argumentConstant, assumeValue);
+            }
         }
 
-        JimpleLocal argumentVariable = (JimpleLocal) arguments.get(0);
+        return new IdTransformer();
 
-        String methodName = ifExpressionStmt.getMethod().getName();
-        if(methodName.equals("contains")) {
-            return new AssumeSphereContainsTransformer(receiverVariable, argumentVariable, assumeValue);
-        } else if (methodName.equals("isContainedIn")) {
-            return new AssumeSphereIsContainedInTransformer(receiverVariable, argumentVariable, assumeValue);
-        }
-        else if(methodName.equals("isRadiosLessOrEqualThan")) {
-            return new AssumeSphereContainsTransformer(receiverVariable, argumentVariable, assumeValue);
-        } else {
-            return new IdTransformer();
-        }
+
     }
 
     /**

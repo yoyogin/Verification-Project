@@ -27,7 +27,7 @@ public class Analysis extends BodyTransformer {
     }
 
     public Analysis() {
-        this.ignoreMethodList = Arrays.asList(new String[] { "Note", "Success", "Error", "<init>", "addPoint", "addRadios", "setPoint", "setRadios", "isContainedIn", "contains" });
+        this.ignoreMethodList = Arrays.asList(new String[] { "Note", "Success", "Error", "<init>", "addPoint", "addRadios", "setPoint", "setRadios", "isContainedIn", "contains","isRadiosLessOrEqualThan" });
     }
 
     @Override
