@@ -9,7 +9,7 @@ public class IntrestingTests {
 
     }
 
-    public void containTest() {
+    public void containTest1() {
         Sphere y = new Sphere(0, 0, 0, 5);
         Sphere x = new Sphere(0, 0, 0, 10);
 
@@ -20,7 +20,7 @@ public class IntrestingTests {
         //maximal possible radios here is 10
     }
 
-    public void containTest() {
+    public void containTest2() {
         Sphere y = new Sphere(2, 2, 2, 5);
         Sphere x = new Sphere(2, 2, 2, 2);
 
@@ -29,7 +29,7 @@ public class IntrestingTests {
         }
     }
 
-    public void containWithOptimizatingTest() {
+    public void containWithOptimizatingTest1() {
         Sphere y = new Sphere(2, 2, 2, 100);
         Sphere x = new Sphere(2, 2, 2, 2);
 
@@ -38,7 +38,7 @@ public class IntrestingTests {
         }
     }
 
-    public void containWithOptimizatingTest() {
+    public void containWithOptimizatingTest2() {
         Sphere y = new Sphere(2, 2, 2, 100);
         Sphere x = new Sphere(2, 2, 2, 2);
 
@@ -48,7 +48,7 @@ public class IntrestingTests {
         }
     }
 
-    public void containWithTest() {
+    public void containWithTest1() {
         Sphere y = new Sphere(2, 2, 2, 2);
         Sphere x = new Sphere(2, 2, 2, 2);
 
@@ -63,7 +63,7 @@ public class IntrestingTests {
         }
     }
 
-    public void containWithTest() {
+    public void containWithTest2() {
         Sphere y = new Sphere(2, 2, 2, 2);
         Sphere x = new Sphere(10, 10, 10, 2);
 
