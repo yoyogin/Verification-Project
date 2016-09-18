@@ -4,9 +4,9 @@ public class IfTests {
         Sphere y = new Sphere(0, 0, 0, 0);
 
         if (x.contains(y)) {
-            Report.Success("x does contain y");
+            x = x.addPoint(2, 2, 2);
         } else {
-            Report.Error("x should contain y");
+            y = y.addPoint(1, 1, 1);
         }
     }
 
@@ -15,9 +15,8 @@ public class IfTests {
         Sphere y = new Sphere(0, 0, 0, 0);
 
         if (x.isContainedIn(y)) {
-            Report.Error("x is not contained in y");
-        } else {
-            Report.Success("x is not contained in y");
+            x = x.addPoint(2, 2, 2);
+            y = y.addPoint(1, 1, 1);
         }
     }
 
@@ -26,9 +25,8 @@ public class IfTests {
         Sphere y = new Sphere(0, 0, 0, 0);
 
         if (!x.contains(y)) {
-            Report.Error("x should contain y");
-        } else {
-            Report.Success("x does contain y");
+            x = x.addPoint(2, 2, 2);
+            y = y.addPoint(1, 1, 1);
         }
     }
 
@@ -37,9 +35,8 @@ public class IfTests {
         Sphere y = new Sphere(0, 0, 0, 0);
 
         if (!x.isContainedIn(y)) {
-            Report.Success("x is not contained in y");
-        } else {
-            Report.Error("x is not contained in y");
+            x = x.addPoint(2, 2, 2);
+            y = y.addPoint(1, 1, 1);
         }
     }
 }
