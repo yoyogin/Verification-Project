@@ -58,23 +58,37 @@ public class IntrestingTests{
 //        }
 //
 //    }
+//
+//    public void containWithTest() {
+//        Sphere y = new Sphere(2,2, 2,2);
+//        Sphere x = new Sphere(2, 2, 2,2);
+//
+//        while(x.isContainedIn(y))
+//        {
+//            x = x.addPoint(1,1,1);
+//            x = x.addRadios(1);
+//
+//        }
+//
+//        if(x.contains(y))
+//        {
+//            x = x.addRadios(1000);
+//
+//        }
+//
+//    }
 
     public void containWithTest() {
         Sphere y = new Sphere(2,2, 2,2);
-        Sphere x = new Sphere(2, 2, 2,2);
+        Sphere x = new Sphere(10, 10, 10,2);
 
         while(x.isContainedIn(y))
         {
-            x = x.addPoint(1,1,1);
             x = x.addRadios(1);
 
         }
 
-        if(x.contains(y))
-        {
-            x = x.addRadios(1000);
 
-        }
 
     }
 }
