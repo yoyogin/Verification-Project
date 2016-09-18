@@ -1,6 +1,6 @@
 package tau.verification.sphereInterval.chaoticIteration;
 
-import tau.verification.sphereInterval.lattice.FactoidsConjunction;
+import tau.verification.sphereInterval.lattice.FactoidsMapping;
 import tau.verification.sphereInterval.util.StringUtils;
 
 import java.util.*;
@@ -58,7 +58,7 @@ public class EquationSystem {
         return result;
     }
 
-    public void resetWorkListItems(FactoidsConjunction value) {
+    public void resetWorkListItems(FactoidsMapping value) {
         for (Equation equation : workListItemToEquation.values()) {
             equation.getLhsWorkListItem().value = value;
         }

@@ -9,7 +9,7 @@ import soot.jimple.internal.JimpleLocal;
 import soot.toolkits.graph.ExceptionalUnitGraph;
 import soot.toolkits.graph.UnitGraph;
 import tau.verification.sphereInterval.Analysis;
-import tau.verification.sphereInterval.lattice.FactoidsConjunction;
+import tau.verification.sphereInterval.lattice.FactoidsMapping;
 import tau.verification.sphereInterval.transformer.BaseTransformer;
 import tau.verification.sphereInterval.transformer.TransformerSwitch;
 
@@ -63,8 +63,8 @@ public class EquationsSystemBuilder {
                 this.entryWorkListItem,
                 new BaseTransformer(0 /* numberOfArguments */) {
                     @Override
-                    public FactoidsConjunction invoke() {
-                        return FactoidsConjunction.getTop();
+                    public FactoidsMapping invoke() {
+                        return FactoidsMapping.getTop();
                     }
 
                     @Override
@@ -85,8 +85,8 @@ public class EquationsSystemBuilder {
                 WorkListItem joinWorkListItem = this.unitToJoinWorkListItem.get(unit);
                 BaseTransformer joinTransformer = new BaseTransformer(2 /* numberOfArguments */) {
                     @Override
-                    public FactoidsConjunction invoke(FactoidsConjunction firstFactoidsConjunction, FactoidsConjunction secondFactoidsConjunction) {
-                        return FactoidsConjunction.upperBound(firstFactoidsConjunction, secondFactoidsConjunction);
+                    public FactoidsMapping invoke(FactoidsMapping firstFactoidsConjunction, FactoidsMapping secondFactoidsConjunction) {
+                        return FactoidsMapping.upperBound(firstFactoidsConjunction, secondFactoidsConjunction);
                     }
 
                     @Override
@@ -104,8 +104,8 @@ public class EquationsSystemBuilder {
 
                     BaseTransformer optimizationTransformer = new BaseTransformer(2 /* numberOfArguments */) {
                         @Override
-                        public FactoidsConjunction invoke(FactoidsConjunction firstFactoidsConjunction, FactoidsConjunction secondFactoidsConjunction) {
-                            return FactoidsConjunction.widen(firstFactoidsConjunction, secondFactoidsConjunction);
+                        public FactoidsMapping invoke(FactoidsMapping firstFactoidsConjunction, FactoidsMapping secondFactoidsConjunction) {
+                            return FactoidsMapping.widen(firstFactoidsConjunction, secondFactoidsConjunction);
                         }
 
                         @Override

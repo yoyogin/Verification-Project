@@ -3,7 +3,7 @@ package tau.verification.sphereInterval.transformer.assume;
 import soot.jimple.IntConstant;
 import soot.jimple.internal.JimpleLocal;
 import tau.verification.sphereInterval.lattice.Factoid;
-import tau.verification.sphereInterval.lattice.FactoidsConjunction;
+import tau.verification.sphereInterval.lattice.FactoidsMapping;
 import tau.verification.sphereInterval.lattice.SphereInterval;
 
 public class AssumeSphereIsContainedInTransformer extends AssumeSphereBaseTransformer {
@@ -31,21 +31,21 @@ public class AssumeSphereIsContainedInTransformer extends AssumeSphereBaseTransf
     }
 
     @Override
-    public FactoidsConjunction invoke(FactoidsConjunction factoidsConjunction) {
+    public FactoidsMapping invoke(FactoidsMapping factoidsMapping) {
         if (assumeContains == false) {
             //TODO handle false by returning bottom if 100% contained in.
             //We are able to check it only for trivial cases like dot spheres
-            return factoidsConjunction;
+            return factoidsMapping;
         }
 
-        if (factoidsConjunction.isBottom()) {
-            return FactoidsConjunction.getBottom();
+        if (factoidsMapping.isBottom()) {
+            return FactoidsMapping.getBottom();
         }
 
-        Factoid receiverFactoid = factoidsConjunction.getFactoid(receiverVariable);
-        Factoid argumentFactoid = factoidsConjunction.getFactoid(argumentVariable);
+        Factoid receiverFactoid = factoidsMapping.getFactoid(receiverVariable);
+        Factoid argumentFactoid = factoidsMapping.getFactoid(argumentVariable);
         if (receiverFactoid == null || argumentFactoid == null) {
-            return factoidsConjunction;
+            return factoidsMapping;
         }
 
         // Create a meet with SI element by algorithm described documentation
@@ -61,7 +61,7 @@ public class AssumeSphereIsContainedInTransformer extends AssumeSphereBaseTransf
         SphereInterval meetWithElementResult = SphereInterval.getLowerBound(receiverFactoid.sphereInterval, meetWithElement);
         Factoid assumedContainsFactoid = new Factoid(receiverFactoid.variable, meetWithElementResult);
 
-        FactoidsConjunction result = FactoidsConjunction.getFactoidsConjunction(factoidsConjunction);
+        FactoidsMapping result = FactoidsMapping.getFactoidsConjunction(factoidsMapping);
         result.update(assumedContainsFactoid);
 
         return result;

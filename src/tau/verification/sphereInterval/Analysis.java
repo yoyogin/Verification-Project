@@ -6,7 +6,7 @@ import tau.verification.sphereInterval.chaoticIteration.ChaoticIteration;
 import tau.verification.sphereInterval.chaoticIteration.EquationSystem;
 import tau.verification.sphereInterval.chaoticIteration.EquationsSystemBuilder;
 import tau.verification.sphereInterval.chaoticIteration.WorkListItem;
-import tau.verification.sphereInterval.lattice.FactoidsConjunction;
+import tau.verification.sphereInterval.lattice.FactoidsMapping;
 import tau.verification.sphereInterval.transformer.BaseTransformer;
 import tau.verification.sphereInterval.util.StringUtils;
 
@@ -56,8 +56,8 @@ public class Analysis extends BodyTransformer {
 
             optimizingEquationSystem.getOptimizingEquation().updateTransformer(new BaseTransformer(2) {
                 @Override
-                public FactoidsConjunction invoke(FactoidsConjunction firstFactoidsConjunction, FactoidsConjunction secondFactoidsConjunction) {
-                    return FactoidsConjunction.narrow(firstFactoidsConjunction, secondFactoidsConjunction);
+                public FactoidsMapping invoke(FactoidsMapping firstFactoidsMapping, FactoidsMapping secondFactoidsMapping) {
+                    return FactoidsMapping.narrow(firstFactoidsMapping, secondFactoidsMapping);
                 }
 
                 @Override

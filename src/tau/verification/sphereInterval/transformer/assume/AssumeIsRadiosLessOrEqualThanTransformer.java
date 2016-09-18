@@ -3,7 +3,7 @@ package tau.verification.sphereInterval.transformer.assume;
 import soot.jimple.IntConstant;
 import soot.jimple.internal.JimpleLocal;
 import tau.verification.sphereInterval.lattice.Factoid;
-import tau.verification.sphereInterval.lattice.FactoidsConjunction;
+import tau.verification.sphereInterval.lattice.FactoidsMapping;
 import tau.verification.sphereInterval.lattice.SphereInterval;
 
 public class AssumeIsRadiosLessOrEqualThanTransformer extends AssumeSphereBaseTransformer {
@@ -45,19 +45,19 @@ public class AssumeIsRadiosLessOrEqualThanTransformer extends AssumeSphereBaseTr
     }
 
     @Override
-    public FactoidsConjunction invoke(FactoidsConjunction factoidsConjunction) {
+    public FactoidsMapping invoke(FactoidsMapping factoidsMapping) {
         if (assumeContains == false) {
             // we cant handle false assume
-            return factoidsConjunction;
+            return factoidsMapping;
         }
 
-        if (factoidsConjunction.isBottom()) {
-            return FactoidsConjunction.getBottom();
+        if (factoidsMapping.isBottom()) {
+            return FactoidsMapping.getBottom();
         }
 
-        Factoid receiverFactoid = factoidsConjunction.getFactoid(receiverVariable);
+        Factoid receiverFactoid = factoidsMapping.getFactoid(receiverVariable);
         if (receiverFactoid == null) {
-            return factoidsConjunction;
+            return factoidsMapping;
         }
 
         IntConstant radios;
@@ -68,9 +68,9 @@ public class AssumeIsRadiosLessOrEqualThanTransformer extends AssumeSphereBaseTr
                     : argumentConstant;
 
         } else {
-            Factoid argumentFactoid = factoidsConjunction.getFactoid(argumentVariable);
+            Factoid argumentFactoid = factoidsMapping.getFactoid(argumentVariable);
             if (argumentFactoid == null) {
-                return factoidsConjunction;
+                return factoidsMapping;
             }
 
             radios = (((IntConstant) (receiverFactoid.sphereInterval.radios.lessThanOrEqual(argumentFactoid.sphereInterval.radios))).value == 1)
@@ -89,7 +89,7 @@ public class AssumeIsRadiosLessOrEqualThanTransformer extends AssumeSphereBaseTr
         );
         Factoid resultFactoid = new Factoid(receiverVariable, si);
 
-        FactoidsConjunction result = FactoidsConjunction.getFactoidsConjunction(factoidsConjunction);
+        FactoidsMapping result = FactoidsMapping.getFactoidsConjunction(factoidsMapping);
         result.update(resultFactoid);
 
         return result;

@@ -1,6 +1,5 @@
 package tau.verification.sphereInterval.lattice;
 
-import soot.jimple.IntConstant;
 import soot.jimple.internal.JimpleLocal;
 
 import java.util.HashSet;
@@ -11,23 +10,23 @@ import java.util.TreeSet;
 /**
  * A set of varToFactoid of the form 'x = Sphere'
  */
-public class FactoidsConjunction {
+public class FactoidsMapping {
     private Set<Factoid> factoids;
 
-    public static FactoidsConjunction getFactoidsConjunction(FactoidsConjunction other) {
-        return new FactoidsConjunction(other);
+    public static FactoidsMapping getFactoidsConjunction(FactoidsMapping other) {
+        return new FactoidsMapping(other);
     }
 
-    public static FactoidsConjunction getFactoidsConjunction() {
-        return new FactoidsConjunction(false);
+    public static FactoidsMapping getFactoidsConjunction() {
+        return new FactoidsMapping(false);
     }
 
-    public static FactoidsConjunction getTop() {
-        return new FactoidsConjunction(false);
+    public static FactoidsMapping getTop() {
+        return new FactoidsMapping(false);
     }
 
-    public static FactoidsConjunction getBottom() {
-        return new FactoidsConjunction(true);
+    public static FactoidsMapping getBottom() {
+        return new FactoidsMapping(true);
     }
 
     public boolean evaluateConjunction() {
@@ -40,11 +39,11 @@ public class FactoidsConjunction {
         return true;
     }
 
-    private FactoidsConjunction(boolean isBottom) {
+    private FactoidsMapping(boolean isBottom) {
         this.factoids = isBottom ? null : new TreeSet<Factoid>();
     }
 
-    private FactoidsConjunction(FactoidsConjunction other) {
+    private FactoidsMapping(FactoidsMapping other) {
         if (other.isBottom()) {
             this.factoids = null;
         } else {
@@ -65,7 +64,7 @@ public class FactoidsConjunction {
     }
 
     public final boolean equals(Object obj) {
-        if (!(obj instanceof FactoidsConjunction)) {
+        if (!(obj instanceof FactoidsMapping)) {
             return false;
         }
 
@@ -73,7 +72,7 @@ public class FactoidsConjunction {
             return true;
         }
 
-        FactoidsConjunction other = (FactoidsConjunction) obj;
+        FactoidsMapping other = (FactoidsMapping) obj;
         if (this.factoids == null || other.factoids == null) {
             return factoids == null && other.factoids == null;
         } else {
@@ -164,7 +163,7 @@ public class FactoidsConjunction {
         }
     }
 
-    public static FactoidsConjunction upperBound(FactoidsConjunction first, FactoidsConjunction second) {
+    public static FactoidsMapping upperBound(FactoidsMapping first, FactoidsMapping second) {
         if (first.isBottom()) {
             return second;
         }
@@ -173,7 +172,7 @@ public class FactoidsConjunction {
             return first;
         }
 
-        FactoidsConjunction result = FactoidsConjunction.getFactoidsConjunction();
+        FactoidsMapping result = FactoidsMapping.getFactoidsConjunction();
         Set<JimpleLocal> variables = first.getVariables();
         variables.addAll(second.getVariables());
 
@@ -191,13 +190,13 @@ public class FactoidsConjunction {
         return result;
     }
 
-    public static FactoidsConjunction widen(FactoidsConjunction first, FactoidsConjunction second) {
+    public static FactoidsMapping widen(FactoidsMapping first, FactoidsMapping second) {
         if (first.isBottom()) {
             return second;
         }
 
 
-        FactoidsConjunction result = FactoidsConjunction.getFactoidsConjunction();
+        FactoidsMapping result = FactoidsMapping.getFactoidsConjunction();
         Set<JimpleLocal> variables = first.getVariables();
         variables.addAll(second.getVariables());
 
@@ -215,13 +214,13 @@ public class FactoidsConjunction {
         return result;
     }
 
-    public static FactoidsConjunction narrow(FactoidsConjunction first, FactoidsConjunction second) {
+    public static FactoidsMapping narrow(FactoidsMapping first, FactoidsMapping second) {
         if (second.isBottom()) {
             return first;
         }
 
 
-        FactoidsConjunction result = FactoidsConjunction.getFactoidsConjunction();
+        FactoidsMapping result = FactoidsMapping.getFactoidsConjunction();
         Set<JimpleLocal> variables = first.getVariables();
         variables.addAll(second.getVariables());
 
@@ -240,12 +239,12 @@ public class FactoidsConjunction {
     }
 
 
-    public static FactoidsConjunction lowerBound(FactoidsConjunction first, FactoidsConjunction second) {
+    public static FactoidsMapping lowerBound(FactoidsMapping first, FactoidsMapping second) {
         if (first.isBottom() || second.isBottom()) {
-            return FactoidsConjunction.getBottom();
+            return FactoidsMapping.getBottom();
         }
 
-        FactoidsConjunction result = FactoidsConjunction.getFactoidsConjunction();
+        FactoidsMapping result = FactoidsMapping.getFactoidsConjunction();
         Set<JimpleLocal> variables = first.getVariables();
         variables.addAll(second.getVariables());
 
@@ -268,7 +267,7 @@ public class FactoidsConjunction {
      *
      * @return true if first is less than or equals the second based on the Factoids Conjunction lattice order relation
      */
-    public static boolean lessThanEquals(FactoidsConjunction first, FactoidsConjunction second) {
+    public static boolean lessThanEquals(FactoidsMapping first, FactoidsMapping second) {
         if (first.isBottom()) {
             return true;
         }

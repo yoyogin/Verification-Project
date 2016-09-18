@@ -1,6 +1,6 @@
 package tau.verification.sphereInterval.chaoticIteration;
 
-import tau.verification.sphereInterval.lattice.FactoidsConjunction;
+import tau.verification.sphereInterval.lattice.FactoidsMapping;
 import tau.verification.sphereInterval.util.StringUtils;
 
 import java.util.*;
@@ -22,7 +22,7 @@ public class ChaoticIteration {
 
         System.out.println("Solving equation system = \n" + equationSystem);
         if (cleanWorkListItems) {
-            this.equationSystem.resetWorkListItems(FactoidsConjunction.getBottom());
+            this.equationSystem.resetWorkListItems(FactoidsMapping.getBottom());
         }
 
         System.out.println("Begin Chaotic Iterations");
@@ -52,12 +52,12 @@ public class ChaoticIteration {
                 System.out.println("\t\t\t" + arg + " : " + arg.value);
             }
 
-            FactoidsConjunction previousValue = currentEquation.getLhsWorkListItem().value;
+            FactoidsMapping previousValue = currentEquation.getLhsWorkListItem().value;
             currentEquation.evaluate();
             System.out.println("\n\t\t\tUpdated " + currentEquation.getLhsWorkListItem() + " : " + currentEquation.getLhsWorkListItem().value);
 
 
-            if (FactoidsConjunction.lessThanEquals(currentEquation.getLhsWorkListItem().value, previousValue)) {
+            if (FactoidsMapping.lessThanEquals(currentEquation.getLhsWorkListItem().value, previousValue)) {
                 // evaluate takes a conjunction upwards so there
                 // was no change to the value in this iteration
                 continue;

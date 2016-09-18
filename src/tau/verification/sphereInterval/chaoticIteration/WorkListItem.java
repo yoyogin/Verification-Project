@@ -1,9 +1,9 @@
 package tau.verification.sphereInterval.chaoticIteration;
 
-import tau.verification.sphereInterval.lattice.FactoidsConjunction;
+import tau.verification.sphereInterval.lattice.FactoidsMapping;
 
 public class WorkListItem {
-    public FactoidsConjunction value;
+    public FactoidsMapping value;
     private String name;
     private static int workListItemCounter = 0; //TODO: consider creating a proper factory object so each method processing will start at index 0
 

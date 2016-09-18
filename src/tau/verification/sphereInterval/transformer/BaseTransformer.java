@@ -1,7 +1,7 @@
 package tau.verification.sphereInterval.transformer;
 
 import tau.verification.sphereInterval.chaoticIteration.WorkListItem;
-import tau.verification.sphereInterval.lattice.FactoidsConjunction;
+import tau.verification.sphereInterval.lattice.FactoidsMapping;
 
 import java.util.List;
 
@@ -12,33 +12,33 @@ public abstract class BaseTransformer {
         this.argumentsCount = argumentsCount;
     }
 
-    public FactoidsConjunction invoke(List<WorkListItem> workListItems) {
+    public FactoidsMapping invoke(List<WorkListItem> workListItems) {
         switch (this.argumentsCount) {
             case 0:
                 return invoke();
             case 1:
-                FactoidsConjunction argument = workListItems.get(0).value;
+                FactoidsMapping argument = workListItems.get(0).value;
                 return invoke(argument);
             case 2:
-                FactoidsConjunction firstArgument = workListItems.get(0).value;
-                FactoidsConjunction secondArgument = workListItems.get(1).value;
+                FactoidsMapping firstArgument = workListItems.get(0).value;
+                FactoidsMapping secondArgument = workListItems.get(1).value;
                 return invoke(firstArgument, secondArgument);
             default:
                 throw new UnsupportedOperationException();
         }
     }
 
-    public FactoidsConjunction invoke() {
+    public FactoidsMapping invoke() {
         throw new UnsupportedOperationException();
     }
 
-    public FactoidsConjunction invoke(FactoidsConjunction factoidsConjunction) {
+    public FactoidsMapping invoke(FactoidsMapping factoidsMapping) {
         throw new UnsupportedOperationException();
     }
 
-    public FactoidsConjunction invoke(
-            FactoidsConjunction firstFactoidsConjunction,
-            FactoidsConjunction secondFactoidsConjunction) {
+    public FactoidsMapping invoke(
+            FactoidsMapping firstFactoidsMapping,
+            FactoidsMapping secondFactoidsMapping) {
         throw new UnsupportedOperationException();
     }
 

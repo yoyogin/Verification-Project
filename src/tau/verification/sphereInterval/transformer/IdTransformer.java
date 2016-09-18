@@ -1,6 +1,6 @@
 package tau.verification.sphereInterval.transformer;
 
-import tau.verification.sphereInterval.lattice.FactoidsConjunction;
+import tau.verification.sphereInterval.lattice.FactoidsMapping;
 
 public final class IdTransformer extends BaseTransformer {
     public IdTransformer() {
@@ -8,8 +8,8 @@ public final class IdTransformer extends BaseTransformer {
     }
 
     @Override
-    public FactoidsConjunction invoke(FactoidsConjunction factoidsConjunction) {
-        return factoidsConjunction;
+    public FactoidsMapping invoke(FactoidsMapping factoidsMapping) {
+        return factoidsMapping;
     }
 
     @Override

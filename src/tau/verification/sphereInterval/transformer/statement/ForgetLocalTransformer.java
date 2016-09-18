@@ -1,7 +1,7 @@
 package tau.verification.sphereInterval.transformer.statement;
 
 import soot.jimple.internal.JimpleLocal;
-import tau.verification.sphereInterval.lattice.FactoidsConjunction;
+import tau.verification.sphereInterval.lattice.FactoidsMapping;
 import tau.verification.sphereInterval.transformer.BaseTransformer;
 
 /**
@@ -18,12 +18,12 @@ public class ForgetLocalTransformer extends BaseTransformer {
     }
 
     @Override
-    public FactoidsConjunction invoke(FactoidsConjunction factoidsConjunction) {
-        if (factoidsConjunction.isBottom()) {
-            return FactoidsConjunction.getBottom();
+    public FactoidsMapping invoke(FactoidsMapping factoidsMapping) {
+        if (factoidsMapping.isBottom()) {
+            return FactoidsMapping.getBottom();
         }
 
-        FactoidsConjunction result = FactoidsConjunction.getFactoidsConjunction(factoidsConjunction);
+        FactoidsMapping result = FactoidsMapping.getFactoidsConjunction(factoidsMapping);
         result.removeFactoidByVariable(this.lhs);
 
         return result;
