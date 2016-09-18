@@ -17,14 +17,16 @@ public class EquationSystem {
         workListItemToEquation.put(lhsWorkListItem, equation);
 
         for (WorkListItem rhsWorkListItem : equation.getRhsWorkListItems()) {
-            Set<WorkListItem> dependentWorkListItems = workListItemToDependentWorkListItems.get(rhsWorkListItem);
 
-            if (dependentWorkListItems == null) {
-                dependentWorkListItems = new HashSet<>();
-                workListItemToDependentWorkListItems.put(rhsWorkListItem, dependentWorkListItems);
-            }
+                Set<WorkListItem> dependentWorkListItems = workListItemToDependentWorkListItems.get(rhsWorkListItem);
 
-            dependentWorkListItems.add(lhsWorkListItem);
+                if (dependentWorkListItems == null) {
+                    dependentWorkListItems = new HashSet<>();
+                    workListItemToDependentWorkListItems.put(rhsWorkListItem, dependentWorkListItems);
+                }
+
+                dependentWorkListItems.add(lhsWorkListItem);
+
         }
     }
 

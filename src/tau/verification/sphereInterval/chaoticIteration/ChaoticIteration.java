@@ -1,5 +1,6 @@
 package tau.verification.sphereInterval.chaoticIteration;
 
+import tau.verification.sphereInterval.Analysis;
 import tau.verification.sphereInterval.lattice.FactoidsConjunction;
 import tau.verification.sphereInterval.util.StringUtils;
 
@@ -58,11 +59,13 @@ public class ChaoticIteration {
             System.out.println("\n\t\t\tUpdated " + currentEquation.getLhsWorkListItem() + " : " + currentEquation.getLhsWorkListItem().value);
 
 
-            if (FactoidsConjunction.lessThanEquals(currentEquation.getLhsWorkListItem().value, previousValue)) {
-                // evaluate takes a conjunction upwards so there
-                // was no change to the value in this iteration
-                continue;
-            }
+                if (FactoidsConjunction.lessThanEquals(currentEquation.getLhsWorkListItem().value, previousValue)) {
+                    // evaluate takes a conjunction upwards so there
+                    // was no change to the value in this iteration
+                    continue;
+                }
+
+
 
 
             Collection<WorkListItem> newWorkListItemsToWorkingSet = new ArrayList<>();

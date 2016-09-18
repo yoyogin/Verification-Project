@@ -186,14 +186,26 @@ public class SphereInterval {
     }
 
     private IntConstant getX1() {
+        if(this.edgeA.value == Integer.MAX_VALUE)
+        {
+            return IntConstant.v(Integer.MAX_VALUE);
+        }
         return (IntConstant) this.x0.add(this.edgeA);
     }
 
     private IntConstant getY1() {
+        if(this.edgeB.value == Integer.MAX_VALUE)
+        {
+            return IntConstant.v(Integer.MAX_VALUE);
+        }
         return (IntConstant) this.y0.add(this.edgeB);
     }
 
     private IntConstant getZ1() {
+        if(this.edgeC.value == Integer.MAX_VALUE)
+        {
+            return IntConstant.v(Integer.MAX_VALUE);
+        }
         return (IntConstant) this.z0.add(this.edgeC);
     }
 
