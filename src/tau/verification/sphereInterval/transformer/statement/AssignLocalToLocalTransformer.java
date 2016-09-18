@@ -28,11 +28,12 @@ public class AssignLocalToLocalTransformer extends BaseTransformer {
             return forgetLocalTransformer.invoke(factoidsConjunction);
         }
 
-        if(rhsFactoid.isBottom()) {
-            ForgetLocalTransformer forgetLhsLocalTransformer = new ForgetLocalTransformer(lhs);
-            ForgetLocalTransformer forgetRhsLocalTransformer = new ForgetLocalTransformer(rhs);
-            return forgetLhsLocalTransformer.invoke(forgetRhsLocalTransformer.invoke(factoidsConjunction));
-        }
+        //creates infinite loops
+//        if(rhsFactoid.isBottom()) {
+//            ForgetLocalTransformer forgetLhsLocalTransformer = new ForgetLocalTransformer(lhs);
+//            ForgetLocalTransformer forgetRhsLocalTransformer = new ForgetLocalTransformer(rhs);
+//            return forgetLhsLocalTransformer.invoke(forgetRhsLocalTransformer.invoke(factoidsConjunction));
+//        }
 
         FactoidsConjunction result = FactoidsConjunction.getFactoidsConjunction(factoidsConjunction);
         result.update(

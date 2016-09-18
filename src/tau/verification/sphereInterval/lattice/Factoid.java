@@ -27,7 +27,9 @@ public class Factoid implements Comparable<Factoid> {
             throw new IllegalArgumentException();
         }
 
+
         this.variable = variable;
+
         this.sphereInterval = new SphereInterval(x0, y0, z0, edgeA, edgeB, edgeC, radios);
     }
 

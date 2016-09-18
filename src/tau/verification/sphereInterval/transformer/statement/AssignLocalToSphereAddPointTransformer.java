@@ -43,9 +43,9 @@ public class AssignLocalToSphereAddPointTransformer extends BaseTransformer {
 
         result.update(new Factoid(
                 this.lhsVariable,
-                (IntConstant) rhsFactoid.sphereInterval.x0.add(this.additionToX0),
-                (IntConstant) rhsFactoid.sphereInterval.y0.add(this.additionToY0),
-                (IntConstant) rhsFactoid.sphereInterval.z0.add(this.additionToZ0),
+                rhsFactoid.sphereInterval.x0 == null ? null :  (IntConstant)rhsFactoid.sphereInterval.x0.add(this.additionToX0),
+                rhsFactoid.sphereInterval.y0 == null ? null :  (IntConstant)rhsFactoid.sphereInterval.y0.add(this.additionToY0),
+                rhsFactoid.sphereInterval.z0 == null ? null :  (IntConstant)rhsFactoid.sphereInterval.z0.add(this.additionToZ0),
                 rhsFactoid.sphereInterval.edgeA,
                 rhsFactoid.sphereInterval.edgeB,
                 rhsFactoid.sphereInterval.edgeC,

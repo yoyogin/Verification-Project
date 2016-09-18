@@ -21,14 +21,22 @@ public class SphereInterval {
             IntConstant edgeB,
             IntConstant edgeC,
             IntConstant radios) {
-        this.isBottom = false;
 
-        assert x0 != null;
-        assert y0 != null;
-        assert z0 != null;
-        assert edgeA != null;
-        assert edgeB != null;
-        assert edgeC != null;
+
+        if(     x0== null &&
+                y0 == null &&
+                z0 == null &&
+                edgeA == null &&
+                edgeB == null &&
+                edgeC == null &&
+                radios == null
+            )
+        {
+            this.isBottom = true;
+        }else
+        {
+            this.isBottom = false;
+        }
 
         this.x0 = x0;
         this.y0 = y0;
@@ -36,7 +44,15 @@ public class SphereInterval {
         this.edgeA = edgeA;
         this.edgeB = edgeB;
         this.edgeC = edgeC;
-        this.radios = (radios.lessThan(IntConstant.v(0)).equals(IntConstant.v(1))) ? IntConstant.v(0) : radios;
+
+
+        if(radios != null)
+        {
+            this.radios = (radios.lessThan(IntConstant.v(0)).equals(IntConstant.v(1))) ? IntConstant.v(0) : radios;
+        }else
+        {
+            this.radios = radios;
+        }
     }
 
     public SphereInterval(SphereInterval other) {
@@ -264,9 +280,9 @@ public class SphereInterval {
             if(second.x0.lessThanOrEqual(first.getX1()).equals(IntConstant.v(1))) {
                 jointX0 = second.x0;
                 if(second.getX1().lessThanOrEqual(first.getX1()).equals(IntConstant.v(1))) {
-                    jointEdgeA = second.getX1();
+                    jointEdgeA = (IntConstant)second.getX1().subtract(jointX0);
                 } else {
-                    jointEdgeA = (IntConstant) first.getX1().subtract(second.x0);
+                    jointEdgeA = (IntConstant) first.getX1().subtract(jointX0);
                 }
             } else {
                 return SphereInterval.getBottom();
@@ -275,9 +291,9 @@ public class SphereInterval {
             if(first.x0.lessThanOrEqual(second.getX1()).equals(IntConstant.v(1))) {
                 jointX0 = first.x0;
                 if(first.getX1().lessThanOrEqual(second.getX1()).equals(IntConstant.v(1))) {
-                    jointEdgeA = first.getX1();
+                    jointEdgeA = (IntConstant)first.getX1().subtract(jointX0);
                 } else {
-                    jointEdgeA = (IntConstant) second.getX1().subtract(first.x0);
+                    jointEdgeA = (IntConstant) second.getX1().subtract(jointX0);
                 }
             } else {
                 return SphereInterval.getBottom();
@@ -291,9 +307,9 @@ public class SphereInterval {
             if(second.y0.lessThanOrEqual(first.getY1()).equals(IntConstant.v(1))) {
                 jointY0 = second.y0;
                 if(second.getY1().lessThanOrEqual(first.getY1()).equals(IntConstant.v(1))) {
-                    jointEdgeB = second.getY1();
+                    jointEdgeB = (IntConstant)second.getY1().subtract(jointY0);
                 } else {
-                    jointEdgeB = (IntConstant) first.getY1().subtract(second.y0);
+                    jointEdgeB = (IntConstant) first.getY1().subtract(second.getY1());
                 }
             } else {
                 return SphereInterval.getBottom();
@@ -302,9 +318,9 @@ public class SphereInterval {
             if(first.y0.lessThanOrEqual(second.getY1()).equals(IntConstant.v(1))) {
                 jointY0 = first.y0;
                 if(first.getY1().lessThanOrEqual(second.getY1()).equals(IntConstant.v(1))) {
-                    jointEdgeB = first.getY1();
+                    jointEdgeB = (IntConstant)first.getY1().subtract(jointY0);
                 } else {
-                    jointEdgeB = (IntConstant) second.getY1().subtract(first.y0);
+                    jointEdgeB = (IntConstant)second.getY1().subtract(jointY0);
                 }
             } else {
                 return SphereInterval.getBottom();
@@ -318,9 +334,9 @@ public class SphereInterval {
             if(second.z0.lessThanOrEqual(first.getZ1()).equals(IntConstant.v(1))) {
                 jointZ0 = second.z0;
                 if(second.getZ1().lessThanOrEqual(first.getZ1()).equals(IntConstant.v(1))) {
-                    jointEdgeC = second.getZ1();
+                    jointEdgeC = (IntConstant)second.getZ1().subtract(jointZ0);
                 } else {
-                    jointEdgeC = (IntConstant) first.getZ1().subtract(second.z0);
+                    jointEdgeC = (IntConstant) first.getZ1().subtract(jointZ0);
                 }
             } else {
                 return SphereInterval.getBottom();
@@ -329,9 +345,9 @@ public class SphereInterval {
             if(first.z0.lessThanOrEqual(second.getZ1()).equals(IntConstant.v(1))) {
                 jointZ0 = first.z0;
                 if(first.getZ1().lessThanOrEqual(second.getZ1()).equals(IntConstant.v(1))) {
-                    jointEdgeC = first.getZ1();
+                    jointEdgeC = (IntConstant) first.getZ1().subtract(jointZ0);
                 } else {
-                    jointEdgeC = (IntConstant) second.getZ1().subtract(first.z0);
+                    jointEdgeC = (IntConstant) second.getZ1().subtract(jointZ0);
                 }
             } else {
                 return SphereInterval.getBottom();

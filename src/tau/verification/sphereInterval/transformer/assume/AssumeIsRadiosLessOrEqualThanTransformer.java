@@ -54,6 +54,12 @@ public class AssumeIsRadiosLessOrEqualThanTransformer extends AssumeSphereBaseTr
     @Override
     public FactoidsConjunction invoke(FactoidsConjunction factoidsConjunction){
 
+        if(assumeContains == false)
+        {
+            //we cant handle false assume
+            return factoidsConjunction;
+        }
+
         if(factoidsConjunction.isBottom()) {
             return FactoidsConjunction.getBottom();
         }
@@ -67,7 +73,7 @@ public class AssumeIsRadiosLessOrEqualThanTransformer extends AssumeSphereBaseTr
 
         if(argumentConstant != null)
         {
-            radios = ((IntConstant)(receiverFactoid.sphereInterval.radios.lessThan(argumentConstant))).value == 1? receiverFactoid.sphereInterval.radios : argumentConstant;
+            radios = ((IntConstant)(receiverFactoid.sphereInterval.radios.lessThanOrEqual(argumentConstant))).value == 1? receiverFactoid.sphereInterval.radios : argumentConstant;
 
         }else
         {
@@ -76,7 +82,7 @@ public class AssumeIsRadiosLessOrEqualThanTransformer extends AssumeSphereBaseTr
                 return factoidsConjunction;
             }
 
-            radios = ((IntConstant)(receiverFactoid.sphereInterval.radios.lessThan(argumentFactoid.sphereInterval.radios))).value == 1? receiverFactoid.sphereInterval.radios : argumentFactoid.sphereInterval.radios;
+            radios = ((IntConstant)(receiverFactoid.sphereInterval.radios.lessThanOrEqual(argumentFactoid.sphereInterval.radios))).value == 1? receiverFactoid.sphereInterval.radios : argumentFactoid.sphereInterval.radios;
         }
 
         SphereInterval si = new SphereInterval(

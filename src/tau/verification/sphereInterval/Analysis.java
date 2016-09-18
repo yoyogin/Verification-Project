@@ -16,7 +16,7 @@ import java.util.HashSet;
 import java.util.Map;
 
 public class Analysis extends BodyTransformer {
-    public static final boolean IS_WIDENING_NARROWING_OPTIMIZATION = true;
+    public static final boolean IS_WIDENING_NARROWING_OPTIMIZATION = false;
 
     private Collection<String> ignoreMethodList;
 

@@ -42,7 +42,7 @@ public class AssignLocalToSphereAddRadiosTransformer extends BaseTransformer {
                 rhsFactoid.sphereInterval.edgeA,
                 rhsFactoid.sphereInterval.edgeB,
                 rhsFactoid.sphereInterval.edgeC,
-                (IntConstant) rhsFactoid.sphereInterval.radios.add(this.additionToRadios)));
+                rhsFactoid.sphereInterval.radios == null ? null :(IntConstant)rhsFactoid.sphereInterval.radios.add(this.additionToRadios)));
 
         return result;
     }
