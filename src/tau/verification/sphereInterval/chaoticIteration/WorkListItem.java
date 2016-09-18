@@ -14,6 +14,11 @@ public class WorkListItem {
         return result;
     }
 
+    public static void clean()
+    {
+        workListItemCounter = 0;
+    }
+
     private WorkListItem(String name) {
         this.name = name;
         this.value = null;

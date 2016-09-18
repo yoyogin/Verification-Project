@@ -4,7 +4,7 @@ public class IsRadiosLessOrEqualThanTransformerTest{
         Sphere x = new Sphere(0, 0, 0,0 );
         Sphere y = new Sphere(0, 0, 0, 100);
 
-        while(x.isRadiosLessOrEqualThan(50))
+        while(x.isRadiosLessOrEqualThan(1000))
         {
             x = x.addRadios(1);
         }

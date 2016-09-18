@@ -140,16 +140,29 @@ public class SphereInterval {
             sphereIntervalDescription =
                     String.format(
                         "(%s, %s, %s, %s, %s, %s, %s)",
-                        this.x0,
-                        this.y0,
-                        this.z0,
-                        this.edgeA,
-                        this.edgeB,
-                        this.edgeC,
-                        this.radios);
+                            handleInfinity(this.x0),
+                            handleInfinity(this.y0),
+                            handleInfinity(this.z0),
+                            handleInfinity(this.edgeA),
+                            handleInfinity(this.edgeB),
+                            handleInfinity(this.edgeC),
+                            handleInfinity(this.radios));
         }
 
         return String.format("%s", sphereIntervalDescription);
+    }
+
+    private String handleInfinity(IntConstant constant)
+    {
+        if(constant.value == Integer.MAX_VALUE)
+        {
+            return "Infinity";
+        }
+        else if(constant.value == Integer.MIN_VALUE)
+        {
+            return "-Infinity";
+        }
+        return constant.toString();
     }
 
     public boolean contains(SphereInterval other) {

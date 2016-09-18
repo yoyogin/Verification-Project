@@ -13,11 +13,18 @@ public class ChaoticIteration {
      * Solves an equation equationSystem using chaotic iteration
      */
     public void iterate(EquationSystem equationSystem) {
+        iterate(equationSystem,true);
+    }
+
+    public void iterate(EquationSystem equationSystem,boolean cleanWorkListItems) {
         this.equationSystem = equationSystem;
         this.iterationCounter = 0;
 
         System.out.println("Solving equation system = \n" + equationSystem);
-        this.equationSystem.resetWorkListItems(FactoidsConjunction.getBottom());
+        if(cleanWorkListItems)
+        {
+            this.equationSystem.resetWorkListItems(FactoidsConjunction.getBottom());
+        }
 
         System.out.println("Begin Chaotic Iterations");
         internalIterate();

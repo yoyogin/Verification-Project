@@ -8,6 +8,7 @@ import soot.jimple.internal.JVirtualInvokeExpr;
 import soot.jimple.internal.JimpleLocal;
 import soot.toolkits.graph.ExceptionalUnitGraph;
 import soot.toolkits.graph.UnitGraph;
+import tau.verification.sphereInterval.Analysis;
 import tau.verification.sphereInterval.lattice.FactoidsConjunction;
 import tau.verification.sphereInterval.transformer.BaseTransformer;
 import tau.verification.sphereInterval.transformer.TransformerSwitch;
@@ -18,6 +19,9 @@ import java.util.List;
 import java.util.Map;
 
 public class EquationsSystemBuilder {
+
+    private static final boolean IS_WIDENING_NAROWING_OPTIMINAZION = Analysis.IS_WIDENING_NARROWING_OPTIMIZATION;
+
     private Body body;
     private WorkListItem entryWorkListItem = null;
     private UnitGraph unitGraph;
@@ -41,6 +45,8 @@ public class EquationsSystemBuilder {
         return createEquations();
     }
 
+
+
     public String getEquationSystemBodyDescription() {
         StringBuilder stringBuilder = new StringBuilder();
 
@@ -51,6 +57,7 @@ public class EquationsSystemBuilder {
 
         return stringBuilder.toString();
     }
+
 
     private EquationSystem createEquations() {
         EquationSystem equationSystem = new EquationSystem();
@@ -74,6 +81,7 @@ public class EquationsSystemBuilder {
         this.workListItemToUnit.put(this.entryWorkListItem, this.unitGraph.getHeads().get(0));
 
         for (Unit unit : this.body.getUnits()) {
+
             List<WorkListItem> inputWorkListItems = this.unitToInputWorkListItems.get(unit);
             if (inputWorkListItems.size() == 2) {
                 WorkListItem workListItem1 = inputWorkListItems.get(0);
@@ -94,6 +102,29 @@ public class EquationsSystemBuilder {
                 Equation joinEquation = new Equation(joinWorkListItem, joinTransformer, workListItem1, workListItem2, getUnitDescription(unit));
                 equationSystem.addEquation(joinEquation);
                 this.workListItemToUnit.put(joinWorkListItem, unit);
+
+                if(IS_WIDENING_NAROWING_OPTIMINAZION)
+                {
+                WorkListItem optimizationWorkList = WorkListItem.getFreshWorkListItem();
+
+                BaseTransformer optimizationTransformer = new BaseTransformer(2 /* numberOfArguments */) {
+                        @Override
+                        public FactoidsConjunction invoke(FactoidsConjunction firstFactoidsConjunction, FactoidsConjunction secondFactoidsConjunction) {
+                            return FactoidsConjunction.widen(firstFactoidsConjunction, secondFactoidsConjunction);
+                        }
+                        @Override
+                        public String toString() {
+                            return "Widening";
+                        }
+                    };
+
+
+                Equation optimizationEquation = new Equation(optimizationWorkList, optimizationTransformer, optimizationWorkList, joinWorkListItem, getUnitDescription(unit));
+                equationSystem.addOptimizingEquation(optimizationEquation);
+                this.workListItemToUnit.put(optimizationWorkList, unit);
+                this.unitToJoinWorkListItem.put(unit,optimizationWorkList);
+                }
+
             }
             assert inputWorkListItems.size() > 2; //TODO: handle cases of more than two? (e.g. loop continue)
 
@@ -179,7 +210,7 @@ public class EquationsSystemBuilder {
             throw null;
         }
 
-        EqExpr expr = (EqExpr) ifStmt.getCondition();
+        ConditionExpr expr = (ConditionExpr) ifStmt.getCondition();
 
         if(!(expr.getOp1() instanceof JimpleLocal)) {
             assert false; // we don't expect this case for our test files
@@ -193,7 +224,7 @@ public class EquationsSystemBuilder {
             throw null;
         }
 
-        if(!(lhs.getType() instanceof BooleanType)) {
+        if(!(lhs.getType() instanceof BooleanType )) {
             assert false; // we don't expect this case for our test files
             throw null;
         }
@@ -203,7 +234,8 @@ public class EquationsSystemBuilder {
             throw null;
         }
 
-        if(!(assignStmt.getRightOp() instanceof JVirtualInvokeExpr)) {
+        if(!(assignStmt.getRightOp() instanceof JVirtualInvokeExpr ||
+                assignStmt.getRightOp() instanceof InstanceFieldRef)) {
             assert false; // we don't expect this case for our test files
             throw null;
         }

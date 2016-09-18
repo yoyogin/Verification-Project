@@ -6,6 +6,8 @@ import tau.verification.sphereInterval.chaoticIteration.ChaoticIteration;
 import tau.verification.sphereInterval.chaoticIteration.EquationSystem;
 import tau.verification.sphereInterval.chaoticIteration.EquationsSystemBuilder;
 import tau.verification.sphereInterval.chaoticIteration.WorkListItem;
+import tau.verification.sphereInterval.lattice.FactoidsConjunction;
+import tau.verification.sphereInterval.transformer.BaseTransformer;
 import tau.verification.sphereInterval.util.StringUtils;
 
 import java.util.Arrays;
@@ -14,6 +16,8 @@ import java.util.HashSet;
 import java.util.Map;
 
 public class Analysis extends BodyTransformer {
+    public static final boolean IS_WIDENING_NARROWING_OPTIMIZATION = true;
+
     private Collection<String> ignoreMethodList;
 
     public static void main(String[] args) {
@@ -37,19 +41,55 @@ public class Analysis extends BodyTransformer {
             return;
         }
 
-        System.out.println(">>>>> Analyzing method '" + methodName + "' <<<<<");
+        if(IS_WIDENING_NARROWING_OPTIMIZATION)
+        {
+            System.out.println(">>>>> Analyzing method with widening/narrowing optimization'" + methodName + "' <<<<<");
 
-        System.out.println("\nBuilding Equation System from '" + methodName + "' body");
-        EquationsSystemBuilder equationsSystemBuilder = new EquationsSystemBuilder(body);
-        System.out.println("Equation system body = \n" + equationsSystemBuilder.getEquationSystemBodyDescription());
-        EquationSystem equationSystem = equationsSystemBuilder.build();
+            System.out.println("\nBuilding Equation System from '" + methodName + "' body");
+            EquationsSystemBuilder equationsSystemBuilder = new EquationsSystemBuilder(body);
+            System.out.println("Equation system body = \n" + equationsSystemBuilder.getEquationSystemBodyDescription());
+            EquationSystem optimizingEquationSystem = equationsSystemBuilder.build();
 
-        System.out.println("Running Chaotic Iteration on equation system");
-        ChaoticIteration chaoticIteration = new ChaoticIteration();
-        chaoticIteration.iterate(equationSystem);
 
-        System.out.println("\n>>>>> Report for method '" + methodName + "' <<<<<");
-        printReport(equationsSystemBuilder.getWorkListItemToUnit());
+
+            System.out.println("Running Widening Chaotic Iteration on equation system");
+            ChaoticIteration chaoticIteration = new ChaoticIteration();
+            chaoticIteration.iterate(optimizingEquationSystem,true);
+
+            optimizingEquationSystem.getOptimizingEquation().updateTransformer(new BaseTransformer(2) {
+                @Override
+                public FactoidsConjunction invoke(FactoidsConjunction firstFactoidsConjunction, FactoidsConjunction secondFactoidsConjunction) {
+                    return FactoidsConjunction.narrow(firstFactoidsConjunction, secondFactoidsConjunction);
+                }
+                @Override
+                public String toString() {
+                    return "Narrowing";
+                }
+            });
+
+            System.out.println("Running Narrowing Chaotic Iteration on equation system");
+            chaoticIteration.iterate(optimizingEquationSystem,false);
+
+            System.out.println("\n>>>>> Report for method '" + methodName + "' <<<<<");
+            printReport(equationsSystemBuilder.getWorkListItemToUnit());
+
+        }else{
+
+            System.out.println(">>>>> Analyzing method '" + methodName + "' <<<<<");
+
+            System.out.println("\nBuilding Equation System from '" + methodName + "' body");
+            EquationsSystemBuilder equationsSystemBuilder = new EquationsSystemBuilder(body);
+            System.out.println("Equation system body = \n" + equationsSystemBuilder.getEquationSystemBodyDescription());
+            EquationSystem equationSystem = equationsSystemBuilder.build();
+
+            System.out.println("Running Chaotic Iteration on equation system");
+            ChaoticIteration chaoticIteration = new ChaoticIteration();
+            chaoticIteration.iterate(equationSystem);
+
+            System.out.println("\n>>>>> Report for method '" + methodName + "' <<<<<");
+            printReport(equationsSystemBuilder.getWorkListItemToUnit());
+        }
+
     }
 
     private void printReport(Map<WorkListItem, Unit> equationToUnit) {

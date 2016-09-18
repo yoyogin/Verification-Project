@@ -2,13 +2,14 @@ package tau.verification.sphereInterval.chaoticIteration;
 
 import tau.verification.sphereInterval.transformer.BaseTransformer;
 
+import javax.xml.transform.Transformer;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Equation {
     private final WorkListItem lhsWorkListItem;
-    private final BaseTransformer transformer;
     private final ArrayList<WorkListItem> rhsWorkListItems;
+    private BaseTransformer transformer;
 
     private final String unitDescription;
 
@@ -42,6 +43,11 @@ public class Equation {
 
     public WorkListItem getLhsWorkListItem() {
         return lhsWorkListItem;
+    }
+
+    public void updateTransformer(BaseTransformer transformer)
+    {
+        this.transformer = transformer;
     }
 
     public List<WorkListItem> getRhsWorkListItems() {

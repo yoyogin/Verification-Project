@@ -6,6 +6,7 @@ import tau.verification.sphereInterval.util.StringUtils;
 import java.util.*;
 
 public class EquationSystem {
+    private Equation optimizingEquation = null;
     private LinkedHashMap<WorkListItem, Equation> workListItemToEquation = new LinkedHashMap<>();
     private HashMap<WorkListItem, Set<WorkListItem>> workListItemToDependentWorkListItems = new HashMap<>();
 
@@ -25,6 +26,17 @@ public class EquationSystem {
 
             dependentWorkListItems.add(lhsWorkListItem);
         }
+    }
+
+    public void addOptimizingEquation(Equation equation)
+    {
+        optimizingEquation = equation;
+        addEquation(equation);
+    }
+
+    public Equation getOptimizingEquation()
+    {
+        return optimizingEquation;
     }
 
     public Equation getEquation(WorkListItem workListItem) {
